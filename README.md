@@ -19,6 +19,7 @@ Explore the rendered HTML files for detailed documentation:
 ## Background
 
 The Evidence for Resilient Agriculture (ERA) initiative is a comprehensive ecosystem of modular projects designed to synthesize evidence supporting sustainable agricultural development. ERA is built on a shared data management system and a controlled vocabulary, facilitating consistent and scalable analysis across diverse geographies and contexts.
+
 ---
 
 ## Getting Started
