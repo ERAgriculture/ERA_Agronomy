@@ -1,0 +1,345 @@
+---
+title: "Geospatial Data in ERA"
+author: "Alliance of Bioversity International & CIAT"
+format:
+  html:
+    toc: true
+    toc-depth: 4
+    toc-expand: 2     
+    number-sections: true
+    code-fold: false
+editor: visual
+---
+
+```{r load required packages,echo=F}
+if (!require("pacman", character.only = TRUE)) {
+  install.packages("pacman")
+  library(pacman)
+}
+
+pacman::p_load(data.table,s3fs)
+```
+
+#  ERA Geospatial Data and Climate Enrichment
+
+## Data Sources
+
+The ERA pipeline enriches observations with climate, soil, and landscape data using custom functions stored in:
+
+- [`R/add_geodata/`](https://github.com/CIAT/ERA_dev/tree/main/R/add_geodata): main dataset scripts
+- [`R/add_geodata/functions/`](https://github.com/CIAT/ERA_dev/tree/main/R/add_geodata/functions): core download and utility functions
+
+Below are the datasets used and the script locations.
+
+---
+
+### CHIRPS (Rainfall)
+
+- **Dataset**: CHIRPS Daily Rainfall
+- **Resolution**: 0.05° (~5.5 km)
+- **Coverage**: Africa and globally, 1981–present
+- **Download Source**:  
+  [`https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_daily/tifs/p05/`](https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_daily/tifs/p05/)
+- **Download Script**:  
+  [`R/add_geodata/chirps.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/chirps.R)
+- **Download Function**:  
+  [`R/add_geodata/functions/download_chirps.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/functions/download_chirps.R)  
+  → `download_chirps()`
+- **Notes**: Filenames include the date (e.g. `chirps.2023.01.01.tif.gz`). Versioning is inferred from file date.
+
+---
+
+### POWER (NASA)
+
+- **Dataset**: NASA POWER (Temperature, Radiation, Wind, etc.)
+- **Resolution**: 0.5° lat × 0.625° lon
+- **Coverage**: ~1983–present
+- **Download Source**:  
+  NASA POWER API — `https://power.larc.nasa.gov/api/temporal/daily/`
+- **Download Script**:  
+  [`R/add_geodata/power.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/power.R)
+- **Download Function**:  
+  [`R/add_geodata/functions/download_power.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/functions/download_power.R)  
+  → `download_power()`
+- **Notes**: Parameters include `"T2M"`, `"PRECTOTCORR"`, etc. Metadata includes `"Site.Key"` and `"Altitude"` for site-matching.
+
+---
+
+### SoilGrids (ISRIC)
+
+- **Dataset**: SoilGrids 2.0
+- **Resolution**:  
+  - **Africa**: 250 m  
+  - **Non-Africa**: 1 km (as returned by `fetchSoilGrids()` API)
+- **Coverage**: Global
+- **Download Script**:  
+  [`R/add_geodata/soilgrids.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/soilgrids.R)  
+  [`R/add_geodata/soilgrids2.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/soilgrids2.R)
+- **Download Function**:  
+  [`R/add_geodata/functions/download_soilgrids2.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/functions/download_soilgrids2.R)  
+  → `download_soilgrids_data()`, `attempt_fetch()`
+- **Notes**: Internally calls `soilDB::fetchSoilGrids()`; output is reshaped and saved as CSV per site/variable.
+
+---
+
+### AEZ (Agro-Ecological Zones)
+
+- **Layers Used**:
+  - `AEZ16_CLAS--SSA.tif`: from Harvard Dataverse  
+  - `004_afr-aez_09.tif`: from [ISRIC server](https://files.africasis.isric.org/aez/004_afr-aez_09.tif)
+- **Script**:  
+  [`R/add_geodata/aez.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/aez.R)
+- **Notes**: The ISRIC AEZ layer is recoded with value-to-label mappings from a CSV.
+
+---
+
+### Elevation (DEM)
+
+- **Dataset**: Elevation raster
+- **Download Script**:  
+  [`R/add_geodata/elevation.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/elevation.R)
+- **Notes**: Processed from SRTM or other public sources.
+
+---
+
+### Water Balance & Onset of Rain
+
+- **Water Balance**:  
+  [`R/add_geodata/water_balance.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/water_balance.R)  
+  → PET, ETo, Rain - PET
+- **Onset Date (Start of Season)**:  
+  [`R/add_geodata/calculate_sos.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/calculate_sos.R)
+
+---
+
+## Methods
+
+The `generate_climate_stats.R` pipeline defines observation windows using:
+
+- Explicit planting/harvest dates from the ERA observation (`obs_table`)
+- Imputed planting date logic when missing
+- Option to use fixed season windows or growing-period-specific logic (e.g., 90 days before harvest)
+
+
+---
+## Downloading the climate data ##
+To access the climate statistics used in ERA, download the harmonized `.RData` file from the geodata directory on S3:
+
+- **S3 location**: `s3://digital-atlas/era/geodata/clim_stats_2025-03-18.RData`
+- **Content**: This file contains daily and seasonal climate summaries per site, ready to be joined with ERA observations.
+
+You can download the file using the `s3fs` interface as follows:
+
+```{r,warning=F}
+# Load required packages
+library("s3fs")
+s3<-s3fs::S3FileSystem$new(anonymous = T)
+
+
+# Set the remote S3 path and local save path
+s3_data_dir <- "s3://digital-atlas/era/geodata"
+local_data_dir <- "data"
+
+# List and filter files
+files_s3 <- s3$dir_ls(s3_data_dir)
+files_s3 <- grep("clim_stats", files_s3, value = TRUE)
+(files_s3 <- tail(files_s3, 1))
+
+# Create local file path and download
+files_local <- gsub(s3_data_dir, local_data_dir, files_s3)
+if(!file.exists(files_local)){
+s3$file_download(files_s3, files_local)
+}
+```
+
+Once downloaded, load the .RData file using:
+
+```{r}
+# Load the harmonized climate data into your environment
+clim_data <- miceadds::load.Rdata2(file = basename(files_local), path = dirname(files_local))
+```
+
+## Climate data content and structure ####
+
+`clim_dat` is a named list of data tables, created by `generate_climate_stats.R`.
+
+```{r}
+names(clim_data)
+```
+
+### Unique locations and times (`clim_data$site_data`)
+`site_data` contains the unique combinations of site, time, crop, planting date, and harvest date from the ERA agronomy dataset.
+
+#### Site, year, season, & study
+
+```{r}
+head(unique(clim_data$site_data[,.(Site.Key,Code,M.Year,Latitude,Longitude,M.Year,M.Year.Code,M.Season)]))
+```
+
+**Field Descriptions:**
+- **Site.Key**: A unique identifier for each site or location. It is used to link locations consistently across datasets.
+- **Code**: A unique code used to identify a publication or entry in the ERA dataset. It serves as the main key for tracking a specific experiment/publication across associated tables.
+- **M.Year**: Measurement year – a code that identifies the production season, typically aligned with the `Time` field in the main ERA dataset. This may take the form of a calendar year or include other formatting to distinguish multiple seasons per year.
+- **Latitude**: Geographic latitude of the site in decimal degrees (WGS84). Used for spatial analyses and mapping.
+- **Longitude**: Geographic longitude of the site in decimal degrees (WGS84). Used for spatial analyses and mapping.
+- **M.Year.Code**: A standardized or formatted version of `M.Year`, often combining year and season. Useful for indexing and subsetting.
+- **M.Season**: Management season (typically `1` or `2`) indicating the cropping season within a year. May be `NA` in unimodal systems; helps distinguish multiple cropping events in bimodal climates.
+
+#### Crops 
+
+```{r}
+head(unique(clim_data$site_data[,.(Product,EU,Topt.low,Topt.high,Tlow,Thigh)]))
+```
+
+**Field Descriptions:**
+- **Product**: The name of the crop or agricultural product (e.g., maize, beans) associated with the management and outcome data.
+- **EU**: Experimental Unit code links to the `era_master_codes$EU` table.
+- **Tlow**: The **minimum temperature threshold** for crop development. Below this value, crop growth is assumed to be negligible or halted. Often derived from EcoCrop or agronomic sources.
+- **Thigh**: The **maximum temperature threshold** for crop development. Temperatures above this can lead to heat stress or failure in development.
+- **Topt.low**: The **lower bound of the optimal temperature range** for crop growth. Within this and `Topt.high`, the crop achieves near-optimal physiological performance.
+- **Topt.high**: The **upper bound of the optimal temperature range** for crop growth. Growth efficiency typically declines beyond this value, even if not fully stressed.
+
+These thresholds define a crop's temperature response curve and come from EcoCrop. They can also be used to calculate growing degree days, stress indices, or suitability zones under historical or future climate conditions.
+
+#### Planting dates
+`site_data` contains information about planting dates and their estimation:
+
+```{r}
+head(clim_data$site_data[,.(Plant.Start,Plant.End,Plant.Diff.Raw,Data.PS.Date,Data.PE.Date,SOS,P.Date.Merge,P.Date.Merge.Source,PlantingDate)])
+```
+
+**Field Descriptions:**
+
+- **Plant.Start**: The reported start date for planting. This indicates when the planting period began according to the original data.
+- **Plant.End**: The reported end date for planting. This marks the conclusion of the planting period in the original dataset.
+- **Plant.Diff.Raw**: The difference (in days) between `Plant.Start` and `Plant.End`—indicating how uncertain the reported planting window was. 
+- **Data.PS.Date**: The estimated start date for planting, inferred from nearby or similar observations in ERA when a reported planting date is missing or uncertain.
+- **Data.PE.Date**: The estimated end date for planting, derived using the same method as Data.PS.Date to define a plausible planting window.
+-	**SOS**: The estimated Start of Season date, derived from daily climate data using agroclimatic thresholds (e.g. rainfall ≥25 mm in a dekad and ≥20 mm in the following two dekads, with aridity index AI ≥ 0.5). It marks when planting conditions were first met based on climatic signals.
+- **P.Date.Merge**: The final, merged planting date calculated by the pipeline. It represents a consolidated planting date that may incorporate adjustments or estimations (for example, averaging the planting window or refining it using rainfall data). It should be interpreted as the number of days since `1900-01-01`.
+- **P.Date.Merge.Source**: A descriptive label indicating the source or method used to derive the merged planting date. This might indicate whether the date was taken directly from published data (e.g., "Published") or estimated using spatial or rainfall data (e.g., "Nearby 1km", "SOS + Published", etc.).
+- **PlantingDate**:
+
+**Explanation of `P.Date.Merge.Source` values:**
+
+```{r}
+clim_data$site_data[,unique(P.Date.Merge.Source)]
+```
+
+Values below are presented in order of preference when estimating planting date in the `P.Date.Merge` field
+- **Published**: The planting date was directly reported in the original study with no need for estimation.  
+- **Published CHIRPS**: A published planting date was available but was refined or verified using CHIRPS rainfall data.  
+- **Nearby 1km CHIRPS** : The estimation was based on observations from locations within a 1‑km radius, with additional refinement using CHIRPS data.  
+- **Nearby 10km CHIRPS**: As with the 10‑km estimation, this method further incorporated CHIRPS rainfall data to improve the estimate.  
+- **Nearby 1km**: Similar to the CHIRPS-based 1‑km estimate but without the additional rainfall data refinement.  
+- **Nearby 10km**: The planting date was estimated from nearby observations aggregated over a 10‑km radius due to missing or uncertain reported dates.  
+- **SOS + Published**: The planting date was adjusted using SOS information in cases where the published date was uncertain, without incorporating CHIRPS data.  
+- **SOS + Published CHIRPS**: When the reported planting date (Published) was too uncertain, the method adjusted it using the Start‐of‐Season (SOS) rainfall onset data alongside CHIRPS information.
+
+This hierarchy reflects a logical preference: **Directly observed data > Nearby analogues > Climatological estimation**.
+
+#### Season length
+`site_data` contains information about reported harvest dates and season length, the latter may use the reported data or be estimated.
+
+```{r}
+head(clim_data$site_data[,.(Harvest.Start,Harvest.End,SLen,Data.SLen,SLen.EcoCrop,SLen.Source,SeasonLength.Data,SeasonLength.EcoCrop)])
+```
+**Field Descriptions:**
+
+- **Harvest.Start**: The reported or estimated date when harvest began. Typically reflects the first day of the harvest window.
+- **Harvest.End**: The reported or estimated date when harvest concluded. Typically reflects the last day of the harvest window.
+- **SLen**: Season Length – calculated as the number of days between `Plant.Start` and `Harvest.End`. Represents the observed or estimated duration of the cropping cycle.
+- **Data.SLen**: Season Length derived from reported data only (i.e., `Plant.Start` and `Harvest.End` must both be available from original records). Used to indicate where the season length is based on direct evidence rather than estimates.
+- **SLen.EcoCrop**: An estimate of cropping cycle length derived from the EcoCrop database refined using data available in ERA where possible. Used as a fallback when data-derived values are missing. `SeasonLength.EcoCrop` is redundant and contains the same information as `SLen.EcoCrop`.
+- **SLen.Source**: This field indicates how the final **Season Length** (`SeasonLength.Data` field) used in calculations was derived, based on the origin of planting and harvest date estimates. The format is:``<Planting Source> + <Season Length Source>``.
+- **SeasonLength.Data**:  Combines `SLen` and `Data.SLen` fields, substituting values `Data.SLen` when `SLen` is `NA.`
+
+
+**Explanation of SLen.Source values:**
+```{r}
+clim_data$site_data[,unique(SLen.Source)]
+```
+
+The format of `SLen.Source` is `<Planting Source> + <Season Length Source>` and the order of preference for the season length source is the same as for planting. Observed values include:  
+- **Published + Pub** – Both planting and harvest dates are reported with low uncertainty in the publication.  
+- **Published + Nearby 1km** – Planting date reported with low uncertainty; season length estimated from nearby (within 1 km) observations.  
+- **CHIRPS Published + Pub** – Planting date reported, but uncertain, and refined using CHIRPS rainfall; harvest dates reported with low uncertainty.  
+- **Nearby 1km + Nearby 1km** – Both planting date and season length derived from nearby (within 1 km) observations.  
+- **Nearby 1km + Nearby 10km** – Planting date from 1 km radius; season length from 10 km radius.  
+- **SOS + Published + Nearby 1km** –The planting date was adjusted using SOS information in cases where the published date was uncertain, without incorporating CHIRPS data; season length from nearby data.  
+- **CHIRPS SOS + Published + Pub** – When the reported planting date (Published) was too uncertain, the method adjusted it using the Start‐of‐Season (SOS) rainfall onset data alongside CHIRPS information; harvest dates reported with low uncertainty.  
+- **Published + Nearby 10km** – Planting date reported with low uncertainty; season length from 10 km proximity.  
+- **Nearby 1km + Pub** – Planting data from nearby; harvest dates reported with low uncertainty.  
+- **Nearby 10km + Nearby 1km** – Planting data from nearby;season length from 10 km proximity.  
+- **NA** – No season length estimate was available or derived.  
+
+These combinations trace the logical fallback and merging sequence for generating season length when direct data are missing or uncertain.
+
+
+
+
+
+## Output and Linkage to ERA Observations
+
+These can be merged with ERA observation data using the Site.ID and Time fields.
+
+
+
+You can link this to ERA using:
+
+```{r merge with era}
+# Example: Merge climate stats to agronomic observations
+#obs <- fread("path/to/era_observations.csv")
+#clim <- readRDS("path/to/clim_stats_2025-03-18.RData")
+
+#obs_clim <- merge(obs, clim, by = "Site.ID", all.x = TRxUE)
+```
+
+
+
+
+## Dataset Versioning
+
+ERA does not use hardcoded version numbers in the metadata. Instead:
+
+#### • Dataset integrity is maintained via:
+
+- **Source URLs** and mirrors embedded in scripts  
+- **Filename conventions**  
+  e.g., `chirps.2023.01.01.tif.gz` for CHIRPS data  
+- **Timestamps in output object names**  
+  e.g., `clim_stats_2025-03-18.RData`
+
+#### • Update logic is script-based:
+
+- Most downloader scripts accept `update = TRUE` to force re-download.
+
+#### • Dataset-specific versioning examples:
+
+- **CHIRPS**:  
+  Downloaded directly from [CHC UCSB FTP](https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_daily/tifs/p05/)  
+  Files stored as `.tif.gz` and organized by year  
+  Script: [`R/add_geodata/chirps.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/chirps.R)  
+  Function: [`download_chirps()`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/functions/download_chirps.R)
+
+- **POWER**:  
+  Accessed via NASA POWER API (`daily`, `ag` community)  
+  Script: [`R/add_geodata/power.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/power.R)  
+  Function: [`download_power()`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/functions/download_power.R)
+
+- **SoilGrids**:  
+  Africa sites use 250 m resolution  
+  Global sites use ~1 km resolution based on API response  
+  Scripts:  
+  [`R/add_geodata/soilgrids.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/soilgrids.R)  
+  [`R/add_geodata/soilgrids2.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/soilgrids2.R)  
+  Function: [`download_soilgrids_data()`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/functions/download_soilgrids2.R)
+
+- **AEZ (Agro-Ecological Zones)**:  
+  - `AEZ16_CLAS--SSA.tif` from Harvard Dataverse  
+  - `004_afr-aez_09.tif` from ISRIC (recoded via CSV mapping)  
+  Script: [`R/add_geodata/aez.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/aez.R)
+
+All scripts are version-controlled and maintained in the [CIAT/ERA_dev GitHub repository](https://github.com/CIAT/ERA_dev).
+
+
