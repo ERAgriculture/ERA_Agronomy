@@ -27,7 +27,8 @@ if (!requireNamespace("pacman", quietly = TRUE)) {
 pacman::p_load(
   sf, knitr, rnaturalearth, rnaturalearthdata, 
   ggplot2, viridis, shiny, dplyr, treemap, treemapify, plotly, data.table,
-  s3fs, arrow, devtools, gh, htmlwidgets,remotes,gridExtra, DT
+  s3fs, arrow, devtools, gh, htmlwidgets,remotes,gridExtra, DT, tidyverse, waffle,
+  ggridges
 )
 
 if(!require(ERAgON)){
@@ -59,7 +60,7 @@ We will cover the following:
 
 *2. Extraction template*
 
-3\. Understanding the *different data formats of ERA*
+*3. Understanding the different data formats of ERA*
 
 ***Downloading the data:***
 
@@ -69,11 +70,15 @@ We will cover the following:
 
 ***Exploring the data:***
 
-*1. Exploring geographic locations of studies available*
+*1. Sub-setting the data to agronomy*
 
-*2. Agronomic practices and subsetting*
+*2. Exploring geographic locations of studies available*
 
-*3. Common outcomes reported and subsetting*
+*3. Exploring the agronomic practices of studies available*
+
+*4. Common outcomes reported*
+
+***An example of an analysis you could do with ERA***
 
 # What is ERA
 
@@ -131,7 +136,7 @@ The link to this extraction template can be found here: <https://github.com/CIAT
 
 ## Understanding the different data formats of ERA
 
-Each of the tables within the front end of the feed into tables behind the scenes.
+Each of the tables within the front end of the excel feeds into tables behind the scenes.
 
 The main tables are :
 
@@ -172,7 +177,7 @@ Data is available and can be downloaded from the S3 Bucket `s3://digital-atlas/e
 
 ## Downloading the metadata
 
-Unhide the code the view the steps to download the metadata
+Unhide the code the view the steps to download the metadata.
 
 ```{r downloading data from S3 bucket,echo=T, message=TRUE}
 # Create an S3 filesystem handle
@@ -203,3 +208,404 @@ agronomic_data <- miceadds::load.Rdata2(
 )
 
 ```
+
+Once the data is download, it will appear as the screenshot below.
+
+Each of the tables can be extracted individual and combined with one another based on a common piece of information. For example, the B.Code, which is present in each tab, can be used to match information from one particular paper across all these tables.
+
+![](images/metadata.png)
+
+To get a better understanding of what the variable codes mean, download the documentation by running the following code:
+
+```{r importing the vocad, echo=T, message=F}
+
+# Some of the columns should be described in the ERA metadata, which can be found in our master vocabulary (we will be updating the metadata soon)
+    # 4.3.1) Download the era master vocab ######
+  era_vocab_url<-"https://github.com/peetmate/era_codes/raw/main/era_master_sheet.xlsx"
+  era_vocab_local<-file.path(getwd(),basename(era_vocab_url))
+  download.file(era_vocab_url, era_vocab_local, mode = "wb")  # Download and write in binary mode
+
+# Import the vocab
+  # Get names of all sheets in the workbook
+  sheet_names <- readxl::excel_sheets(era_vocab_local)
+  sheet_names<-sheet_names[!grepl("sheet|Sheet",sheet_names)]
+  
+  # Read each sheet into a list
+  master_codes <- sapply(sheet_names, FUN=function(x){data.table(readxl::read_excel(era_vocab_local, sheet = x))},USE.NAMES=T)
+  
+  era_fields<-master_codes$era_fields
+  era_fields[Table=="Animals.Diet",.(Field,Field_Description)]
+  
+#Display the table 
+    #	Display	the	summary	table	of	diets
+DT::datatable(
+  era_fields,
+  options = list(
+    scrollY = "400px",  # Set vertical scroll height
+    scrollX = TRUE,     # Enable horizontal scrolling
+    pageLength = 20,    # Initial number of rows displayed
+    fixedHeader = FALSE  # Keep column headers fixed while scrolling
+  )
+)
+```
+
+## Downloading ERA.Compiled
+
+ERA.Compiled is part of the `ERAg` package and is generated through a processing script that performs several key functions, including harmonizing units, aligning entries with the ERA ontology, creating treatment--control comparisons, and computing response ratios.
+
+To download this data for the package, running the following code:
+
+`ERA.Compiled<- ERA.Compiled`
+
+To view the field descript, run the following line:\
+\
+`ERAg::ERACompiledFields`
+
+```{r downloading era.compiled and descriptions, echo=T, message=F}
+ERA.Compiled<- ERA.Compiled
+
+ERACompiledFields<- ERAg::ERACompiledFields
+
+#Display the table 
+    #	Display	the	summary	table	of	diets
+DT::datatable(
+  ERACompiledFields,
+  options = list(
+    scrollY = "400px",  # Set vertical scroll height
+    scrollX = TRUE,     # Enable horizontal scrolling
+    pageLength = 20,    # Initial number of rows displayed
+    fixedHeader = FALSE  # Keep column headers fixed while scrolling
+  )
+)
+
+```
+
+You can also explore descriptions of major ERA concepts (Practices, Outcomes, Products)
+
+```{r view practices, outcomes and products, echo=T, message=F}
+practices<- ERAg::PracticeCodes
+outcomes<- ERAg::OutcomeCodes
+products<- ERAg::EUCodes
+
+DT::datatable(
+  practices,
+  options = list(
+    scrollY = "400px",  # Set vertical scroll height
+    scrollX = TRUE,     # Enable horizontal scrolling
+    pageLength = 20,    # Initial number of rows displayed
+    fixedHeader = FALSE  # Keep column headers fixed while scrolling
+  )
+)
+
+DT::datatable(
+  outcomes,
+  options = list(
+    scrollY = "400px",  # Set vertical scroll height
+    scrollX = TRUE,     # Enable horizontal scrolling
+    pageLength = 20,    # Initial number of rows displayed
+    fixedHeader = FALSE  # Keep column headers fixed while scrolling
+  )
+)
+
+DT::datatable(
+  products,
+  options = list(
+    scrollY = "400px",  # Set vertical scroll height
+    scrollX = TRUE,     # Enable horizontal scrolling
+    pageLength = 20,    # Initial number of rows displayed
+    fixedHeader = FALSE  # Keep column headers fixed while scrolling
+  )
+)
+```
+
+# Exploring the data
+
+## Subsetting the data to agronomy
+
+ERA has a diverse range of practices, from agronomy to livestock and a few papers on postharvest storage. We will therefore focus on Agronomy for this User Guide. If you are interest in livestock practices, please explore our Livestock User Guide (<https://eragriculture.github.io/ERL/Guide-to-Livestock-Data-Analysis-in-the-ERA-Dataset--STATIC.html>)
+
+Unhide the code to see how we sub-set the data to agronomy papers only.
+
+```{r subset to agronomy, echo=T, message=F}
+ERA.Compiled_ag <-ERA.Compiled[grepl("Plant", Product.Type)]
+
+```
+
+## Exploring geographic locations of studies available
+
+We collected country, site name paraphrased from study, and spatial coordinates when given. Location\'s coordinates were verified in Google Maps, as they were often inaccurately reported. Enumerators also recorded a measure of spatial uncertainty. When authors reported decimal degrees and there was no correction required to the co-ordinates, then uncertainty was measured in terms of the value\'s precision. When the location was estimated using Google Maps, the spatial uncertainty value was measured in terms of the precision of the site location description (e.g., a single farm or region) and the enumerator\'s visual interpretation of land use at and near the coordinates. Observation\'s geographic coordinates were collected to facilitate linking the data compiled in ERA to external databases, for example related to climatic and environmental factors not necessarily reported in the original study.
+
+```{r plotting the distribution of data, echo=T, message=F}
+# Ensure coordinates are numeric
+ERA.Compiled_ag <- ERA.Compiled_ag %>%
+  mutate(
+    Latitude = as.numeric(Latitude),
+    Longitude = as.numeric(Longitude)
+  ) %>%
+  filter(!is.na(Latitude) & !is.na(Longitude))
+
+# Count the number of papers per country
+paper_counts <- ERA.Compiled_ag %>%
+  group_by(Country) %>%
+  summarise(N_Papers = n_distinct(Code), .groups = "drop")
+
+# Load only African countries
+world <- ne_countries(scale = "medium", continent = "Africa", returnclass = "sf")
+
+# Fix Tanzania name if needed
+world <- world %>%
+  mutate(admin = if_else(admin == "United Republic of Tanzania", "Tanzania", admin))
+
+
+# Ensure CRS is consistent
+world <- st_transform(world, crs = 4326)
+
+# Convert combined_sites to spatial data
+sites_sf <- st_as_sf(ERA.Compiled_ag, coords = c("Longitude", "Latitude"), crs = 4326, remove = FALSE)
+
+# Join paper counts to map
+map_data <- world %>%
+  dplyr::select(admin, geometry) %>%
+  rename(Country = admin) %>%
+  left_join(paper_counts, by = "Country")
+
+# Plot the map
+map<- ggplot() +
+  geom_sf(data = map_data, aes(fill = N_Papers), color = "white") +
+  geom_point(data = sites_sf, aes(x = Longitude, y = Latitude), 
+             shape = 21, color = "black", fill = "white", size = 2, alpha = 0.5) +
+  scale_fill_viridis_c(
+    option = "mako",
+    direction = -1,
+    na.value = "gray95"
+  ) +
+  labs(fill = "Agronomy Papers") +
+  theme_minimal() +
+  theme(
+    legend.position = "bottom",          # ⬅ Move to bottom
+    legend.direction = "horizontal",     # ⬅ Make it horizontal
+    legend.title = element_text(size = 12, face = "bold"),
+    legend.text = element_text(size = 10),
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    axis.title = element_blank(),
+    panel.grid = element_blank()
+  ) +
+  guides(fill = guide_colorbar(
+    barwidth = 10, barheight = 0.5, title.position = "top", title.hjust = 0.5
+  )) +
+  coord_sf(xlim = c(-20, 55), ylim = c(-35, 38), expand = FALSE)
+
+# Display the map
+map
+```
+
+## Exploring the products of studies available
+
+```{r plotting products, echo=T, message=F}
+prod_counts <- ERA.Compiled_ag %>%
+  separate_rows(Product.Subtype, sep = "-") %>% 
+  group_by(Product.Subtype) %>%
+  summarise(Count = n_distinct(Code), .groups = "drop") %>%
+  mutate(label = paste0(Product.Subtype, " (", Count, ")"))
+
+
+tree_plot<- ggplot(prod_counts, aes(area = Count, fill = Count, label = label)) +
+  geom_treemap(color = "white") +
+  geom_treemap_text(
+    colour = "black",
+    place = "centre",
+    grow = FALSE,       # Disable growing to avoid oversized text
+    reflow = TRUE,
+    size = 10            # Adjust this value to control the actual text size
+  ) +
+  scale_fill_distiller(palette = "Greens", direction = 1, guide = "none") +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 14, face = "bold"),
+    legend.position = "none"
+  )
+tree_plot
+```
+
+## Exploring the agronomic practices within studies available
+
+Say something about era practices............
+.............................................
+
+```{r plotting practices, echo=T, message=F}
+
+ag_counts <- ERA.Compiled_ag %>%
+  separate_rows(Theme, sep = "-") %>% 
+  group_by(Theme) %>%
+  summarise(Count = n_distinct(Code), .groups = "drop") %>%
+  mutate(label = paste0(Theme, " (", Count, ")"))
+
+# Define parts per square (e.g. 1 square = 10 studies)
+parts_per_square <- 20
+
+# Prepare waffle input
+waffle_data <- ag_counts %>%
+  mutate(
+    squares = round(Count / parts_per_square)
+  ) %>%
+  filter(squares > 0)  # Drop any 0-square items
+
+# Named vector for waffle
+waffle_vec <- setNames(waffle_data$squares, waffle_data$label)
+
+# Waffle plot
+waffle_plot <- waffle::waffle(
+  parts = waffle_vec,
+  rows = 10,
+  size = 0.5,
+  colors = RColorBrewer::brewer.pal(n = nrow(waffle_data), name = "Blues"),
+  legend_pos = "bottom"
+) +
+  theme(
+    legend.position = "bottom",
+    legend.text = element_text(size = 10),
+    legend.title = element_blank()
+  ) +
+  guides(fill = guide_legend(nrow = 3, byrow = TRUE))
+
+waffle_plot
+
+```
+
+
+## Exploring outcomes reported in the studies available
+
+Say something about outcomes............................
+........................................................
+
+```{r plotting Outcomes, echo=T, message=F}
+# Aggregate data by pillar and indicator
+out_counts <- ERA.Compiled_ag %>%
+  mutate(Out.Pillar = trimws(as.character(Out.Pillar))) %>%
+  filter(Out.Pillar != "", !is.na(Out.Pillar), !is.na(Out.Ind)) %>%
+  group_by(Out.Pillar, Out.Ind) %>%
+  summarise(Num_Papers = n_distinct(Code), .groups = "drop") %>%
+  rename(Pillar = Out.Pillar, Indicator = Out.Ind)
+
+
+# Sort indicators within each pillar
+out_counts <- out_counts %>%
+  arrange(Pillar, Indicator) %>%
+  mutate(
+    Indicator = factor(Indicator, levels = unique(Indicator)),
+    Pillar = factor(Pillar, levels = c("Productivity", "Resilience", "Mitigation"))
+  )
+
+# Optional: define pillar colors
+pillar_colors <- c(
+  "Productivity" = "#FFCC66",
+  "Resilience" = "#990000",
+  "Mitigation" = "#8B4513"
+)
+
+# Plot
+bar_plot <- ggplot(out_counts, aes(
+  x = Indicator, y = Num_Papers, fill = Pillar
+)) +
+  geom_col(width = 0.8) +
+  labs(
+    y = "Number of Papers",
+    x = "Outcome Indicator"
+  ) +
+  scale_fill_manual(values = pillar_colors, na.value = "gray70") +
+  scale_y_continuous(
+    limits = c(0, max(out_counts$Num_Papers) + 50),
+    expand = c(0, 0)
+  ) +
+  facet_wrap(~Pillar, scales = "free_x", nrow = 1) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(size = 10, angle = 45, hjust = 1),
+    axis.text.y = element_text(size = 10),
+    axis.title.x = element_text(size = 12, face = "bold", margin = margin(t = 10)),
+    axis.title.y = element_text(size = 12, face = "bold"),
+    legend.position = "none",
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    strip.text = element_text(size = 12, face = "bold"),
+    plot.margin = margin(10, 10, 10, 10)
+  )
+
+# Show plot
+bar_plot
+```
+
+# An example of an analysis you could do with ERA
+
+Lets assume you want to explore the impact of agriculture technologies on Maize yields.
+ERA only considers treatment comparisons. Each observation encodes a comparison between two treatments.
+
+
+The following principles assisted in consistent comparisons of treatment outcomes across studies:
+
+1. New versus common treatment. A new technology versus a control, which is typically farmers’ conventional technologies.
+
+2. Additive complexity. An improved technology / set of technologies to a simpler option, e.g., agroforestry+fertilizer vs agroforestry alone.
+
+3. Agriculture to agriculture. Agricultural systems are never compared to natural systems. For example, we can compare soil organic carbon in mulch versus no mulch systems, but not versus natural or semi-natural vegetation.
+
+4. Same implementation levels. Comparisons were made within the same ‘level’ of implementation. For example, 40 kg N/ha was compared with other treatments using 40 kgN/ha but not 20 kgN/ha.
+
+5. All treatment details. All major characteristics of the treatments were coded, including seed variety, tillage type, weed control, tree species, and chemical applications, among others, up to 13 labels per treatment.
+
+6. In-year comparisons. Only comparisons of treatments and outcomes that occur in the same year or season were included. Residual effects, e.g., of phosphorus applied in year one with yield in year three, were not recorded.
+
+7. Include all possible treatments. All treatments, and their component technologies, in a study were coded if they formed part of valid comparison.
+
+Based this, a response ratio is calculated by MeanT/MeanC
+
+```{r analysis, echo=T, message=T}
+filtered_data <- ERA.Compiled_ag %>%
+  filter(Product == "Maize", Out.SubInd == "Crop Yield", !is.na(yi))
+
+# Step 2: Keep only practices with at least 3 values and some variation
+valid_practices <- filtered_data %>%
+  group_by(PrName) %>%
+  filter(n() >= 3, sd(yi, na.rm = TRUE) > 0) %>%
+  ungroup()
+
+# Step 3: Get top 5 PrName by number of rows
+top_practices <- valid_practices %>%
+  count(PrName, sort = TRUE) %>%
+  slice_head(n = 5) %>%
+  pull(PrName)
+
+# Step 4: Final filtered data
+ridge_data <- valid_practices %>%
+  filter(PrName %in% top_practices)
+
+# Step 5: Plot
+ridge_plot <- ggplot(ridge_data, aes(x = yi, y = PrName, fill = ..x..)) +
+  geom_density_ridges_gradient(scale = 3, rel_min_height = 0.01, color = "black") +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "blue") +
+  stat_summary(
+    aes(x = yi),
+    fun = mean,
+    geom = "point",
+    color = "black",
+    shape = 18,
+    size = 2
+  ) +
+  scale_fill_viridis_c(option = "C", direction = -1) +
+  labs(
+    title = "Response Ratios for Maize - Crop Yield",
+    x = "Response Ratio (yi)",
+    y = "Practice"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(face = "bold", size = 14),
+    axis.text = element_text(size = 10),
+    axis.title = element_text(size = 12)
+  )
+
+
+ridge_plot
+```
+
