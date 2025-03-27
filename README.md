@@ -11,7 +11,7 @@ Explore the rendered HTML files for detailed documentation:
 - **Metadata Exploration**: Connects outcomes with metadata for contextual insights.
 ---
 ## Repository Contents
-1. **Guide to Agronomy Data Analysis in ERA Dataset**
+1. **Guide to Agronomy Data Analysis in ERA Dataset**: https://eragriculture.github.io/ERA_Agronomy/ERA-User-Guide.html
 - Provides a roadmap for leveraging ERA datasets.
 - Includes practical steps for data cleaning, visualization, and advanced analysis.
 
