@@ -68,6 +68,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="geo_spatial_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="geo_spatial_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="geo_spatial_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="geo_spatial_files/libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="geo_spatial_files/libs/lightable-0.0.1/lightable.css" rel="stylesheet">
 
 
 </head>
@@ -102,14 +104,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#planting-dates" id="toc-planting-dates" class="nav-link" data-scroll-target="#planting-dates"><span class="header-section-number">1.4.1.3</span> Planting dates</a></li>
   <li><a href="#season-length" id="toc-season-length" class="nav-link" data-scroll-target="#season-length"><span class="header-section-number">1.4.1.4</span> Season length</a></li>
   </ul></li>
-  </ul></li>
-  <li><a href="#output-and-linkage-to-era-observations" id="toc-output-and-linkage-to-era-observations" class="nav-link" data-scroll-target="#output-and-linkage-to-era-observations"><span class="header-section-number">1.5</span> Output and Linkage to ERA Observations</a></li>
-  <li><a href="#dataset-versioning" id="toc-dataset-versioning" class="nav-link" data-scroll-target="#dataset-versioning"><span class="header-section-number">1.6</span> Dataset Versioning</a>
+  <li><a href="#climate-data-pdate.slen.datapdate.slen.ecocroppdate.slen.p30" id="toc-climate-data-pdate.slen.datapdate.slen.ecocroppdate.slen.p30" class="nav-link" data-scroll-target="#climate-data-pdate.slen.datapdate.slen.ecocroppdate.slen.p30"><span class="header-section-number">1.4.2</span> Climate data (<code>PDate.SLen.Data/PDate.SLen.EcoCrop/PDate.SLen.P30</code>)</a>
   <ul class="collapse">
-  <li><a href="#dataset-integrity-is-maintained-via" id="toc-dataset-integrity-is-maintained-via" class="nav-link" data-scroll-target="#dataset-integrity-is-maintained-via"><span class="header-section-number">1.6.0.1</span> • Dataset integrity is maintained via:</a></li>
-  <li><a href="#update-logic-is-script-based" id="toc-update-logic-is-script-based" class="nav-link" data-scroll-target="#update-logic-is-script-based"><span class="header-section-number">1.6.0.2</span> • Update logic is script-based:</a></li>
-  <li><a href="#dataset-specific-versioning-examples" id="toc-dataset-specific-versioning-examples" class="nav-link" data-scroll-target="#dataset-specific-versioning-examples"><span class="header-section-number">1.6.0.3</span> • Dataset-specific versioning examples:</a></li>
+  <li><a href="#gdd" id="toc-gdd" class="nav-link" data-scroll-target="#gdd"><span class="header-section-number">1.4.2.1</span> gdd</a></li>
+  <li><a href="#temperature" id="toc-temperature" class="nav-link" data-scroll-target="#temperature"><span class="header-section-number">1.4.2.2</span> temperature</a></li>
+  <li><a href="#rainfall" id="toc-rainfall" class="nav-link" data-scroll-target="#rainfall"><span class="header-section-number">1.4.2.3</span> rainfall</a></li>
+  <li><a href="#eratio" id="toc-eratio" class="nav-link" data-scroll-target="#eratio"><span class="header-section-number">1.4.2.4</span> eratio</a></li>
+  <li><a href="#logging" id="toc-logging" class="nav-link" data-scroll-target="#logging"><span class="header-section-number">1.4.2.5</span> logging</a></li>
   </ul></li>
+  </ul></li>
+  <li><a href="#connecting-climate-stats-back-to-the-era-database" id="toc-connecting-climate-stats-back-to-the-era-database" class="nav-link" data-scroll-target="#connecting-climate-stats-back-to-the-era-database"><span class="header-section-number">1.5</span> Connecting climate stats back to the ERA database</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -141,11 +145,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<div class="cell">
-<div class="cell-output cell-output-stderr">
-<pre><code>Loading required package: pacman</code></pre>
-</div>
-</div>
 <section id="era-geospatial-data-and-climate-enrichment" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> ERA Geospatial Data and Climate Enrichment</h1>
 <section id="data-sources" class="level2" data-number="1.1">
@@ -268,68 +267,136 @@ NASA POWER API — <code>https://power.larc.nasa.gov/api/temporal/daily/</code><
 </ul>
 <p>You can download the file using the <code>s3fs</code> interface as follows:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load required packages</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"s3fs"</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>s3<span class="ot">&lt;-</span>s3fs<span class="sc">::</span>S3FileSystem<span class="sc">$</span><span class="fu">new</span>(<span class="at">anonymous =</span> T)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Set the remote S3 path and local save path</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>s3_data_dir <span class="ot">&lt;-</span> <span class="st">"s3://digital-atlas/era/geodata"</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>local_data_dir <span class="ot">&lt;-</span> <span class="st">"data"</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># List and filter files</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>files_s3 <span class="ot">&lt;-</span> s3<span class="sc">$</span><span class="fu">dir_ls</span>(s3_data_dir)</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>files_s3 <span class="ot">&lt;-</span> <span class="fu">grep</span>(<span class="st">"clim_stats"</span>, files_s3, <span class="at">value =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>(files_s3 <span class="ot">&lt;-</span> <span class="fu">tail</span>(files_s3, <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load required packages</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"s3fs"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>s3<span class="ot">&lt;-</span>s3fs<span class="sc">::</span>S3FileSystem<span class="sc">$</span><span class="fu">new</span>(<span class="at">anonymous =</span> T)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Set the remote S3 path and local save path</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>s3_data_dir <span class="ot">&lt;-</span> <span class="st">"s3://digital-atlas/era/geodata"</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>local_data_dir <span class="ot">&lt;-</span> <span class="st">"data"</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># List and filter files</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>files_s3 <span class="ot">&lt;-</span> s3<span class="sc">$</span><span class="fu">dir_ls</span>(s3_data_dir)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>files_s3 <span class="ot">&lt;-</span> <span class="fu">grep</span>(<span class="st">"clim_stats"</span>, files_s3, <span class="at">value =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>(files_s3 <span class="ot">&lt;-</span> <span class="fu">tail</span>(files_s3, <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "s3://digital-atlas/era/geodata/clim_stats_2025-03-18.RData"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create local file path and download</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>files_local <span class="ot">&lt;-</span> <span class="fu">gsub</span>(s3_data_dir, local_data_dir, files_s3)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">file.exists</span>(files_local)){</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>s3<span class="sc">$</span><span class="fu">file_download</span>(files_s3, files_local)</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create local file path and download</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>files_local <span class="ot">&lt;-</span> <span class="fu">gsub</span>(s3_data_dir, local_data_dir, files_s3)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">file.exists</span>(files_local)){</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>s3<span class="sc">$</span><span class="fu">file_download</span>(files_s3, files_local)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Once downloaded, load the .RData file using:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the harmonized climate data into your environment</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>clim_data <span class="ot">&lt;-</span> miceadds<span class="sc">::</span><span class="fu">load.Rdata2</span>(<span class="at">file =</span> <span class="fu">basename</span>(files_local), <span class="at">path =</span> <span class="fu">dirname</span>(files_local))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the harmonized climate data into your environment</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>clim_data <span class="ot">&lt;-</span> miceadds<span class="sc">::</span><span class="fu">load.Rdata2</span>(<span class="at">file =</span> <span class="fu">basename</span>(files_local), <span class="at">path =</span> <span class="fu">dirname</span>(files_local))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="climate-data-content-and-structure" class="level2" data-number="1.4">
 <h2 data-number="1.4" class="anchored" data-anchor-id="climate-data-content-and-structure"><span class="header-section-number">1.4</span> Climate data content and structure</h2>
 <p><code>clim_dat</code> is a named list of data tables, created by <code>generate_climate_stats.R</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(clim_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(clim_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "PDate.SLen.Data"    "PDate.SLen.EcoCrop" "PDate.SLen.P30"    
 [4] "site_data"         </code></pre>
 </div>
 </div>
+<p><strong><code>site_data</code></strong>: contains the spatial and temporal location data for which climate statistic are generated.</p>
+<p><strong>PDate.SLen.Data/PDate.SLen.EcoCrop/PDate.SLen.P30`</strong>: these objects are lists of output climate data calculated for for different parameterizations of season length.</p>
 <section id="unique-locations-and-times-clim_datasite_data" class="level3" data-number="1.4.1">
 <h3 data-number="1.4.1" class="anchored" data-anchor-id="unique-locations-and-times-clim_datasite_data"><span class="header-section-number">1.4.1</span> Unique locations and times (<code>clim_data$site_data</code>)</h3>
 <p><code>site_data</code> contains the unique combinations of site, time, crop, planting date, and harvest date from the ERA agronomy dataset.</p>
 <section id="site-year-season-study" class="level4" data-number="1.4.1.1">
 <h4 data-number="1.4.1.1" class="anchored" data-anchor-id="site-year-season-study"><span class="header-section-number">1.4.1.1</span> Site, year, season, &amp; study</h4>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">unique</span>(clim_data<span class="sc">$</span>site_data[,.(Site.Key,Code,M.Year,Latitude,Longitude,M.Year,M.Year.Code,M.Season)]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>                Site.Key     Code M.Year Latitude Longitude M.Year M.Year.Code
-                  &lt;char&gt;   &lt;char&gt; &lt;char&gt;    &lt;num&gt;     &lt;num&gt; &lt;char&gt;      &lt;char&gt;
-1: 11.1555 -12.5285 B400   NN0002   2007  11.1555  -12.5285   2007        &lt;NA&gt;
-2:  13.2790 -5.9340 B600   NN0002   2007  13.2790   -5.9340   2007        &lt;NA&gt;
-3:  10.3671 -9.3355 B500   NN0002   2007  10.3671   -9.3355   2007        &lt;NA&gt;
-4:  13.2790 -5.9340 B600   NN0003   1998  13.2790   -5.9340   1998        &lt;NA&gt;
-5:  33.8430 -5.4760 B500   NN0008   1994  33.8430   -5.4760   1994        &lt;NA&gt;
-6: 32.9540 -7.6260 B1000 NN0009.1   1995  32.9540   -7.6260   1995        &lt;NA&gt;
-   M.Season
-     &lt;char&gt;
-1:     &lt;NA&gt;
-2:     &lt;NA&gt;
-3:     &lt;NA&gt;
-4:     &lt;NA&gt;
-5:     &lt;NA&gt;
-6:     &lt;NA&gt;</code></pre>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">unique</span>(clim_data<span class="sc">$</span>site_data[,.(Site.Key,Code,M.Year,Latitude,Longitude,M.Year,M.Year.Code,M.Season)]))<span class="sc">|&gt;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">format =</span> <span class="st">"html"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>, <span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">"striped"</span>, <span class="st">"hover"</span>), <span class="at">position =</span> <span class="st">"left"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scroll_box</span>(<span class="at">width =</span> <span class="st">"100%"</span>, <span class="at">height =</span> <span class="st">"250px"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:250px; overflow-x: scroll; width:100%; ">
+<table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">Site.Key</th>
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">Code</th>
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">M.Year</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">Latitude</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">Longitude</th>
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">M.Year</th>
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">M.Year.Code</th>
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">M.Season</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">11.1555 -12.5285 B400</td>
+<td style="text-align: left;">NN0002</td>
+<td style="text-align: left;">2007</td>
+<td style="text-align: right;">11.1555</td>
+<td style="text-align: right;">-12.5285</td>
+<td style="text-align: left;">2007</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">13.2790 -5.9340 B600</td>
+<td style="text-align: left;">NN0002</td>
+<td style="text-align: left;">2007</td>
+<td style="text-align: right;">13.2790</td>
+<td style="text-align: right;">-5.9340</td>
+<td style="text-align: left;">2007</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">10.3671 -9.3355 B500</td>
+<td style="text-align: left;">NN0002</td>
+<td style="text-align: left;">2007</td>
+<td style="text-align: right;">10.3671</td>
+<td style="text-align: right;">-9.3355</td>
+<td style="text-align: left;">2007</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">13.2790 -5.9340 B600</td>
+<td style="text-align: left;">NN0003</td>
+<td style="text-align: left;">1998</td>
+<td style="text-align: right;">13.2790</td>
+<td style="text-align: right;">-5.9340</td>
+<td style="text-align: left;">1998</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">33.8430 -5.4760 B500</td>
+<td style="text-align: left;">NN0008</td>
+<td style="text-align: left;">1994</td>
+<td style="text-align: right;">33.8430</td>
+<td style="text-align: right;">-5.4760</td>
+<td style="text-align: left;">1994</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">32.9540 -7.6260 B1000</td>
+<td style="text-align: left;">NN0009.1</td>
+<td style="text-align: left;">1995</td>
+<td style="text-align: right;">32.9540</td>
+<td style="text-align: right;">-7.6260</td>
+<td style="text-align: left;">1995</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+</tr>
+</tbody>
+</table>
+</div>
+
 </div>
 </div>
 <p><strong>Field Descriptions:</strong> - <strong>Site.Key</strong>: A unique identifier for each site or location. It is used to link locations consistently across datasets. - <strong>Code</strong>: A unique code used to identify a publication or entry in the ERA dataset. It serves as the main key for tracking a specific experiment/publication across associated tables. - <strong>M.Year</strong>: Measurement year – a code that identifies the production season, typically aligned with the <code>Time</code> field in the main ERA dataset. This may take the form of a calendar year or include other formatting to distinguish multiple seasons per year. - <strong>Latitude</strong>: Geographic latitude of the site in decimal degrees (WGS84). Used for spatial analyses and mapping. - <strong>Longitude</strong>: Geographic longitude of the site in decimal degrees (WGS84). Used for spatial analyses and mapping. - <strong>M.Year.Code</strong>: A standardized or formatted version of <code>M.Year</code>, often combining year and season. Useful for indexing and subsetting. - <strong>M.Season</strong>: Management season (typically <code>1</code> or <code>2</code>) indicating the cropping season within a year. May be <code>NA</code> in unimodal systems; helps distinguish multiple cropping events in bimodal climates.</p>
@@ -337,16 +404,76 @@ NASA POWER API — <code>https://power.larc.nasa.gov/api/temporal/daily/</code><
 <section id="crops" class="level4" data-number="1.4.1.2">
 <h4 data-number="1.4.1.2" class="anchored" data-anchor-id="crops"><span class="header-section-number">1.4.1.2</span> Crops</h4>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">unique</span>(clim_data<span class="sc">$</span>site_data[,.(Product,EU,Topt.low,Topt.high,Tlow,Thigh)]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>               Product     EU Topt.low Topt.high  Tlow Thigh
-                &lt;char&gt; &lt;char&gt;    &lt;num&gt;     &lt;num&gt; &lt;num&gt; &lt;num&gt;
-1:               Fonio     c6     24.2      31.4  11.4  36.8
-2:        Pearl Millet    c17     25.0      35.0  12.0  40.0
-3:             Sorghum    c13     22.0      35.0   8.0  40.0
-4:               Wheat    c14     15.0      23.0   5.0  27.0
-5: Groundnut or Peanut     h9     22.0      32.0  10.0  45.0
-6:               Maize     c7     18.0      33.0  10.0  47.0</code></pre>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">unique</span>(clim_data<span class="sc">$</span>site_data[,.(Product,EU,Topt.low,Topt.high,Tlow,Thigh)]))<span class="sc">|&gt;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">format =</span> <span class="st">"html"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>, <span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">"striped"</span>, <span class="st">"hover"</span>), <span class="at">position =</span> <span class="st">"left"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scroll_box</span>(<span class="at">width =</span> <span class="st">"100%"</span>, <span class="at">height =</span> <span class="st">"250px"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:250px; overflow-x: scroll; width:100%; ">
+<table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">Product</th>
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">EU</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">Topt.low</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">Topt.high</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">Tlow</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">Thigh</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Fonio</td>
+<td style="text-align: left;">c6</td>
+<td style="text-align: right;">24.2</td>
+<td style="text-align: right;">31.4</td>
+<td style="text-align: right;">11.4</td>
+<td style="text-align: right;">36.8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Pearl Millet</td>
+<td style="text-align: left;">c17</td>
+<td style="text-align: right;">25.0</td>
+<td style="text-align: right;">35.0</td>
+<td style="text-align: right;">12.0</td>
+<td style="text-align: right;">40.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Sorghum</td>
+<td style="text-align: left;">c13</td>
+<td style="text-align: right;">22.0</td>
+<td style="text-align: right;">35.0</td>
+<td style="text-align: right;">8.0</td>
+<td style="text-align: right;">40.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Wheat</td>
+<td style="text-align: left;">c14</td>
+<td style="text-align: right;">15.0</td>
+<td style="text-align: right;">23.0</td>
+<td style="text-align: right;">5.0</td>
+<td style="text-align: right;">27.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Groundnut or Peanut</td>
+<td style="text-align: left;">h9</td>
+<td style="text-align: right;">22.0</td>
+<td style="text-align: right;">32.0</td>
+<td style="text-align: right;">10.0</td>
+<td style="text-align: right;">45.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Maize</td>
+<td style="text-align: left;">c7</td>
+<td style="text-align: right;">18.0</td>
+<td style="text-align: right;">33.0</td>
+<td style="text-align: right;">10.0</td>
+<td style="text-align: right;">47.0</td>
+</tr>
+</tbody>
+</table>
+</div>
+
 </div>
 </div>
 <p><strong>Field Descriptions:</strong> - <strong>Product</strong>: The name of the crop or agricultural product (e.g., maize, beans) associated with the management and outcome data. - <strong>EU</strong>: Experimental Unit code links to the <code>era_master_codes$EU</code> table. - <strong>Tlow</strong>: The <strong>minimum temperature threshold</strong> for crop development. Below this value, crop growth is assumed to be negligible or halted. Often derived from EcoCrop or agronomic sources. - <strong>Thigh</strong>: The <strong>maximum temperature threshold</strong> for crop development. Temperatures above this can lead to heat stress or failure in development. - <strong>Topt.low</strong>: The <strong>lower bound of the optimal temperature range</strong> for crop growth. Within this and <code>Topt.high</code>, the crop achieves near-optimal physiological performance. - <strong>Topt.high</strong>: The <strong>upper bound of the optimal temperature range</strong> for crop growth. Growth efficiency typically declines beyond this value, even if not fully stressed.</p>
@@ -356,24 +483,97 @@ NASA POWER API — <code>https://power.larc.nasa.gov/api/temporal/daily/</code><
 <h4 data-number="1.4.1.3" class="anchored" data-anchor-id="planting-dates"><span class="header-section-number">1.4.1.3</span> Planting dates</h4>
 <p><code>site_data</code> contains information about planting dates and their estimation:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(clim_data<span class="sc">$</span>site_data[,.(Plant.Start,Plant.End,Plant.Diff.Raw,Data.PS.Date,Data.PE.Date,SOS,P.Date.Merge,P.Date.Merge.Source,PlantingDate)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>   Plant.Start  Plant.End Plant.Diff.Raw Data.PS.Date Data.PE.Date    SOS
-        &lt;Date&gt;     &lt;Date&gt;          &lt;int&gt;       &lt;Date&gt;       &lt;Date&gt; &lt;Date&gt;
-1:  2007-07-13 2007-07-13              0         &lt;NA&gt;         &lt;NA&gt;   &lt;NA&gt;
-2:  2007-07-12 2007-07-12              0         &lt;NA&gt;         &lt;NA&gt;   &lt;NA&gt;
-3:  2007-07-09 2007-07-09              0         &lt;NA&gt;         &lt;NA&gt;   &lt;NA&gt;
-4:  1998-07-23 1998-07-23              0         &lt;NA&gt;         &lt;NA&gt;   &lt;NA&gt;
-5:  1998-07-13 1998-07-13              0         &lt;NA&gt;         &lt;NA&gt;   &lt;NA&gt;
-6:  1993-12-07 1993-12-07              0         &lt;NA&gt;         &lt;NA&gt;   &lt;NA&gt;
-   P.Date.Merge P.Date.Merge.Source PlantingDate
-          &lt;num&gt;              &lt;char&gt;       &lt;Date&gt;
-1:        13707           Published   2007-07-13
-2:        13706           Published   2007-07-12
-3:        13703           Published   2007-07-09
-4:        10430           Published   1998-07-23
-5:        10420           Published   1998-07-13
-6:         8741           Published   1993-12-07</code></pre>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(clim_data<span class="sc">$</span>site_data[,.(Plant.Start,Plant.End,Plant.Diff.Raw,Data.PS.Date,Data.PE.Date,SOS,P.Date.Merge,P.Date.Merge.Source,PlantingDate)])<span class="sc">|&gt;</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">format =</span> <span class="st">"html"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>, <span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">"striped"</span>, <span class="st">"hover"</span>), <span class="at">position =</span> <span class="st">"left"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scroll_box</span>(<span class="at">width =</span> <span class="st">"100%"</span>, <span class="at">height =</span> <span class="st">"250px"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:250px; overflow-x: scroll; width:100%; ">
+<table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">Plant.Start</th>
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">Plant.End</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">Plant.Diff.Raw</th>
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">Data.PS.Date</th>
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">Data.PE.Date</th>
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">SOS</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">P.Date.Merge</th>
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">P.Date.Merge.Source</th>
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">PlantingDate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">2007-07-13</td>
+<td style="text-align: left;">2007-07-13</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">13707</td>
+<td style="text-align: left;">Published</td>
+<td style="text-align: left;">2007-07-13</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2007-07-12</td>
+<td style="text-align: left;">2007-07-12</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">13706</td>
+<td style="text-align: left;">Published</td>
+<td style="text-align: left;">2007-07-12</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">2007-07-09</td>
+<td style="text-align: left;">2007-07-09</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">13703</td>
+<td style="text-align: left;">Published</td>
+<td style="text-align: left;">2007-07-09</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">1998-07-23</td>
+<td style="text-align: left;">1998-07-23</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">10430</td>
+<td style="text-align: left;">Published</td>
+<td style="text-align: left;">1998-07-23</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">1998-07-13</td>
+<td style="text-align: left;">1998-07-13</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">10420</td>
+<td style="text-align: left;">Published</td>
+<td style="text-align: left;">1998-07-13</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">1993-12-07</td>
+<td style="text-align: left;">1993-12-07</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: right;">8741</td>
+<td style="text-align: left;">Published</td>
+<td style="text-align: left;">1993-12-07</td>
+</tr>
+</tbody>
+</table>
+</div>
+
 </div>
 </div>
 <p><strong>Field Descriptions:</strong></p>
@@ -388,13 +588,49 @@ NASA POWER API — <code>https://power.larc.nasa.gov/api/temporal/daily/</code><
 <li><strong>P.Date.Merge.Source</strong>: A descriptive label indicating the source or method used to derive the merged planting date. This might indicate whether the date was taken directly from published data (e.g., “Published”) or estimated using spatial or rainfall data (e.g., “Nearby 1km”, “SOS + Published”, etc.).</li>
 <li><strong>PlantingDate</strong>:</li>
 </ul>
-<p>Explanation of <code>P.Date.Merge.Source</code> values:</p>
+<p><strong>Explanation of <code>P.Date.Merge.Source</code> values:</strong></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>clim_data<span class="sc">$</span>site_data[,<span class="fu">unique</span>(P.Date.Merge.Source)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "Published"              "Published CHIRPS"       "Nearby 10km"           
-[4] "Nearby 10km CHIRPS"     "Nearby 1km CHIRPS"      "SOS + Published CHIRPS"
-[7] "Nearby 1km"             "SOS + Published"       </code></pre>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>clim_data<span class="sc">$</span>site_data[,<span class="fu">unique</span>(P.Date.Merge.Source)]<span class="sc">|&gt;</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">format =</span> <span class="st">"html"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>, <span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">"striped"</span>, <span class="st">"hover"</span>), <span class="at">position =</span> <span class="st">"left"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scroll_box</span>(<span class="at">width =</span> <span class="st">"100%"</span>, <span class="at">height =</span> <span class="st">"250px"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:250px; overflow-x: scroll; width:100%; ">
+<table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">x</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Published</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Published CHIRPS</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Nearby 10km</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Nearby 10km CHIRPS</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Nearby 1km CHIRPS</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SOS + Published CHIRPS</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Nearby 1km</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SOS + Published</td>
+</tr>
+</tbody>
+</table>
+</div>
+
 </div>
 </div>
 <p>Values below are presented in order of preference when estimating planting date in the <code>P.Date.Merge</code> field - <strong>Published</strong>: The planting date was directly reported in the original study with no need for estimation.<br>
@@ -411,24 +647,90 @@ NASA POWER API — <code>https://power.larc.nasa.gov/api/temporal/daily/</code><
 <h4 data-number="1.4.1.4" class="anchored" data-anchor-id="season-length"><span class="header-section-number">1.4.1.4</span> Season length</h4>
 <p><code>site_data</code> contains information about reported harvest dates and season length, the latter may use the reported data or be estimated.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(clim_data<span class="sc">$</span>site_data[,.(Harvest.Start,Harvest.End,SLen,Data.SLen,SLen.EcoCrop,SLen.Source,SeasonLength.Data,SeasonLength.EcoCrop)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>   Harvest.Start Harvest.End  SLen Data.SLen SLen.EcoCrop     SLen.Source
-          &lt;Date&gt;      &lt;Date&gt; &lt;num&gt;     &lt;num&gt;        &lt;num&gt;          &lt;char&gt;
-1:    2007-10-15  2007-10-15  94.0        NA           65 Published + Pub
-2:    2007-10-24  2007-10-24 104.0        NA           65 Published + Pub
-3:    2007-10-06  2007-10-07  89.5        NA           65 Published + Pub
-4:    1998-11-16  1998-11-16 116.0        NA          105 Published + Pub
-5:    1998-11-03  1998-11-03 113.0        NA          115 Published + Pub
-6:    1994-05-28  1994-05-28 172.0        NA          151 Published + Pub
-   SeasonLength.Data SeasonLength.EcoCrop
-               &lt;num&gt;                &lt;num&gt;
-1:              94.0                   65
-2:             104.0                   65
-3:              89.5                   65
-4:             116.0                  105
-5:             113.0                  115
-6:             172.0                  151</code></pre>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(clim_data<span class="sc">$</span>site_data[,.(Harvest.Start,Harvest.End,SLen,Data.SLen,SLen.EcoCrop,SLen.Source,SeasonLength.Data,SeasonLength.EcoCrop)])<span class="sc">|&gt;</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">format =</span> <span class="st">"html"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>, <span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">"striped"</span>, <span class="st">"hover"</span>), <span class="at">position =</span> <span class="st">"left"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scroll_box</span>(<span class="at">width =</span> <span class="st">"100%"</span>, <span class="at">height =</span> <span class="st">"250px"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:250px; overflow-x: scroll; width:100%; ">
+<table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">Harvest.Start</th>
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">Harvest.End</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">SLen</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">Data.SLen</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">SLen.EcoCrop</th>
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">SLen.Source</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">SeasonLength.Data</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">SeasonLength.EcoCrop</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">2007-10-15</td>
+<td style="text-align: left;">2007-10-15</td>
+<td style="text-align: right;">94.0</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">65</td>
+<td style="text-align: left;">Published + Pub</td>
+<td style="text-align: right;">94.0</td>
+<td style="text-align: right;">65</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2007-10-24</td>
+<td style="text-align: left;">2007-10-24</td>
+<td style="text-align: right;">104.0</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">65</td>
+<td style="text-align: left;">Published + Pub</td>
+<td style="text-align: right;">104.0</td>
+<td style="text-align: right;">65</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">2007-10-06</td>
+<td style="text-align: left;">2007-10-07</td>
+<td style="text-align: right;">89.5</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">65</td>
+<td style="text-align: left;">Published + Pub</td>
+<td style="text-align: right;">89.5</td>
+<td style="text-align: right;">65</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">1998-11-16</td>
+<td style="text-align: left;">1998-11-16</td>
+<td style="text-align: right;">116.0</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">105</td>
+<td style="text-align: left;">Published + Pub</td>
+<td style="text-align: right;">116.0</td>
+<td style="text-align: right;">105</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">1998-11-03</td>
+<td style="text-align: left;">1998-11-03</td>
+<td style="text-align: right;">113.0</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">115</td>
+<td style="text-align: left;">Published + Pub</td>
+<td style="text-align: right;">113.0</td>
+<td style="text-align: right;">115</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">1994-05-28</td>
+<td style="text-align: left;">1994-05-28</td>
+<td style="text-align: right;">172.0</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">151</td>
+<td style="text-align: left;">Published + Pub</td>
+<td style="text-align: right;">172.0</td>
+<td style="text-align: right;">151</td>
+</tr>
+</tbody>
+</table>
+</div>
+
 </div>
 </div>
 <p><strong>Field Descriptions:</strong></p>
@@ -441,8 +743,8 @@ NASA POWER API — <code>https://power.larc.nasa.gov/api/temporal/daily/</code><
 <li><strong>SLen.Source</strong>: This field indicates how the final <strong>Season Length</strong> (<code>SeasonLength.Data</code> field) used in calculations was derived, based on the origin of planting and harvest date estimates. The format is:<code>&lt;Planting Source&gt; + &lt;Season Length Source&gt;</code>.</li>
 <li><strong>SeasonLength.Data</strong>: Combines <code>SLen</code> and <code>Data.SLen</code> fields, substituting values <code>Data.SLen</code> when <code>SLen</code> is <code>NA.</code></li>
 </ul>
-<p>Explanation of SLen.Source values: ::: {.cell}</p>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>clim_data<span class="sc">$</span>site_data[,<span class="fu">unique</span>(SLen.Source)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><strong>Explanation of SLen.Source values:</strong> ::: {.cell}</p>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>clim_data<span class="sc">$</span>site_data[,<span class="fu">unique</span>(SLen.Source)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] "Published + Pub"              "Published + Nearby 1km"      
  [3] "CHIRPS Published + Pub"       NA                            
@@ -465,71 +767,1299 @@ NASA POWER API — <code>https://power.larc.nasa.gov/api/temporal/daily/</code><
 - <strong>Nearby 10km + Nearby 1km</strong> – Planting data from nearby;season length from 10 km proximity.<br>
 - <strong>NA</strong> – No season length estimate was available or derived.</p>
 <p>These combinations trace the logical fallback and merging sequence for generating season length when direct data are missing or uncertain.</p>
-</section>
-</section>
-</section>
-<section id="output-and-linkage-to-era-observations" class="level2" data-number="1.5">
-<h2 data-number="1.5" class="anchored" data-anchor-id="output-and-linkage-to-era-observations"><span class="header-section-number">1.5</span> Output and Linkage to ERA Observations</h2>
 <p>These can be merged with ERA observation data using the Site.ID and Time fields.</p>
-<p>You can link this to ERA using:</p>
+</section>
+</section>
+<section id="climate-data-pdate.slen.datapdate.slen.ecocroppdate.slen.p30" class="level3" data-number="1.4.2">
+<h3 data-number="1.4.2" class="anchored" data-anchor-id="climate-data-pdate.slen.datapdate.slen.ecocroppdate.slen.p30"><span class="header-section-number">1.4.2</span> Climate data (<code>PDate.SLen.Data/PDate.SLen.EcoCrop/PDate.SLen.P30</code>)</h3>
+<p><strong><code>PDate.SLen.Data</code></strong> : <code>site_data$P.Date.Merge</code> and <code>site_data$SeasonLength.Data</code> are used to determine the start and end dates within which climate statistics are calculated. If season length is not reported or cannot be inferred from ERA data for a row in <code>site_data</code> then no climate stats will be generated for that record.</p>
+<p><strong><code>PDate.SLen.EcoCrop</code></strong> <code>site_data$P.Date.Merge</code> and <code>site_data$SLen.EcoCrop</code> are used to determine the start and end dates within which climate statistics are calculated. Season length is inferred from the midpoint of ecocrop cycle length for a crop, refined where possible using reported values within the ERA dataset. This dataset therefore inputes missing season length and contains more records than <code>PDate.SLen.Data</code>,however season length is likely to be less accurate.</p>
+<p><strong><code>PDate.SLen.P30</code></strong> <code>site_data$P.Date.Merge</code> is used to determine the start date of the climate window, and the end date is fixed to 30 days after planting. This represent the post-planting climate, which can be a particularly sensitive period for many crops.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example: Merge climate stats to agronomic observations</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co">#obs &lt;- fread("path/to/era_observations.csv")</span></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co">#clim &lt;- readRDS("path/to/clim_stats_2025-03-18.RData")</span></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="co">#obs_clim &lt;- merge(obs, clim, by = "Site.ID", all.x = TRxUE)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(clim_data<span class="sc">$</span>PDate.SLen.Data)<span class="sc">|&gt;</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">format =</span> <span class="st">"html"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>, <span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">"striped"</span>, <span class="st">"hover"</span>), <span class="at">position =</span> <span class="st">"left"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scroll_box</span>(<span class="at">width =</span> <span class="st">"100%"</span>, <span class="at">height =</span> <span class="st">"250px"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:250px; overflow-x: scroll; width:100%; ">
+<table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">x</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">gdd</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">temperature</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">rainfall</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">eratio</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">logging</td>
+</tr>
+</tbody>
+</table>
 </div>
-</section>
-<section id="dataset-versioning" class="level2" data-number="1.6">
-<h2 data-number="1.6" class="anchored" data-anchor-id="dataset-versioning"><span class="header-section-number">1.6</span> Dataset Versioning</h2>
-<p>ERA does not use hardcoded version numbers in the metadata. Instead:</p>
-<section id="dataset-integrity-is-maintained-via" class="level4" data-number="1.6.0.1">
-<h4 data-number="1.6.0.1" class="anchored" data-anchor-id="dataset-integrity-is-maintained-via"><span class="header-section-number">1.6.0.1</span> • Dataset integrity is maintained via:</h4>
+
+</div>
+</div>
+<p>Each of the following names corresponds to a list of <strong>climate statistics</strong> calculated over the seasonal window defined by <code>P.Date.Merge</code> and <code>SeasonLength.Data</code>:</p>
 <ul>
-<li><strong>Source URLs</strong> and mirrors embedded in scripts<br>
-</li>
-<li><strong>Filename conventions</strong><br>
-e.g., <code>chirps.2023.01.01.tif.gz</code> for CHIRPS data<br>
-</li>
-<li><strong>Timestamps in output object names</strong><br>
-e.g., <code>clim_stats_2025-03-18.RData</code></li>
+<li><p><strong><code>gdd</code></strong>: Growing Degree Days — cumulative heat units over the season binned into thermal stress classes, useful for crop development and heat stress exposure tracking.</p></li>
+<li><p><strong><code>temperature</code></strong>: Mean, minimum, and maximum temperatures over the season. Consecutive and total days above/below temperature thresholds.</p></li>
+<li><p><strong><code>rainfall</code></strong>: Total and average precipitation during the season. Consecutive and total days above/below precipitation thresholds.</p></li>
+<li><p><strong><code>eratio</code></strong>: Ratio of rainfall to reference evapotranspiration — a proxy for water availability or drought stress.</p></li>
+<li><p><strong><code>logging</code></strong>: Days with waterlogging risk — based on rainfall thresholds that may indicate excess moisture conditions.</p></li>
 </ul>
+<p>Each object is a <code>data.table</code> with one row per Site.ID and columns containing summary statistics for that climate indicator.</p>
+<p>All tables share these fields:<br>
+- <strong><code>row_index</code></strong> : Internal index to link this row back to the corresponding entry in the <code>site_data</code> table.<br>
+- <strong><code>id</code></strong>: The site identifier, typically matching <code>Site.Key</code> from the ERA dataset.<br>
+- <strong><code>window</code></strong>: Description of window used, useful if merging tables that use different climate window calculation methods.</p>
+<section id="gdd" class="level4" data-number="1.4.2.1">
+<h4 data-number="1.4.2.1" class="anchored" data-anchor-id="gdd"><span class="header-section-number">1.4.2.1</span> gdd</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(clim_data<span class="sc">$</span>PDate.SLen.Data<span class="sc">$</span>gdd)<span class="sc">|&gt;</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">format =</span> <span class="st">"html"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>, <span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">"striped"</span>, <span class="st">"hover"</span>), <span class="at">position =</span> <span class="st">"left"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scroll_box</span>(<span class="at">width =</span> <span class="st">"100%"</span>, <span class="at">height =</span> <span class="st">"250px"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:250px; overflow-x: scroll; width:100%; ">
+<table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">gdd_subopt</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">gdd_opt</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">gdd_aboveopt</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">gdd_abovemax</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">row_index</th>
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">id</th>
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">window</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">659.81</td>
+<td style="text-align: right;">386.42</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">11.1555 -12.5285 B400</td>
+<td style="text-align: left;">PlantingDate-SeasonLength.Data</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">287.46</td>
+<td style="text-align: right;">998.80</td>
+<td style="text-align: right;">378.54</td>
+<td style="text-align: right;">56.34</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">13.2790 -5.9340 B600</td>
+<td style="text-align: left;">PlantingDate-SeasonLength.Data</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">421.58</td>
+<td style="text-align: right;">1258.04</td>
+<td style="text-align: right;">156.67</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">13.2790 -5.9340 B600</td>
+<td style="text-align: left;">PlantingDate-SeasonLength.Data</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">26.86</td>
+<td style="text-align: right;">2094.32</td>
+<td style="text-align: right;">154.30</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">13.2790 -5.9340 B600</td>
+<td style="text-align: left;">PlantingDate-SeasonLength.Data</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">512.95</td>
+<td style="text-align: right;">1643.76</td>
+<td style="text-align: right;">200.86</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">242</td>
+<td style="text-align: left;">13.2790 -5.9340 B600</td>
+<td style="text-align: left;">PlantingDate-SeasonLength.Data</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">642.92</td>
+<td style="text-align: right;">1476.19</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">243</td>
+<td style="text-align: left;">13.2790 -5.9340 B600</td>
+<td style="text-align: left;">PlantingDate-SeasonLength.Data</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+</div>
+</div>
+<p>This table contains Growing Degree Day (GDD) statistics calculated over the defined season window for each site. Here’s what each field represents:<br>
+- <strong><code>gdd_subopt</code></strong>: Cumulative GDD within the <strong>sub-optimal temperature range</strong> for crop growth (above base temperature but below optimal).<br>
+- <strong><code>gdd_opt</code></strong>: Cumulative GDD within the <strong>optimal temperature range</strong> — where the crop is expected to grow most efficiently.<br>
+- <strong><code>gdd_aboveopt</code></strong>: Cumulative GDD in the <strong>above-optimal range</strong>, where temperatures may begin to reduce growth efficiency.<br>
+- <strong><code>gdd_abovemax</code></strong>: Cumulative GDD <strong>above the maximum threshold</strong>, indicating <strong>heat stress</strong> or potentially damaging conditions.</p>
 </section>
-<section id="update-logic-is-script-based" class="level4" data-number="1.6.0.2">
-<h4 data-number="1.6.0.2" class="anchored" data-anchor-id="update-logic-is-script-based"><span class="header-section-number">1.6.0.2</span> • Update logic is script-based:</h4>
+<section id="temperature" class="level4" data-number="1.4.2.2">
+<h4 data-number="1.4.2.2" class="anchored" data-anchor-id="temperature"><span class="header-section-number">1.4.2.2</span> temperature</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(clim_data<span class="sc">$</span>PDate.SLen.Data<span class="sc">$</span>temperature) <span class="sc">|&gt;</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">format =</span> <span class="st">"html"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>, <span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">"striped"</span>, <span class="st">"hover"</span>), <span class="at">position =</span> <span class="st">"left"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scroll_box</span>(<span class="at">width =</span> <span class="st">"100%"</span>, <span class="at">height =</span> <span class="st">"250px"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:250px; overflow-x: scroll; width:100%; ">
+<table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmax_tg_35.days</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmax_tg_35.days_pr</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmax_tg_35.max_rseq</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmax_tg_35.n_seq_d5</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmax_tg_35.n_seq_d10</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmax_tg_35.n_seq_d15</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmax_tg_37.5.days</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmax_tg_37.5.days_pr</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmax_tg_37.5.max_rseq</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmax_tg_37.5.n_seq_d5</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmax_tg_37.5.n_seq_d10</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmax_tg_37.5.n_seq_d15</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmax_tg_40.days</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmax_tg_40.days_pr</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmax_tg_40.max_rseq</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmax_tg_40.n_seq_d5</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmax_tg_40.n_seq_d10</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmax_tg_40.n_seq_d15</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmin_min</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmin_mean</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmin_var</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmin_sd</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmin_range</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmax_max</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmax_mean</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmax_var</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmax_sd</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmax_range</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmean_max</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmean_min</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmean_mean</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmean_var</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmean_sd</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmean_range</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">row_index</th>
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">id</th>
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">window</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">17.12</td>
+<td style="text-align: right;">19.20484</td>
+<td style="text-align: right;">0.5520529</td>
+<td style="text-align: right;">0.7430026</td>
+<td style="text-align: right;">3.53</td>
+<td style="text-align: right;">28.93</td>
+<td style="text-align: right;">25.86895</td>
+<td style="text-align: right;">2.293629</td>
+<td style="text-align: right;">1.514473</td>
+<td style="text-align: right;">6.41</td>
+<td style="text-align: right;">24.13</td>
+<td style="text-align: right;">20.28</td>
+<td style="text-align: right;">22.12011</td>
+<td style="text-align: right;">0.6404053</td>
+<td style="text-align: right;">0.8002533</td>
+<td style="text-align: right;">3.85</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">11.1555 -12.5285 B400</td>
+<td style="text-align: left;">PlantingDate-SeasonLength.Data</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">26</td>
+<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">0.08</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">21.50</td>
+<td style="text-align: right;">23.20086</td>
+<td style="text-align: right;">0.4275060</td>
+<td style="text-align: right;">0.6538394</td>
+<td style="text-align: right;">3.22</td>
+<td style="text-align: right;">38.19</td>
+<td style="text-align: right;">32.73733</td>
+<td style="text-align: right;">8.146920</td>
+<td style="text-align: right;">2.854281</td>
+<td style="text-align: right;">9.99</td>
+<td style="text-align: right;">30.36</td>
+<td style="text-align: right;">25.10</td>
+<td style="text-align: right;">27.61000</td>
+<td style="text-align: right;">1.6095365</td>
+<td style="text-align: right;">1.2686751</td>
+<td style="text-align: right;">5.26</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">13.2790 -5.9340 B600</td>
+<td style="text-align: left;">PlantingDate-SeasonLength.Data</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">0.26</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0.04</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">15.34</td>
+<td style="text-align: right;">22.49282</td>
+<td style="text-align: right;">4.7318049</td>
+<td style="text-align: right;">2.1752712</td>
+<td style="text-align: right;">9.98</td>
+<td style="text-align: right;">39.02</td>
+<td style="text-align: right;">33.29855</td>
+<td style="text-align: right;">7.062630</td>
+<td style="text-align: right;">2.657561</td>
+<td style="text-align: right;">12.06</td>
+<td style="text-align: right;">30.97</td>
+<td style="text-align: right;">24.00</td>
+<td style="text-align: right;">27.51803</td>
+<td style="text-align: right;">2.1326849</td>
+<td style="text-align: right;">1.4603715</td>
+<td style="text-align: right;">6.97</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">13.2790 -5.9340 B600</td>
+<td style="text-align: left;">PlantingDate-SeasonLength.Data</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">24</td>
+<td style="text-align: right;">0.21</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0.04</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">17.06</td>
+<td style="text-align: right;">23.20991</td>
+<td style="text-align: right;">1.4771248</td>
+<td style="text-align: right;">1.2153702</td>
+<td style="text-align: right;">8.26</td>
+<td style="text-align: right;">39.02</td>
+<td style="text-align: right;">33.07772</td>
+<td style="text-align: right;">6.777048</td>
+<td style="text-align: right;">2.603276</td>
+<td style="text-align: right;">12.06</td>
+<td style="text-align: right;">30.97</td>
+<td style="text-align: right;">24.30</td>
+<td style="text-align: right;">27.81044</td>
+<td style="text-align: right;">1.7045494</td>
+<td style="text-align: right;">1.3055839</td>
+<td style="text-align: right;">6.67</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">13.2790 -5.9340 B600</td>
+<td style="text-align: left;">PlantingDate-SeasonLength.Data</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">41</td>
+<td style="text-align: right;">0.27</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">0.04</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">15.34</td>
+<td style="text-align: right;">22.31513</td>
+<td style="text-align: right;">6.6597218</td>
+<td style="text-align: right;">2.5806437</td>
+<td style="text-align: right;">11.17</td>
+<td style="text-align: right;">39.02</td>
+<td style="text-align: right;">33.53647</td>
+<td style="text-align: right;">6.299657</td>
+<td style="text-align: right;">2.509912</td>
+<td style="text-align: right;">12.06</td>
+<td style="text-align: right;">31.94</td>
+<td style="text-align: right;">23.60</td>
+<td style="text-align: right;">27.50913</td>
+<td style="text-align: right;">2.8049959</td>
+<td style="text-align: right;">1.6748122</td>
+<td style="text-align: right;">8.34</td>
+<td style="text-align: right;">242</td>
+<td style="text-align: left;">13.2790 -5.9340 B600</td>
+<td style="text-align: left;">PlantingDate-SeasonLength.Data</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">14.62</td>
+<td style="text-align: right;">21.53866</td>
+<td style="text-align: right;">5.1984658</td>
+<td style="text-align: right;">2.2800144</td>
+<td style="text-align: right;">10.18</td>
+<td style="text-align: right;">34.70</td>
+<td style="text-align: right;">31.26745</td>
+<td style="text-align: right;">2.501307</td>
+<td style="text-align: right;">1.581552</td>
+<td style="text-align: right;">7.00</td>
+<td style="text-align: right;">28.97</td>
+<td style="text-align: right;">23.06</td>
+<td style="text-align: right;">26.20007</td>
+<td style="text-align: right;">1.2735088</td>
+<td style="text-align: right;">1.1284985</td>
+<td style="text-align: right;">5.91</td>
+<td style="text-align: right;">243</td>
+<td style="text-align: left;">13.2790 -5.9340 B600</td>
+<td style="text-align: left;">PlantingDate-SeasonLength.Data</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+</div>
+</div>
+<p>This table summarizes temperature-related climate statistics. Fields fall into two main categories:</p>
+<p><strong>1. Heat Stress Threshold Indicators (<code>tmax_tg_*</code>)</strong></p>
+<p>These fields summarize <strong>extreme high-temperature events</strong>, using thresholds of <strong>35°C</strong>, <strong>37.5°C</strong>, and <strong>40°C</strong>. The same set of metrics is calculated for each threshold:</p>
 <ul>
-<li>Most downloader scripts accept <code>update = TRUE</code> to force re-download.</li>
-</ul>
-</section>
-<section id="dataset-specific-versioning-examples" class="level4" data-number="1.6.0.3">
-<h4 data-number="1.6.0.3" class="anchored" data-anchor-id="dataset-specific-versioning-examples"><span class="header-section-number">1.6.0.3</span> • Dataset-specific versioning examples:</h4>
-<ul>
-<li><p><strong>CHIRPS</strong>:<br>
-Downloaded directly from <a href="https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_daily/tifs/p05/">CHC UCSB FTP</a><br>
-Files stored as <code>.tif.gz</code> and organized by year<br>
-Script: <a href="https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/chirps.R"><code>R/add_geodata/chirps.R</code></a><br>
-Function: <a href="https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/functions/download_chirps.R"><code>download_chirps()</code></a></p></li>
-<li><p><strong>POWER</strong>:<br>
-Accessed via NASA POWER API (<code>daily</code>, <code>ag</code> community)<br>
-Script: <a href="https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/power.R"><code>R/add_geodata/power.R</code></a><br>
-Function: <a href="https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/functions/download_power.R"><code>download_power()</code></a></p></li>
-<li><p><strong>SoilGrids</strong>:<br>
-Africa sites use 250 m resolution<br>
-Global sites use ~1 km resolution based on API response<br>
-Scripts:<br>
-<a href="https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/soilgrids.R"><code>R/add_geodata/soilgrids.R</code></a><br>
-<a href="https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/soilgrids2.R"><code>R/add_geodata/soilgrids2.R</code></a><br>
-Function: <a href="https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/functions/download_soilgrids2.R"><code>download_soilgrids_data()</code></a></p></li>
-<li><p><strong>AEZ (Agro-Ecological Zones)</strong>:</p>
-<ul>
-<li><code>AEZ16_CLAS--SSA.tif</code> from Harvard Dataverse<br>
+<li><strong><code>tmax_tg_[threshold].days</code></strong>: Total number of days where maximum temperature (<code>Tmax</code>) exceeded the threshold. e.g., <code>tmax_tg_35.days</code> = number of days &gt; 35°C.<br>
 </li>
-<li><code>004_afr-aez_09.tif</code> from ISRIC (recoded via CSV mapping)<br>
-Script: <a href="https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/aez.R"><code>R/add_geodata/aez.R</code></a></li>
+<li><strong><code>tmax_tg_[threshold].days_pr</code></strong>: Proportion of days in the season above the threshold.<br>
+</li>
+<li><strong><code>tmax_tg_[threshold].max_rseq</code></strong>: Maximum length of any <strong>consecutive sequence</strong> of days above the threshold.<br>
+</li>
+<li><strong><code>tmax_tg_[threshold].n_seq_dX</code></strong>: Number of <strong>sequences of at least X days</strong> where Tmax stayed above the threshold.
+<ul>
+<li><code>d5</code>: ≥5 consecutive days.</li>
+<li><code>d10</code>: ≥10 consecutive days<br>
+</li>
+<li><code>d15</code>: ≥15 consecutive days</li>
 </ul></li>
 </ul>
-<p>All scripts are version-controlled and maintained in the <a href="https://github.com/CIAT/ERA_dev">CIAT/ERA_dev GitHub repository</a>.</p>
+<p>These indicators help assess the <strong>intensity, persistence, and frequency</strong> of heat stress.</p>
+<p><strong>2. General Temperature Statistics</strong></p>
+<p>These capture broader temperature behavior during the season:</p>
+<ul>
+<li><strong>Tmin-related fields:</strong>
+<ul>
+<li><code>tmin_min</code>: Minimum of daily minimum temperatures</li>
+<li><code>tmin_mean</code>: Mean daily minimum temperature</li>
+<li><code>tmin_var</code>: Variance of daily minimum temperatures</li>
+<li><code>tmin_sd</code>: Standard deviation of daily minimum temperatures</li>
+<li><code>tmin_range</code>: Difference between max and min daily minimum temperatures</li>
+</ul></li>
+<li><strong>Tmax-related fields:</strong>
+<ul>
+<li><code>tmax_max</code>: Maximum of daily maximum temperatures</li>
+<li><code>tmax_mean</code>: Mean daily maximum temperature</li>
+<li><code>tmax_var</code>: Variance of daily maximum temperatures</li>
+<li><code>tmax_sd</code>: Standard deviation of daily maximum temperatures</li>
+<li><code>tmax_range</code>: Difference between max and min daily maximum temperatures</li>
+</ul></li>
+<li><strong>Tmean (daily average temperature) fields:</strong>
+<ul>
+<li><code>tmean_max</code>: Maximum of daily mean temperatures</li>
+<li><code>tmean_min</code>: Minimum of daily mean temperatures</li>
+<li><code>tmean_mean</code>: Mean of daily mean temperatures</li>
+<li><code>tmean_var</code>: Variance of daily mean temperatures</li>
+<li><code>tmean_sd</code>: Standard deviation of daily mean temperatures</li>
+<li><code>tmean_range</code>: Difference between max and min daily mean temperatures</li>
+</ul></li>
+</ul>
+<p>These metrics provide a comprehensive description of <strong>temperature variability and extremes</strong> during the growing season.</p>
 </section>
+<section id="rainfall" class="level4" data-number="1.4.2.3">
+<h4 data-number="1.4.2.3" class="anchored" data-anchor-id="rainfall"><span class="header-section-number">1.4.2.3</span> rainfall</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(clim_data<span class="sc">$</span>PDate.SLen.Data<span class="sc">$</span>temperature) <span class="sc">|&gt;</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">format =</span> <span class="st">"html"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>, <span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">"striped"</span>, <span class="st">"hover"</span>), <span class="at">position =</span> <span class="st">"left"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scroll_box</span>(<span class="at">width =</span> <span class="st">"100%"</span>, <span class="at">height =</span> <span class="st">"250px"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:250px; overflow-x: scroll; width:100%; ">
+<table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmax_tg_35.days</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmax_tg_35.days_pr</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmax_tg_35.max_rseq</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmax_tg_35.n_seq_d5</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmax_tg_35.n_seq_d10</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmax_tg_35.n_seq_d15</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmax_tg_37.5.days</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmax_tg_37.5.days_pr</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmax_tg_37.5.max_rseq</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmax_tg_37.5.n_seq_d5</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmax_tg_37.5.n_seq_d10</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmax_tg_37.5.n_seq_d15</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmax_tg_40.days</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmax_tg_40.days_pr</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmax_tg_40.max_rseq</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmax_tg_40.n_seq_d5</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmax_tg_40.n_seq_d10</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmax_tg_40.n_seq_d15</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmin_min</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmin_mean</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmin_var</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmin_sd</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmin_range</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmax_max</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmax_mean</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmax_var</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmax_sd</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmax_range</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmean_max</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmean_min</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmean_mean</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmean_var</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmean_sd</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">tmean_range</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">row_index</th>
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">id</th>
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">window</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">17.12</td>
+<td style="text-align: right;">19.20484</td>
+<td style="text-align: right;">0.5520529</td>
+<td style="text-align: right;">0.7430026</td>
+<td style="text-align: right;">3.53</td>
+<td style="text-align: right;">28.93</td>
+<td style="text-align: right;">25.86895</td>
+<td style="text-align: right;">2.293629</td>
+<td style="text-align: right;">1.514473</td>
+<td style="text-align: right;">6.41</td>
+<td style="text-align: right;">24.13</td>
+<td style="text-align: right;">20.28</td>
+<td style="text-align: right;">22.12011</td>
+<td style="text-align: right;">0.6404053</td>
+<td style="text-align: right;">0.8002533</td>
+<td style="text-align: right;">3.85</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">11.1555 -12.5285 B400</td>
+<td style="text-align: left;">PlantingDate-SeasonLength.Data</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">26</td>
+<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">0.08</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">21.50</td>
+<td style="text-align: right;">23.20086</td>
+<td style="text-align: right;">0.4275060</td>
+<td style="text-align: right;">0.6538394</td>
+<td style="text-align: right;">3.22</td>
+<td style="text-align: right;">38.19</td>
+<td style="text-align: right;">32.73733</td>
+<td style="text-align: right;">8.146920</td>
+<td style="text-align: right;">2.854281</td>
+<td style="text-align: right;">9.99</td>
+<td style="text-align: right;">30.36</td>
+<td style="text-align: right;">25.10</td>
+<td style="text-align: right;">27.61000</td>
+<td style="text-align: right;">1.6095365</td>
+<td style="text-align: right;">1.2686751</td>
+<td style="text-align: right;">5.26</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">13.2790 -5.9340 B600</td>
+<td style="text-align: left;">PlantingDate-SeasonLength.Data</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">0.26</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0.04</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">15.34</td>
+<td style="text-align: right;">22.49282</td>
+<td style="text-align: right;">4.7318049</td>
+<td style="text-align: right;">2.1752712</td>
+<td style="text-align: right;">9.98</td>
+<td style="text-align: right;">39.02</td>
+<td style="text-align: right;">33.29855</td>
+<td style="text-align: right;">7.062630</td>
+<td style="text-align: right;">2.657561</td>
+<td style="text-align: right;">12.06</td>
+<td style="text-align: right;">30.97</td>
+<td style="text-align: right;">24.00</td>
+<td style="text-align: right;">27.51803</td>
+<td style="text-align: right;">2.1326849</td>
+<td style="text-align: right;">1.4603715</td>
+<td style="text-align: right;">6.97</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">13.2790 -5.9340 B600</td>
+<td style="text-align: left;">PlantingDate-SeasonLength.Data</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">24</td>
+<td style="text-align: right;">0.21</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0.04</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">17.06</td>
+<td style="text-align: right;">23.20991</td>
+<td style="text-align: right;">1.4771248</td>
+<td style="text-align: right;">1.2153702</td>
+<td style="text-align: right;">8.26</td>
+<td style="text-align: right;">39.02</td>
+<td style="text-align: right;">33.07772</td>
+<td style="text-align: right;">6.777048</td>
+<td style="text-align: right;">2.603276</td>
+<td style="text-align: right;">12.06</td>
+<td style="text-align: right;">30.97</td>
+<td style="text-align: right;">24.30</td>
+<td style="text-align: right;">27.81044</td>
+<td style="text-align: right;">1.7045494</td>
+<td style="text-align: right;">1.3055839</td>
+<td style="text-align: right;">6.67</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">13.2790 -5.9340 B600</td>
+<td style="text-align: left;">PlantingDate-SeasonLength.Data</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">41</td>
+<td style="text-align: right;">0.27</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">0.04</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">15.34</td>
+<td style="text-align: right;">22.31513</td>
+<td style="text-align: right;">6.6597218</td>
+<td style="text-align: right;">2.5806437</td>
+<td style="text-align: right;">11.17</td>
+<td style="text-align: right;">39.02</td>
+<td style="text-align: right;">33.53647</td>
+<td style="text-align: right;">6.299657</td>
+<td style="text-align: right;">2.509912</td>
+<td style="text-align: right;">12.06</td>
+<td style="text-align: right;">31.94</td>
+<td style="text-align: right;">23.60</td>
+<td style="text-align: right;">27.50913</td>
+<td style="text-align: right;">2.8049959</td>
+<td style="text-align: right;">1.6748122</td>
+<td style="text-align: right;">8.34</td>
+<td style="text-align: right;">242</td>
+<td style="text-align: left;">13.2790 -5.9340 B600</td>
+<td style="text-align: left;">PlantingDate-SeasonLength.Data</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">14.62</td>
+<td style="text-align: right;">21.53866</td>
+<td style="text-align: right;">5.1984658</td>
+<td style="text-align: right;">2.2800144</td>
+<td style="text-align: right;">10.18</td>
+<td style="text-align: right;">34.70</td>
+<td style="text-align: right;">31.26745</td>
+<td style="text-align: right;">2.501307</td>
+<td style="text-align: right;">1.581552</td>
+<td style="text-align: right;">7.00</td>
+<td style="text-align: right;">28.97</td>
+<td style="text-align: right;">23.06</td>
+<td style="text-align: right;">26.20007</td>
+<td style="text-align: right;">1.2735088</td>
+<td style="text-align: right;">1.1284985</td>
+<td style="text-align: right;">5.91</td>
+<td style="text-align: right;">243</td>
+<td style="text-align: left;">13.2790 -5.9340 B600</td>
+<td style="text-align: left;">PlantingDate-SeasonLength.Data</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+</div>
+</div>
+<p>This table summarizes rainfall-related climate statistics.</p>
+<p><strong>1. Total and Derived Rainfall Metrics</strong> - <strong><code>rain_sum</code></strong>: Total rainfall (mm) accumulated over the observation window.<br>
+- <strong><code>eto_sum</code></strong>: Total reference evapotranspiration (mm) over the window, calculated from NASA POWER data.<br>
+- <strong><code>eto_na</code></strong>: Number of days with missing <code>ETO</code> values due to data unavailability.<br>
+- <strong><code>w_balance</code></strong>: Approximate seasonal water balance: <code>rain_sum</code> – <code>eto_sum</code>.<br>
+- <strong><code>w_balance_negdays</code></strong>: Number of days when daily rainfall &lt; daily evapotranspiration (i.e., water deficit days).</p>
+<p><strong>2. Dry Spell Indicators (<code>rain_l_*</code>)</strong></p>
+<p>These indicators summarize <strong>dry spells</strong> using thresholds of <strong>0.1 mm</strong>, <strong>1 mm</strong>, and <strong>5 mm</strong> of daily rainfall.</p>
+<p>For each threshold:<br>
+- <strong><code>rain_l_[threshold].days</code></strong>: Total number of days below the rainfall threshold. e.g., <code>rain_l_1.days</code> = number of days with rainfall &lt; 1 mm.<br>
+- <strong><code>rain_l_[threshold].days_pr</code></strong> Proportion of total days below the threshold.<br>
+- <strong><code>rain_l_[threshold].max_seq</code></strong>: Length of the <strong>longest consecutive sequence</strong> of dry days.<br>
+- <strong><code>rain_l_[threshold].n_seq_dX</code></strong>:Number of dry spells lasting at least X days:<br>
+- <code>d5</code> = ≥5 consecutive days<br>
+- <code>d10</code> = ≥10 consecutive days<br>
+- <code>d15</code> = ≥15 consecutive days</p>
+<p>Thresholds used: - <code>rain_l_0.1</code>: Very light rainfall (effectively dry)<br>
+- <code>rain_l_1</code>: Light rainfall<br>
+- <code>rain_l_5</code>: Moderate rainfall threshold</p>
+<p>These variables help identify <strong>drought risk</strong>, <strong>intra-seasonal dry periods</strong>, and <strong>rainfall distribution</strong> relevant to crop growth.</p>
+</section>
+<section id="eratio" class="level4" data-number="1.4.2.4">
+<h4 data-number="1.4.2.4" class="anchored" data-anchor-id="eratio"><span class="header-section-number">1.4.2.4</span> eratio</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(clim_data<span class="sc">$</span>PDate.SLen.Data<span class="sc">$</span>eratio) <span class="sc">|&gt;</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">format =</span> <span class="st">"html"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>, <span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">"striped"</span>, <span class="st">"hover"</span>), <span class="at">position =</span> <span class="st">"left"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scroll_box</span>(<span class="at">width =</span> <span class="st">"100%"</span>, <span class="at">height =</span> <span class="st">"250px"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:250px; overflow-x: scroll; width:100%; ">
+<table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">eratio_mean</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">eratio_median</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">eratio_min</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">eratio_l_0.5.days</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">eratio_l_0.5.days_pr</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">eratio_l_0.5.max_seq</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">eratio_l_0.5.n_seq_d5</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">eratio_l_0.5.n_seq_d10</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">eratio_l_0.5.n_seq_d15</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">eratio_l_0.25.days</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">eratio_l_0.25.days_pr</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">eratio_l_0.25.max_seq</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">eratio_l_0.25.n_seq_d5</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">eratio_l_0.25.n_seq_d10</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">eratio_l_0.25.n_seq_d15</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">eratio_l_0.1.days</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">eratio_l_0.1.days_pr</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">eratio_l_0.1.max_seq</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">eratio_l_0.1.n_seq_d5</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">eratio_l_0.1.n_seq_d10</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">eratio_l_0.1.n_seq_d15</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">row_index</th>
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">id</th>
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">window</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1.0000000</td>
+<td style="text-align: right;">1.000</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">11.1555 -12.5285 B400</td>
+<td style="text-align: left;">PlantingDate-SeasonLength.Data</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0.5509524</td>
+<td style="text-align: right;">0.510</td>
+<td style="text-align: right;">0.04</td>
+<td style="text-align: right;">51</td>
+<td style="text-align: right;">0.49</td>
+<td style="text-align: right;">38</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">0.29</td>
+<td style="text-align: right;">23</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.10</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">13.2790 -5.9340 B600</td>
+<td style="text-align: left;">PlantingDate-SeasonLength.Data</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0.5288034</td>
+<td style="text-align: right;">0.630</td>
+<td style="text-align: right;">0.02</td>
+<td style="text-align: right;">48</td>
+<td style="text-align: right;">0.41</td>
+<td style="text-align: right;">48</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">43</td>
+<td style="text-align: right;">0.37</td>
+<td style="text-align: right;">42</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">32</td>
+<td style="text-align: right;">0.27</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">13.2790 -5.9340 B600</td>
+<td style="text-align: left;">PlantingDate-SeasonLength.Data</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0.5821053</td>
+<td style="text-align: right;">0.675</td>
+<td style="text-align: right;">0.02</td>
+<td style="text-align: right;">40</td>
+<td style="text-align: right;">0.35</td>
+<td style="text-align: right;">35</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">31</td>
+<td style="text-align: right;">0.27</td>
+<td style="text-align: right;">29</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">19</td>
+<td style="text-align: right;">0.17</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">13.2790 -5.9340 B600</td>
+<td style="text-align: left;">PlantingDate-SeasonLength.Data</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0.4673333</td>
+<td style="text-align: right;">0.495</td>
+<td style="text-align: right;">0.02</td>
+<td style="text-align: right;">75</td>
+<td style="text-align: right;">0.50</td>
+<td style="text-align: right;">62</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">59</td>
+<td style="text-align: right;">0.39</td>
+<td style="text-align: right;">56</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">46</td>
+<td style="text-align: right;">0.31</td>
+<td style="text-align: right;">29</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">242</td>
+<td style="text-align: left;">13.2790 -5.9340 B600</td>
+<td style="text-align: left;">PlantingDate-SeasonLength.Data</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0.6235570</td>
+<td style="text-align: right;">0.750</td>
+<td style="text-align: right;">0.02</td>
+<td style="text-align: right;">54</td>
+<td style="text-align: right;">0.36</td>
+<td style="text-align: right;">52</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">40</td>
+<td style="text-align: right;">0.27</td>
+<td style="text-align: right;">40</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">29</td>
+<td style="text-align: right;">0.19</td>
+<td style="text-align: right;">28</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">243</td>
+<td style="text-align: left;">13.2790 -5.9340 B600</td>
+<td style="text-align: left;">PlantingDate-SeasonLength.Data</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+</div>
+</div>
+<p>These variables describe <strong>evaporative ratio (Eratio)</strong> statistics, which serve as a proxy for water stress during the crop season.<br>
+<strong>Eratio</strong> is computed as the ratio of <strong>actual evapotranspiration (Ea)</strong> to <strong>potential evapotranspiration (Ep)</strong>, based on a daily water balance simulation that accounts for rainfall, PET, and soil water-holding capacity:</p>
+<p><code>Eratio = Ea / Ep</code></p>
+<ul>
+<li><strong>Ep</strong> (potential evapotranspiration) is calculated using the <strong>Priestley–Taylor method</strong>.</li>
+<li><strong>Ea</strong> is estimated by simulating <strong>daily water availability</strong> in the soil, using a simple empirical model based on soil capacity and depletion (see <code>calc_daily_watbal()</code> in <code>watbal_all_in_one.R</code>).</li>
+<li>Soil properties (e.g., field capacity, saturation, depth) are estimated using a pedotransfer function (<code>AWCPTF()</code>), and aggregated with <code>soilcap_calc()</code>.</li>
+</ul>
+<p>This approach integrates soil, rainfall, and climate to better reflect actual water supply to crops, beyond rainfall alone.</p>
+<p>Low values indicate water deficits, while higher values suggest sufficient water supply relative to atmospheric demand.</p>
+<p><strong>1. Summary Eratio Statistics</strong></p>
+<ul>
+<li><strong><code>eratio_mean</code></strong>: Mean daily Eratio over the observation window.<br>
+</li>
+<li><strong><code>eratio_median</code></strong>: Median daily Eratio.<br>
+</li>
+<li><strong><code>eratio_min</code></strong>: Minimum daily Eratio (most severe water deficit day).</li>
+</ul>
+<p><strong>2. Water Stress Indicators (<code>eratio_l_*</code>)</strong></p>
+<p>These fields capture <strong>frequency, duration, and intensity of low Eratio events</strong>, using thresholds of <strong>&lt;0.5</strong>, <strong>&lt;0.25</strong>, and <strong>&lt;0.1</strong>.</p>
+<p>For each threshold: - <strong><code>eratio_l_[threshold].days</code></strong>: Number of days where Eratio fell below the threshold. e.g., <code>eratio_l_0.5.days</code> = number of days with Eratio &lt; 0.5.<br>
+- <strong><code>eratio_l_[threshold].days_pr</code></strong>: Proportion of total days with Eratio below the threshold.<br>
+- <strong><code>eratio_l_[threshold].max_seq</code></strong>: Maximum <strong>consecutive sequence</strong> of days below the threshold.<br>
+- <strong><code>eratio_l_[threshold].n_seq_dX</code></strong>: Number of <strong>spells of at least X consecutive days</strong> below the threshold:<br>
+- <code>d5</code> = ≥5 consecutive days<br>
+- <code>d10</code> = ≥10 consecutive days<br>
+- <code>d15</code> = ≥15 consecutive days</p>
+<p>Thresholds represent escalating levels of water stress: - <code>0.5</code>: Mild deficit<br>
+- <code>0.25</code>: Moderate deficit<br>
+- <code>0.1</code>: Severe deficit</p>
+<p>These metrics can be used to <strong>identify seasonal water stress risk</strong>, <strong>evaluate drought periods</strong>, and <strong>inform adaptive irrigation or planting strategies</strong>.</p>
+</section>
+<section id="logging" class="level4" data-number="1.4.2.5">
+<h4 data-number="1.4.2.5" class="anchored" data-anchor-id="logging"><span class="header-section-number">1.4.2.5</span> logging</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(clim_data<span class="sc">$</span>PDate.SLen.Data<span class="sc">$</span>logging) <span class="sc">|&gt;</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>(<span class="at">format =</span> <span class="st">"html"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>, <span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">"striped"</span>, <span class="st">"hover"</span>), <span class="at">position =</span> <span class="st">"left"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scroll_box</span>(<span class="at">width =</span> <span class="st">"100%"</span>, <span class="at">height =</span> <span class="st">"250px"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:250px; overflow-x: scroll; width:100%; ">
+<table class="table table-striped table-hover caption-top table-sm small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">logging_sum</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">logging_mean</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">logging_median</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">logging_present_mean</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">logging_g_0.days</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">logging_g_0.days_pr</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">logging_g_0.max_seq</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">logging_g_0.n_seq_d5</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">logging_g_0.n_seq_d10</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">logging_g_0.n_seq_d15</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">logging_g_ssat_0.5.days</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">logging_g_ssat_0.5.days_pr</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">logging_g_ssat_0.5.max_seq</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">logging_g_ssat_0.5.n_seq_d5</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">logging_g_ssat_0.5.n_seq_d10</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">logging_g_ssat_0.5.n_seq_d15</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">logging_g_ssat_0.9.days</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">logging_g_ssat_0.9.days_pr</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">logging_g_ssat_0.9.max_seq</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">logging_g_ssat_0.9.n_seq_d5</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">logging_g_ssat_0.9.n_seq_d10</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">logging_g_ssat_0.9.n_seq_d15</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">row_index</th>
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">id</th>
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">window</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">28.08139</td>
+<td style="text-align: right;">0.2955936</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.9683237</td>
+<td style="text-align: right;">29</td>
+<td style="text-align: right;">0.31</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">28</td>
+<td style="text-align: right;">0.29</td>
+<td style="text-align: right;">37</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">28</td>
+<td style="text-align: right;">0.29</td>
+<td style="text-align: right;">37</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">11.1555 -12.5285 B400</td>
+<td style="text-align: left;">PlantingDate-SeasonLength.Data</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0.00000</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">105</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">105</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">13.2790 -5.9340 B600</td>
+<td style="text-align: left;">PlantingDate-SeasonLength.Data</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0.00000</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">117</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">117</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">13.2790 -5.9340 B600</td>
+<td style="text-align: left;">PlantingDate-SeasonLength.Data</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0.00000</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">114</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">114</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">13.2790 -5.9340 B600</td>
+<td style="text-align: left;">PlantingDate-SeasonLength.Data</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0.00000</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">150</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">150</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">242</td>
+<td style="text-align: left;">13.2790 -5.9340 B600</td>
+<td style="text-align: left;">PlantingDate-SeasonLength.Data</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">14.09770</td>
+<td style="text-align: right;">0.0946154</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.7419842</td>
+<td style="text-align: right;">19</td>
+<td style="text-align: right;">0.13</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">19</td>
+<td style="text-align: right;">0.13</td>
+<td style="text-align: right;">83</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">18</td>
+<td style="text-align: right;">0.12</td>
+<td style="text-align: right;">83</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">243</td>
+<td style="text-align: left;">13.2790 -5.9340 B600</td>
+<td style="text-align: left;">PlantingDate-SeasonLength.Data</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+</div>
+</div>
+<p>These variables summarize <strong>soil waterlogging</strong> conditions during the crop season.<br>
+Waterlogging is defined here as the <strong>amount of water held in the soil above field capacity</strong> but <strong>below saturation</strong>, simulated via a daily water balance using <a href="https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/functions/water_balance.R"><code>calc_daily_watbal()</code></a> from <a href="https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/functions/water_balance.R"><code>watbal_all_in_one.R</code></a>.</p>
+<p>Logging occurs when incoming rainfall exceeds the soil’s capacity to retain water at field capacity, but has <strong>not yet exceeded total saturation</strong>.</p>
+<p><strong>1. Summary Waterlogging Statistics</strong></p>
+<ul>
+<li><strong><code>logging_sum</code></strong>: Total cumulative logging value across the observation window.<br>
+</li>
+<li><strong><code>logging_mean</code></strong>: Mean daily logging value.<br>
+</li>
+<li><strong><code>logging_median</code></strong>: Median daily logging value.<br>
+</li>
+<li><strong><code>logging_present_mean</code></strong>: Mean logging value on days when waterlogging was present (i.e., &gt; 0).</li>
+</ul>
+<p><strong>2. General Waterlogging Presence (<code>logging_g_0.*</code>)</strong></p>
+<p>These fields indicate periods when <strong>water balance &gt; 0</strong>, a proxy for general waterlogging.</p>
+<ul>
+<li><strong><code>logging_g_0.days</code></strong>: Number of days where waterlogging &gt; 0.<br>
+</li>
+<li><strong><code>logging_g_0.days_pr</code></strong>: Proportion of days with waterlogging &gt; 0.<br>
+</li>
+<li><strong><code>logging_g_0.max_seq</code></strong>: Longest <strong>consecutive sequence</strong> of waterlogged days.<br>
+</li>
+<li><strong><code>logging_g_0.n_seq_dX</code></strong>: Number of <strong>spells</strong> of X consecutive days with waterlogging:
+<ul>
+<li><code>d5</code>: ≥5 consecutive days</li>
+<li><code>d10</code>: ≥10 consecutive days</li>
+<li><code>d15</code>: ≥15 consecutive days</li>
+</ul></li>
+</ul>
+<p><strong>3. Saturation Threshold Indicators (<code>logging_g_ssat_*</code>)</strong></p>
+<p>These fields apply stricter thresholds based on <strong>soil saturation</strong>: - <code>ssat_0.5</code>: Moderate saturation (50% of saturation) - <code>ssat_0.9</code>: High saturation (90% of saturation)</p>
+<p>For each threshold:</p>
+<ul>
+<li><strong><code>logging_g_ssat_[threshold].days</code></strong>: Number of days exceeding the saturation threshold.<br>
+</li>
+<li><strong><code>logging_g_ssat_[threshold].days_pr</code></strong>: Proportion of season with saturation exceeded.<br>
+</li>
+<li><strong><code>logging_g_ssat_[threshold].max_seq</code></strong>: Maximum consecutive days above threshold.</li>
+<li><strong><code>logging_g_ssat_[threshold].n_seq_dX</code></strong>: Number of <strong>long saturation spells</strong>:
+<ul>
+<li><code>d5</code>: ≥5 consecutive days<br>
+</li>
+<li><code>d10</code>: ≥10 consecutive days<br>
+</li>
+<li><code>d15</code>: ≥15 consecutive days</li>
+</ul></li>
+</ul>
+<p>These indicators help assess <strong>excess moisture risks</strong>, which can influence <strong>root health</strong>, <strong>germination success</strong>, and <strong>yields</strong>.</p>
+</section>
+</section>
+</section>
+<section id="connecting-climate-stats-back-to-the-era-database" class="level2" data-number="1.5">
+<h2 data-number="1.5" class="anchored" data-anchor-id="connecting-climate-stats-back-to-the-era-database"><span class="header-section-number">1.5</span> Connecting climate stats back to the ERA database</h2>
 </section>
 </section>
 

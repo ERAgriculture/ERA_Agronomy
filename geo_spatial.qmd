@@ -11,13 +11,13 @@ format:
 editor: visual
 ---
 
-```{r load required packages,echo=F}
+```{r load required packages,echo=F,warning=F,message=F}
 if (!require("pacman", character.only = TRUE)) {
   install.packages("pacman")
   library(pacman)
 }
 
-pacman::p_load(data.table,s3fs)
+pacman::p_load(data.table,s3fs,kable,kableExtra,knitr)
 ```
 
 #  ERA Geospatial Data and Climate Enrichment
@@ -167,13 +167,21 @@ clim_data <- miceadds::load.Rdata2(file = basename(files_local), path = dirname(
 names(clim_data)
 ```
 
+**`site_data`**: contains the spatial and temporal location data for which climate statistic are generated.
+
+**PDate.SLen.Data/PDate.SLen.EcoCrop/PDate.SLen.P30`**: these objects are lists of output climate data calculated for for different parameterizations
+of season length.
+
 ### Unique locations and times (`clim_data$site_data`)
 `site_data` contains the unique combinations of site, time, crop, planting date, and harvest date from the ERA agronomy dataset.
 
 #### Site, year, season, & study
 
 ```{r}
-head(unique(clim_data$site_data[,.(Site.Key,Code,M.Year,Latitude,Longitude,M.Year,M.Year.Code,M.Season)]))
+head(unique(clim_data$site_data[,.(Site.Key,Code,M.Year,Latitude,Longitude,M.Year,M.Year.Code,M.Season)]))|>
+  kable(format = "html") |>
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
+  scroll_box(width = "100%", height = "250px")
 ```
 
 **Field Descriptions:**
@@ -188,7 +196,10 @@ head(unique(clim_data$site_data[,.(Site.Key,Code,M.Year,Latitude,Longitude,M.Yea
 #### Crops 
 
 ```{r}
-head(unique(clim_data$site_data[,.(Product,EU,Topt.low,Topt.high,Tlow,Thigh)]))
+head(unique(clim_data$site_data[,.(Product,EU,Topt.low,Topt.high,Tlow,Thigh)]))|>
+  kable(format = "html") |>
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
+  scroll_box(width = "100%", height = "250px")
 ```
 
 **Field Descriptions:**
@@ -205,7 +216,10 @@ These thresholds define a crop's temperature response curve and come from EcoCro
 `site_data` contains information about planting dates and their estimation:
 
 ```{r}
-head(clim_data$site_data[,.(Plant.Start,Plant.End,Plant.Diff.Raw,Data.PS.Date,Data.PE.Date,SOS,P.Date.Merge,P.Date.Merge.Source,PlantingDate)])
+head(clim_data$site_data[,.(Plant.Start,Plant.End,Plant.Diff.Raw,Data.PS.Date,Data.PE.Date,SOS,P.Date.Merge,P.Date.Merge.Source,PlantingDate)])|>
+  kable(format = "html") |>
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
+  scroll_box(width = "100%", height = "250px")
 ```
 
 **Field Descriptions:**
@@ -223,7 +237,10 @@ head(clim_data$site_data[,.(Plant.Start,Plant.End,Plant.Diff.Raw,Data.PS.Date,Da
 **Explanation of `P.Date.Merge.Source` values:**
 
 ```{r}
-clim_data$site_data[,unique(P.Date.Merge.Source)]
+clim_data$site_data[,unique(P.Date.Merge.Source)]|>
+  kable(format = "html") |>
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
+  scroll_box(width = "100%", height = "250px")
 ```
 
 Values below are presented in order of preference when estimating planting date in the `P.Date.Merge` field
@@ -242,7 +259,10 @@ This hierarchy reflects a logical preference: **Directly observed data > Nearby 
 `site_data` contains information about reported harvest dates and season length, the latter may use the reported data or be estimated.
 
 ```{r}
-head(clim_data$site_data[,.(Harvest.Start,Harvest.End,SLen,Data.SLen,SLen.EcoCrop,SLen.Source,SeasonLength.Data,SeasonLength.EcoCrop)])
+head(clim_data$site_data[,.(Harvest.Start,Harvest.End,SLen,Data.SLen,SLen.EcoCrop,SLen.Source,SeasonLength.Data,SeasonLength.EcoCrop)])|>
+  kable(format = "html") |>
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
+  scroll_box(width = "100%", height = "250px")
 ```
 **Field Descriptions:**
 
@@ -276,70 +296,242 @@ The format of `SLen.Source` is `<Planting Source> + <Season Length Source>` and 
 These combinations trace the logical fallback and merging sequence for generating season length when direct data are missing or uncertain.
 
 
-
-
-
-## Output and Linkage to ERA Observations
-
 These can be merged with ERA observation data using the Site.ID and Time fields.
 
+### Climate data (`PDate.SLen.Data/PDate.SLen.EcoCrop/PDate.SLen.P30`)
 
+**`PDate.SLen.Data`** : `site_data$P.Date.Merge` and `site_data$SeasonLength.Data` are used to determine the start and end dates within which climate statistics are calculated. If season length is not reported or cannot be inferred from ERA data for a row in `site_data` then no climate stats will be generated for that record.
 
-You can link this to ERA using:
+**`PDate.SLen.EcoCrop`**  `site_data$P.Date.Merge` and `site_data$SLen.EcoCrop` are used to determine the start and end dates within which climate statistics are calculated. Season length is inferred from the midpoint of ecocrop cycle length for a crop, refined where possible using reported values within the ERA dataset. This dataset therefore inputes missing season length and contains more records than `PDate.SLen.Data`,however season length is likely to be less accurate.
 
-```{r merge with era}
-# Example: Merge climate stats to agronomic observations
-#obs <- fread("path/to/era_observations.csv")
-#clim <- readRDS("path/to/clim_stats_2025-03-18.RData")
+**`PDate.SLen.P30`**  `site_data$P.Date.Merge` is used to determine the start date of the climate window, and the end date is fixed to 30 days after planting. This represent the post-planting climate, which can be a particularly sensitive period for many crops.
 
-#obs_clim <- merge(obs, clim, by = "Site.ID", all.x = TRxUE)
+```{r}
+names(clim_data$PDate.SLen.Data)|>
+  kable(format = "html") |>
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
+  scroll_box(width = "100%", height = "250px")
 ```
 
+Each of the following names corresponds to a list of **climate statistics** calculated over the seasonal window defined by `P.Date.Merge` and `SeasonLength.Data`:
 
+- **`gdd`**:  Growing Degree Days — cumulative heat units over the season binned into thermal stress classes, useful for crop development and heat stress exposure tracking.
 
+- **`temperature`**:  Mean, minimum, and maximum temperatures over the season. Consecutive and total days above/below temperature thresholds.
 
-## Dataset Versioning
+- **`rainfall`**:  Total and average precipitation during the season. Consecutive and total days above/below precipitation thresholds.
 
-ERA does not use hardcoded version numbers in the metadata. Instead:
+- **`eratio`**: Ratio of rainfall to reference evapotranspiration — a proxy for water availability or drought stress.
 
-#### • Dataset integrity is maintained via:
+- **`logging`**: Days with waterlogging risk — based on rainfall thresholds that may indicate excess moisture conditions.
 
-- **Source URLs** and mirrors embedded in scripts  
-- **Filename conventions**  
-  e.g., `chirps.2023.01.01.tif.gz` for CHIRPS data  
-- **Timestamps in output object names**  
-  e.g., `clim_stats_2025-03-18.RData`
+Each object is a `data.table` with one row per Site.ID and columns containing summary statistics for that climate indicator.
 
-#### • Update logic is script-based:
+All tables share these fields:  
+- **`row_index`** : Internal index to link this row back to the corresponding entry in the `site_data` table.  
+- **`id`**: The site identifier, typically matching `Site.Key` from the ERA dataset.  
+- **`window`**: Description of window used, useful if merging tables that use different climate window calculation methods.
 
-- Most downloader scripts accept `update = TRUE` to force re-download.
+#### gdd
 
-#### • Dataset-specific versioning examples:
+```{r}
+head(clim_data$PDate.SLen.Data$gdd)|>
+  kable(format = "html") |>
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
+  scroll_box(width = "100%", height = "250px")
+```
+This table contains Growing Degree Day (GDD) statistics calculated over the defined season window for each site. Here's what each field represents:  
+- **`gdd_subopt`**: Cumulative GDD within the **sub-optimal temperature range** for crop growth (above base temperature but below optimal).  
+- **`gdd_opt`**: Cumulative GDD within the **optimal temperature range** — where the crop is expected to grow most efficiently.  
+- **`gdd_aboveopt`**: Cumulative GDD in the **above-optimal range**, where temperatures may begin to reduce growth efficiency.  
+- **`gdd_abovemax`**: Cumulative GDD **above the maximum threshold**, indicating **heat stress** or potentially damaging conditions.  
 
-- **CHIRPS**:  
-  Downloaded directly from [CHC UCSB FTP](https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_daily/tifs/p05/)  
-  Files stored as `.tif.gz` and organized by year  
-  Script: [`R/add_geodata/chirps.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/chirps.R)  
-  Function: [`download_chirps()`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/functions/download_chirps.R)
+#### temperature
+```{r}
+head(clim_data$PDate.SLen.Data$temperature) |>
+  kable(format = "html") |>
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
+  scroll_box(width = "100%", height = "250px")
+```
 
-- **POWER**:  
-  Accessed via NASA POWER API (`daily`, `ag` community)  
-  Script: [`R/add_geodata/power.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/power.R)  
-  Function: [`download_power()`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/functions/download_power.R)
+This table summarizes temperature-related climate statistics. Fields fall into two main categories:
 
-- **SoilGrids**:  
-  Africa sites use 250 m resolution  
-  Global sites use ~1 km resolution based on API response  
-  Scripts:  
-  [`R/add_geodata/soilgrids.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/soilgrids.R)  
-  [`R/add_geodata/soilgrids2.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/soilgrids2.R)  
-  Function: [`download_soilgrids_data()`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/functions/download_soilgrids2.R)
+**1. Heat Stress Threshold Indicators (`tmax_tg_*`)**
 
-- **AEZ (Agro-Ecological Zones)**:  
-  - `AEZ16_CLAS--SSA.tif` from Harvard Dataverse  
-  - `004_afr-aez_09.tif` from ISRIC (recoded via CSV mapping)  
-  Script: [`R/add_geodata/aez.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/aez.R)
+These fields summarize **extreme high-temperature events**, using thresholds of **35°C**, **37.5°C**, and **40°C**. The same set of metrics is calculated for each threshold:
 
-All scripts are version-controlled and maintained in the [CIAT/ERA_dev GitHub repository](https://github.com/CIAT/ERA_dev).
+- **`tmax_tg_[threshold].days`**: Total number of days where maximum temperature (`Tmax`) exceeded the threshold. e.g., `tmax_tg_35.days` = number of days > 35°C.  
+- **`tmax_tg_[threshold].days_pr`**: Proportion of days in the season above the threshold.  
+- **`tmax_tg_[threshold].max_rseq`**: Maximum length of any **consecutive sequence** of days above the threshold.  
+- **`tmax_tg_[threshold].n_seq_dX`**: Number of **sequences of at least X days** where Tmax stayed above the threshold.  
+  - `d5`: ≥5 consecutive days. 
+  - `d10`: ≥10 consecutive days  
+  - `d15`: ≥15 consecutive days  
+
+These indicators help assess the **intensity, persistence, and frequency** of heat stress.
+
+**2. General Temperature Statistics**
+
+These capture broader temperature behavior during the season:
+
+- **Tmin-related fields:**
+  - `tmin_min`: Minimum of daily minimum temperatures
+  - `tmin_mean`: Mean daily minimum temperature
+  - `tmin_var`: Variance of daily minimum temperatures
+  - `tmin_sd`: Standard deviation of daily minimum temperatures
+  - `tmin_range`: Difference between max and min daily minimum temperatures
+
+- **Tmax-related fields:**
+  - `tmax_max`: Maximum of daily maximum temperatures
+  - `tmax_mean`: Mean daily maximum temperature
+  - `tmax_var`: Variance of daily maximum temperatures
+  - `tmax_sd`: Standard deviation of daily maximum temperatures
+  - `tmax_range`: Difference between max and min daily maximum temperatures
+
+- **Tmean (daily average temperature) fields:**
+  - `tmean_max`: Maximum of daily mean temperatures
+  - `tmean_min`: Minimum of daily mean temperatures
+  - `tmean_mean`: Mean of daily mean temperatures
+  - `tmean_var`: Variance of daily mean temperatures
+  - `tmean_sd`: Standard deviation of daily mean temperatures
+  - `tmean_range`: Difference between max and min daily mean temperatures
+
+These metrics provide a comprehensive description of **temperature variability and extremes** during the growing season.
+
+#### rainfall
+```{r}
+head(clim_data$PDate.SLen.Data$temperature) |>
+  kable(format = "html") |>
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
+  scroll_box(width = "100%", height = "250px")
+```
+
+This table summarizes rainfall-related climate statistics.
+
+**1. Total and Derived Rainfall Metrics**
+- **`rain_sum`**: Total rainfall (mm) accumulated over the observation window.  
+- **`eto_sum`**: Total reference evapotranspiration (mm) over the window, calculated from NASA POWER data.  
+- **`eto_na`**: Number of days with missing `ETO` values due to data unavailability.  
+- **`w_balance`**: Approximate seasonal water balance: `rain_sum` – `eto_sum`.  
+- **`w_balance_negdays`**: Number of days when daily rainfall < daily evapotranspiration (i.e., water deficit days).
+
+**2. Dry Spell Indicators (`rain_l_*`)**
+
+These indicators summarize **dry spells** using thresholds of **0.1 mm**, **1 mm**, and **5 mm** of daily rainfall.
+
+For each threshold:  
+- **`rain_l_[threshold].days`**: Total number of days below the rainfall threshold. e.g., `rain_l_1.days` = number of days with rainfall < 1 mm.  
+- **`rain_l_[threshold].days_pr`** Proportion of total days below the threshold.  
+- **`rain_l_[threshold].max_seq`**: Length of the **longest consecutive sequence** of dry days.  
+- **`rain_l_[threshold].n_seq_dX`**:Number of dry spells lasting at least X days:  
+  - `d5` = ≥5 consecutive days  
+  - `d10` = ≥10 consecutive days  
+  - `d15` = ≥15 consecutive days
+
+Thresholds used:
+- `rain_l_0.1`: Very light rainfall (effectively dry)  
+- `rain_l_1`: Light rainfall  
+- `rain_l_5`: Moderate rainfall threshold
+
+These variables help identify **drought risk**, **intra-seasonal dry periods**, and **rainfall distribution** relevant to crop growth.
+
+#### eratio
+```{r}
+head(clim_data$PDate.SLen.Data$eratio) |>
+  kable(format = "html") |>
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
+  scroll_box(width = "100%", height = "250px")
+```
+
+These variables describe **evaporative ratio (Eratio)** statistics, which serve as a proxy for water stress during the crop season.  
+**Eratio** is computed as the ratio of **actual evapotranspiration (Ea)** to **potential evapotranspiration (Ep)**, based on a daily water balance simulation that accounts for rainfall, PET, and soil water-holding capacity:  
+
+`Eratio = Ea / Ep`
+
+- **Ep** (potential evapotranspiration) is calculated using the **Priestley–Taylor method**.
+- **Ea** is estimated by simulating **daily water availability** in the soil, using a simple empirical model based on soil capacity and depletion (see `calc_daily_watbal()` in `watbal_all_in_one.R`).
+- Soil properties (e.g., field capacity, saturation, depth) are estimated using a pedotransfer function (`AWCPTF()`), and aggregated with `soilcap_calc()`.
+
+This approach integrates soil, rainfall, and climate to better reflect actual water supply to crops, beyond rainfall alone.
+
+Low values indicate water deficits, while higher values suggest sufficient water supply relative to atmospheric demand.
+
+**1. Summary Eratio Statistics**
+
+- **`eratio_mean`**: Mean daily Eratio over the observation window.  
+- **`eratio_median`**: Median daily Eratio.  
+- **`eratio_min`**: Minimum daily Eratio (most severe water deficit day).  
+
+**2. Water Stress Indicators (`eratio_l_*`)**
+
+These fields capture **frequency, duration, and intensity of low Eratio events**, using thresholds of **<0.5**, **<0.25**, and **<0.1**.
+
+For each threshold:
+- **`eratio_l_[threshold].days`**: Number of days where Eratio fell below the threshold. e.g., `eratio_l_0.5.days` = number of days with Eratio < 0.5.  
+- **`eratio_l_[threshold].days_pr`**: Proportion of total days with Eratio below the threshold.  
+- **`eratio_l_[threshold].max_seq`**: Maximum **consecutive sequence** of days below the threshold.  
+- **`eratio_l_[threshold].n_seq_dX`**: Number of **spells of at least X consecutive days** below the threshold:  
+  - `d5` = ≥5 consecutive days  
+  - `d10` = ≥10 consecutive days  
+  - `d15` = ≥15 consecutive days
+
+Thresholds represent escalating levels of water stress:
+- `0.5`: Mild deficit  
+- `0.25`: Moderate deficit  
+- `0.1`: Severe deficit
+
+These metrics can be used to **identify seasonal water stress risk**, **evaluate drought periods**, and **inform adaptive irrigation or planting strategies**.
+
+#### logging
+```{r}
+head(clim_data$PDate.SLen.Data$logging) |>
+  kable(format = "html") |>
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
+  scroll_box(width = "100%", height = "250px")
+```
+
+These variables summarize **soil waterlogging** conditions during the crop season.  
+Waterlogging is defined here as the **amount of water held in the soil above field capacity** but **below saturation**, simulated via a daily water balance using [`calc_daily_watbal()`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/functions/water_balance.R) from [`watbal_all_in_one.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/functions/water_balance.R).
+
+Logging occurs when incoming rainfall exceeds the soil’s capacity to retain water at field capacity, but has **not yet exceeded total saturation**.
+
+**1. Summary Waterlogging Statistics**
+
+- **`logging_sum`**: Total cumulative logging value across the observation window.  
+- **`logging_mean`**: Mean daily logging value.  
+- **`logging_median`**: Median daily logging value.  
+- **`logging_present_mean`**: Mean logging value on days when waterlogging was present (i.e., > 0).
+
+**2. General Waterlogging Presence (`logging_g_0.*`)**
+
+These fields indicate periods when **water balance > 0**, a proxy for general waterlogging.
+
+- **`logging_g_0.days`**: Number of days where waterlogging > 0.  
+- **`logging_g_0.days_pr`**: Proportion of days with waterlogging > 0.  
+- **`logging_g_0.max_seq`**: Longest **consecutive sequence** of waterlogged days.  
+- **`logging_g_0.n_seq_dX`**: Number of **spells** of X consecutive days with waterlogging:  
+  - `d5`: ≥5 consecutive days
+  - `d10`: ≥10 consecutive days
+  - `d15`: ≥15 consecutive days
+
+**3. Saturation Threshold Indicators (`logging_g_ssat_*`)**
+
+These fields apply stricter thresholds based on **soil saturation**:
+- `ssat_0.5`: Moderate saturation (50% of saturation)
+- `ssat_0.9`: High saturation (90% of saturation)
+
+For each threshold:
+
+- **`logging_g_ssat_[threshold].days`**: Number of days exceeding the saturation threshold.    
+- **`logging_g_ssat_[threshold].days_pr`**: Proportion of season with saturation exceeded.  
+- **`logging_g_ssat_[threshold].max_seq`**: Maximum consecutive days above threshold.
+- **`logging_g_ssat_[threshold].n_seq_dX`**: Number of **long saturation spells**:  
+  - `d5`: ≥5 consecutive days  
+  - `d10`: ≥10 consecutive days  
+  - `d15`: ≥15 consecutive days
+
+These indicators help assess **excess moisture risks**, which can influence **root health**, **germination success**, and **yields**.
+
+## Connecting climate stats back to the ERA database
 
 
