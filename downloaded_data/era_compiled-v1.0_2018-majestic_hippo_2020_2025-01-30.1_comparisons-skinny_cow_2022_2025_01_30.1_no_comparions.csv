@@ -1,0 +1,196 @@
+Code,C.Descrip,T.Descrip,Index,Version,issue
+LM0001,control,Gypsum + 0.5,"17217,17226,17235,17244,17253,17262",2018,No practices in plist (no valid comparison found)?.
+LM0001,control,Gypsum + 1,"17218,17227,17236,17245,17254,17263",2018,No practices in plist (no valid comparison found)?.
+LM0001,control,Gypsum + 2,"17219,17228,17237,17246,17255,17264",2018,No practices in plist (no valid comparison found)?.
+HK0065,100 full water regime,rainfed,"37055,37058,37061,37064,37067,37070,37073,37076,37079,37082",2018,No practices in plist (no valid comparison found)?.
+JS0110,furrow,trickle/sprinkler,"61893,61894,61895,61899,61905,61906",2018,No practices in plist (no valid comparison found)?.
+JS0130.1,furrow blended 4.5 salinity,drip blended 4.5 salinity,"62361,62364",2018,No practices in plist (no valid comparison found)?.
+JS0130.1,furrow cyclic 3 salinity,drip cyclic 3 salinity,"62365,62370,62373",2018,No practices in plist (no valid comparison found)?.
+JS0130.1,furrow cyclic 4.5 salinity,drip cyclic 4.5 salinity,"62366,62367",2018,No practices in plist (no valid comparison found)?.
+JS0130.1,furrow cyclic 2 salinity,drip cyclic 2 salinity,"62368,62372,62377",2018,No practices in plist (no valid comparison found)?.
+JS0130.1,furrow blended 3 salinity,drip blended 3 salinity,"62369,62376,62379",2018,No practices in plist (no valid comparison found)?.
+JS0130.1,furrow blended 2 salinity,drip blended 2 salinity,"62371,62378,62382",2018,No practices in plist (no valid comparison found)?.
+JS0130.1,furrow cyclic .55 salinity,drip cyclic .55 salinity,"62374,62380",2018,No practices in plist (no valid comparison found)?.
+JS0130.1,furrow blended .55 salinity,drip blended .55 salinity,"62375,62381",2018,No practices in plist (no valid comparison found)?.
+JS0130.3,furrow cyclic 4.5 salinity,drip cyclic 4.5 salinity,62407,2018,No practices in plist (no valid comparison found)?.
+JS0130.3,furrow cyclic .55 salinity,drip cyclic .55 salinity,62408,2018,No practices in plist (no valid comparison found)?.
+JS0185,FYM,FYM + Gypsum,"64695,64699,64704,64709",2018,No practices in plist (no valid comparison found)?.
+JS0428,fully irrigated,rainfed,"73541,73546,73547,73556,73559,73562,73571,73572,73577,73582,73585,73586,73589,73596,73599,73604",2018,No practices in plist (no valid comparison found)?.
+LM0161,cut and carry,cut and leave (incoperation at harvest),"24946,24953,24994,25001,25042,25049,25090,25097,25104,25111,25118,25125",2018,No practices in plist (no valid comparison found)?.
+HK0205,M1b1  intercropping surface irrigation,M1b1  intercropping drip irrigation,"44460,44461,44483,44484",2018,No practices in plist (no valid comparison found)?.
+HK0205,M1b2 intercropping surface irrigation,M1b2 intercropping drip irrigation,"44462,44463,44485,44486",2018,No practices in plist (no valid comparison found)?.
+HK0205,intercropping surface (across varieties),intercropping drip irrigation (dry) (acrosss varieties),"44515,44516,44517,44518,44519,44520,44521,44522,44523,44524,44525,44526",2018,No practices in plist (no valid comparison found)?.
+AN0054,Control NPK,ASH,"78929,78940,78951,78962,78973,78984",2020,No practices in plist (no valid comparison found)?.
+AG0113,Alternative furrow - 100% ET,Alternative furrow - 50% ET,"89284,89303,89321,89339,89357,89375",2020,No practices in plist (no valid comparison found)?.
+AG0113,Alternative furrow - 100% ET,Alternative furrow - 75% ET,"89287,89302,89320,89338,89356,89374",2020,No practices in plist (no valid comparison found)?.
+AG0113,Fixed furrow - 100% ET,Alternative furrow - 50% ET,"89290,89309,89327,89345,89363,89381",2020,No practices in plist (no valid comparison found)?.
+AG0113,Fixed furrow - 100% ET,Alternative furrow - 75% ET,"89293,89308,89326,89344,89362,89380",2020,No practices in plist (no valid comparison found)?.
+AG0113,Conventional furrow - 100% ET,Alternative furrow - 50% ET,"89296,89315,89333,89351,89369,89387",2020,No practices in plist (no valid comparison found)?.
+AG0113,Conventional furrow - 100% ET,Alternative furrow - 75% ET,"89299,89314,89332,89350,89368,89386",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-HDS + 0N + Nerica S-21,ADW30-HDS + 0N + Nerica S-21,"89984,90284",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-HDS + 0N + Nerica S-21,ADW60-HDS + 0N + Nerica S-21,"89989,90289",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-HDS + 50N + Nerica S-21,ADW30-HDS + 50N + Nerica S-21,"89994,90294",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-HDS + 50N + Nerica S-21,ADW60-HDS + 50N + Nerica S-21,"89995,90295",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-HDS + 100N + Nerica S-21,ADW30-HDS + 100N + Nerica S-21,"89996,90296",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-HDS + 100N + Nerica S-21,ADW60-HDS + 100N + Nerica S-21,"89997,90297",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-HDS + 150N + Nerica S-21,ADW30-HDS + 150N + Nerica S-21,"89998,90298",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-HDS + 150N + Nerica S-21,ADW60-HDS + 150N + Nerica S-21,"89999,90299",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-HDS + 200N + Nerica S-21,ADW30-HDS + 200N + Nerica S-21,"90000,90300",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-HDS + 200N + Nerica S-21,ADW60-HDS + 200N + Nerica S-21,"90001,90301",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-HDS + 0N + Nerica S-44,ADW30-HDS + 0N + Nerica S-44,"90006,90306",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-HDS + 0N + Nerica S-44,ADW60-HDS + 0N + Nerica S-44,"90011,90311",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-HDS + 50N + Nerica S-44,ADW30-HDS + 50N + Nerica S-44,"90016,90316",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-HDS + 50N + Nerica S-44,ADW60-HDS + 50N + Nerica S-44,"90017,90317",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-HDS + 100N + Nerica S-44,ADW30-HDS + 100N + Nerica S-44,"90018,90318",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-HDS + 100N + Nerica S-44,ADW60-HDS + 100N + Nerica S-44,"90019,90319",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-HDS + 150N + Nerica S-44,ADW30-HDS + 150N + Nerica S-44,"90020,90320",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-HDS + 150N + Nerica S-44,ADW60-HDS + 150N + Nerica S-44,"90021,90321",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-HDS + 200N + Nerica S-44,ADW30-HDS + 200N + Nerica S-44,"90022,90322",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-HDS + 200N + Nerica S-44,ADW60-HDS + 200N + Nerica S-44,"90023,90323",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-HDS + 0N + Sahel 210,ADW30-HDS + 0N + Sahel 210,"90028,90328",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-HDS + 0N + Sahel 210,ADW60-HDS + 0N + Sahel 210,"90033,90333",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-HDS + 50N + Sahel 210,ADW30-HDS + 50N + Sahel 210,"90038,90338",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-HDS + 50N + Sahel 210,ADW60-HDS + 50N + Sahel 210,"90039,90339",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-HDS + 100N + Sahel 210,ADW30-HDS + 100N + Sahel 210,"90040,90340",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-HDS + 100N + Sahel 210,ADW60-HDS + 100N + Sahel 210,"90041,90341",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-HDS + 150N + Sahel 210,ADW30-HDS + 150N + Sahel 210,"90042,90342",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-HDS + 150N + Sahel 210,ADW60-HDS + 150N + Sahel 210,"90043,90343",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-HDS + 200N + Sahel 210,ADW30-HDS + 200N + Sahel 210,"90044,90344",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-HDS + 200N + Sahel 210,ADW60-HDS + 200N + Sahel 210,"90045,90345",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-HDS + 0N + Sahel 202,ADW30-HDS + 0N + Sahel 202,"90050,90350",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-HDS + 0N + Sahel 202,ADW60-HDS + 0N + Sahel 202,"90055,90355",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-HDS + 50N + Sahel 202,ADW30-HDS + 50N + Sahel 202,"90060,90360",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-HDS + 50N + Sahel 202,ADW60-HDS + 50N + Sahel 202,"90061,90361",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-HDS + 100N + Sahel 202,ADW30-HDS + 100N + Sahel 202,"90062,90362",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-HDS + 100N + Sahel 202,ADW60-HDS + 100N + Sahel 202,"90063,90363",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-HDS + 150N + Sahel 202,ADW30-HDS + 150N + Sahel 202,"90064,90364",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-HDS + 150N + Sahel 202,ADW60-HDS + 150N + Sahel 202,"90065,90365",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-HDS + 200N + Sahel 202,ADW30-HDS + 200N + Sahel 202,"90066,90366",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-HDS + 200N + Sahel 202,ADW60-HDS + 200N + Sahel 202,"90067,90367",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-HDS + 0N + AR032H,ADW30-HDS + 0N + AR032H,"90072,90372",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-HDS + 0N + AR032H,ADW60-HDS + 0N + AR032H,"90077,90377",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-HDS + 50N + AR032H,ADW30-HDS + 50N + AR032H,"90082,90382",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-HDS + 50N + AR032H,ADW60-HDS + 50N + AR032H,"90083,90383",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-HDS + 100N + AR032H,ADW30-HDS + 100N + AR032H,"90084,90384",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-HDS + 100N + AR032H,ADW60-HDS + 100N + AR032H,"90085,90385",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-HDS + 150N + AR032H,ADW30-HDS + 150N + AR032H,"90086,90386",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-HDS + 150N + AR032H,ADW60-HDS + 150N + AR032H,"90087,90387",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-HDS + 200N + AR032H,ADW30-HDS + 200N + AR032H,"90088,90388",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-HDS + 200N + AR032H,ADW60-HDS + 200N + AR032H,"90089,90389",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-WS + 0N + Nerica S-21,ADW30-WS + 0N + Nerica S-21,"90134,90434",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-WS + 0N + Nerica S-21,ADW60-WS + 0N + Nerica S-21,"90139,90439",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-WS + 50N + Nerica S-21,ADW30-WS + 50N + Nerica S-21,"90144,90444",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-WS + 50N + Nerica S-21,ADW60-WS + 50N + Nerica S-21,"90145,90445",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-WS + 100N + Nerica S-21,ADW30-WS + 100N + Nerica S-21,"90146,90446",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-WS + 100N + Nerica S-21,ADW60-WS + 100N + Nerica S-21,"90147,90447",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-WS + 150N + Nerica S-21,ADW30-WS + 150N + Nerica S-21,"90148,90448",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-WS + 150N + Nerica S-21,ADW60-WS + 150N + Nerica S-21,"90149,90449",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-WS + 200N + Nerica S-21,ADW30-WS + 200N + Nerica S-21,"90150,90450",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-WS + 200N + Nerica S-21,ADW60-WS + 200N + Nerica S-21,"90151,90451",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-WS + 0N + Nerica S-44,ADW30-WS + 0N + Nerica S-44,"90156,90456",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-WS + 0N + Nerica S-44,ADW60-WS + 0N + Nerica S-44,"90161,90461",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-WS + 50N + Nerica S-44,ADW30-WS + 50N + Nerica S-44,"90166,90466",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-WS + 50N + Nerica S-44,ADW60-WS + 50N + Nerica S-44,"90167,90467",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-WS + 100N + Nerica S-44,ADW30-WS + 100N + Nerica S-44,"90168,90468",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-WS + 100N + Nerica S-44,ADW60-WS + 100N + Nerica S-44,"90169,90469",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-WS + 150N + Nerica S-44,ADW30-WS + 150N + Nerica S-44,"90170,90470",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-WS + 150N + Nerica S-44,ADW60-WS + 150N + Nerica S-44,"90171,90471",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-WS + 200N + Nerica S-44,ADW30-WS + 200N + Nerica S-44,"90172,90472",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-WS + 200N + Nerica S-44,ADW60-WS + 200N + Nerica S-44,"90173,90473",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-WS + 0N + Sahel 210,ADW30-WS + 0N + Sahel 210,"90178,90478",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-WS + 0N + Sahel 210,ADW60-WS + 0N + Sahel 210,"90183,90483",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-WS + 50N + Sahel 210,ADW30-WS + 50N + Sahel 210,"90188,90488",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-WS + 50N + Sahel 210,ADW60-WS + 50N + Sahel 210,"90189,90489",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-WS + 100N + Sahel 210,ADW30-WS + 100N + Sahel 210,"90190,90490",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-WS + 100N + Sahel 210,ADW60-WS + 100N + Sahel 210,"90191,90491",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-WS + 150N + Sahel 210,ADW30-WS + 150N + Sahel 210,"90192,90492",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-WS + 150N + Sahel 210,ADW60-WS + 150N + Sahel 210,"90193,90493",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-WS + 200N + Sahel 210,ADW30-WS + 200N + Sahel 210,"90194,90494",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-WS + 200N + Sahel 210,ADW60-WS + 200N + Sahel 210,"90195,90495",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-WS + 0N + Sahel 202,ADW30-WS + 0N + Sahel 202,"90200,90500",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-WS + 0N + Sahel 202,ADW60-WS + 0N + Sahel 202,"90205,90505",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-WS + 50N + Sahel 202,ADW30-WS + 50N + Sahel 202,"90210,90510",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-WS + 50N + Sahel 202,ADW60-WS + 50N + Sahel 202,"90211,90511",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-WS + 100N + Sahel 202,ADW30-WS + 100N + Sahel 202,"90212,90512",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-WS + 100N + Sahel 202,ADW60-WS + 100N + Sahel 202,"90213,90513",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-WS + 150N + Sahel 202,ADW30-WS + 150N + Sahel 202,"90214,90514",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-WS + 150N + Sahel 202,ADW60-WS + 150N + Sahel 202,"90215,90515",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-WS + 200N + Sahel 202,ADW30-WS + 200N + Sahel 202,"90216,90516",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-WS + 200N + Sahel 202,ADW60-WS + 200N + Sahel 202,"90217,90517",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-WS + 0N + AR032H,ADW30-WS + 0N + AR032H,"90222,90522",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-WS + 0N + AR032H,ADW60-WS + 0N + AR032H,"90227,90527",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-WS + 50N + AR032H,ADW30-WS + 50N + AR032H,"90232,90532",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-WS + 50N + AR032H,ADW60-WS + 50N + AR032H,"90233,90533",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-WS + 100N + AR032H,ADW30-WS + 100N + AR032H,"90234,90534",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-WS + 100N + AR032H,ADW60-WS + 100N + AR032H,"90235,90535",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-WS + 150N + AR032H,ADW30-WS + 150N + AR032H,"90236,90536",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-WS + 150N + AR032H,ADW60-WS + 150N + AR032H,"90237,90537",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-WS + 200N + AR032H,ADW30-WS + 200N + AR032H,"90238,90538",2020,No practices in plist (no valid comparison found)?.
+AG0118,CF-WS + 200N + AR032H,ADW60-WS + 200N + AR032H,"90239,90539",2020,No practices in plist (no valid comparison found)?.
+AN0101,C,PRDs,"92388,92390",2020,No practices in plist (no valid comparison found)?.
+AN0101,C,PRDw,"92389,92391",2020,No practices in plist (no valid comparison found)?.
+AN0103,Traditional,100% ETc,"92411,92414,92417,92420,92423,92426,92429,92432",2020,No practices in plist (no valid comparison found)?.
+AN0120,Mulched soil T0,Mulched soil T1**Dup,"93451,93456,93461,93466,93471",2020,No practices in plist (no valid comparison found)?.
+AN0120,No mulch soil T0,No mulch soil T1**Dup,"93454,93459,93464,93469,93474",2020,No practices in plist (no valid comparison found)?.
+AN0125,2014 100%,2014 PRD 50%,"93966,93972,93978",2020,No practices in plist (no valid comparison found)?.
+AN0125,2015 100%,2015 PRD 50%,"93969,93975,93981",2020,No practices in plist (no valid comparison found)?.
+AN0127,Design 1<<Design 1,Design 2<<Design 2,"94058,94060",2020,No practices in plist (no valid comparison found)?.
+AN0127,Design 1<<Design 1,Design 3<<Design 3,"94059,94061",2020,No practices in plist (no valid comparison found)?.
+DK0127,F L100 Ns-CP1,D L100 Ns-CP1,"99229,99245,99261,99277",2020,No practices in plist (no valid comparison found)?.
+DK0127,F L100 Nq-CP1,D L100 Nq-CP1,"99232,99248,99264,99280",2020,No practices in plist (no valid comparison found)?.
+DK0127,F L100 Ns-CP2,D L100 Ns-CP2,"99237,99253,99269,99285",2020,No practices in plist (no valid comparison found)?.
+DK0127,F L100 Nq-CP2,D L100 Nq-CP2,"99240,99256,99272,99288",2020,No practices in plist (no valid comparison found)?.
+DK0128,FIrNs,DIrNs,"99290,99291",2020,No practices in plist (no valid comparison found)?.
+DK0128,FIrNq,DIrNq,"99292,99293",2020,No practices in plist (no valid comparison found)?.
+DK0128,FIfNs,DIfNs,"99294,99295",2020,No practices in plist (no valid comparison found)?.
+DK0128,FIfNq,DIfNq,"99296,99297",2020,No practices in plist (no valid comparison found)?.
+NJ0072,Control- Barley ,Gypsum- Barley ,"104458,104470",2020,No practices in plist (no valid comparison found)?.
+NJ0072,Control- Barley ,G +Subsoiling- Barley ,"104461,104473",2020,No practices in plist (no valid comparison found)?.
+NJ0072,Control- Rice ,Gypsum- Rice ,"104464,104476,104482,104488",2020,No practices in plist (no valid comparison found)?.
+NJ0072,Control- Rice ,G +Subsoiling- Rice ,"104467,104479,104485,104491",2020,No practices in plist (no valid comparison found)?.
+NJ0073,T0- Nasr,T1- Nasr,104494,2020,No practices in plist (no valid comparison found)?.
+NJ0073,T0- Maali,T1- Maali,104495,2020,No practices in plist (no valid comparison found)?.
+NJ0073,T0- Salim ,T1- Salim,104496,2020,No practices in plist (no valid comparison found)?.
+NJ0073,T0- Tahent,T1- Tahent,104497,2020,No practices in plist (no valid comparison found)?.
+NJ0073,T0- Utique,T1- Utique,104498,2020,No practices in plist (no valid comparison found)?.
+NJ0108,100% FI ,PRD,"107598,107605,107612,107619,107626,107633,107640,107647,107654,107661,107668,107675,107682,107689,107696,107703,107710,107717,107724,107731,107738,107745",2020,No practices in plist (no valid comparison found)?.
+NJ0108,100% FI ,80% PRD,"107599,107606,107613,107620,107627,107634,107641,107648,107655,107662,107669,107676,107683,107690,107697,107704,107711,107718,107725,107732,107739,107746",2020,No practices in plist (no valid comparison found)?.
+NJ0108,100% FI ,60% PRD,"107600,107607,107614,107621,107628,107635,107642,107649,107656,107663,107670,107677,107684,107691,107698,107705,107712,107719,107726,107733,107740,107747",2020,No practices in plist (no valid comparison found)?.
+NJ0108,100% FI ,40% PRD,"107601,107608,107615,107622,107629,107636,107643,107650,107657,107664,107671,107678,107685,107692,107699,107706,107713,107720,107727,107734,107741,107748",2020,No practices in plist (no valid comparison found)?.
+NJ0114,FIS 100% FI WOM,FIS PRD WOM,"108069,108126,108183,108240",2020,No practices in plist (no valid comparison found)?.
+NJ0114,FIS 100% FI WOM,DIS 100% FI WOM,"108071,108128,108185,108242",2020,No practices in plist (no valid comparison found)?.
+NJ0114,FIS 100% FI WOM,DIS PRD WOM,"108077,108134,108191,108248,108293,108298,108311,108316",2020,No practices in plist (no valid comparison found)?.
+NJ0114,FIS 100% FI WM,FIS PRD WM,"108081,108138,108195,108252,108362,108367,108372,108377,108382,108387,108392,108397,108402",2020,No practices in plist (no valid comparison found)?.
+NJ0114,FIS 100% FI WM,DIS 100% FI WM,"108082,108139,108196,108253,108363,108368,108373,108378,108383,108388,108393,108398,108403",2020,No practices in plist (no valid comparison found)?.
+NJ0114,FIS 100% FI WM,DIS PRD WM,"108085,108142,108199,108256,108295,108300,108313,108318,108364,108369,108374,108379,108384,108389,108394,108399,108404",2020,No practices in plist (no valid comparison found)?.
+NJ0114,FIS 75% FI WOM,DIS 75% FI WOM,"108088,108145,108202,108259",2020,No practices in plist (no valid comparison found)?.
+NJ0114,FIS 75% FI WOM,DIS 50% FI WOM,"108090,108147,108204,108261",2020,No practices in plist (no valid comparison found)?.
+NJ0114,FIS 75% FI WM,DIS 75% FI WM,"108092,108149,108206,108263",2020,No practices in plist (no valid comparison found)?.
+NJ0114,FIS 75% FI WM,DIS 50% FI WM,"108093,108150,108207,108264",2020,No practices in plist (no valid comparison found)?.
+NJ0114,FIS 50% FI WOM,DIS 75% FI WOM,"108096,108153,108210,108267",2020,No practices in plist (no valid comparison found)?.
+NJ0114,FIS 50% FI WOM,DIS 50% FI WOM,"108098,108155,108212,108269",2020,No practices in plist (no valid comparison found)?.
+NJ0114,FIS 50% FI WM,DIS 75% FI WM,"108100,108157,108214,108271",2020,No practices in plist (no valid comparison found)?.
+NJ0114,FIS 50% FI WM,DIS 50% FI WM,"108101,108158,108215,108272",2020,No practices in plist (no valid comparison found)?.
+NJ0114,FIS PRD WOM,DIS PRD WOM,"108103,108160,108217,108274",2020,No practices in plist (no valid comparison found)?.
+NJ0114,FIS PRD WM,DIS PRD WM,"108105,108162,108219,108276,108365,108370,108375,108380,108385,108390,108395,108400,108405",2020,No practices in plist (no valid comparison found)?.
+NJ0114,DIS 100% FI WOM,DIS PRD WOM,"108111,108168,108225,108282",2020,No practices in plist (no valid comparison found)?.
+NJ0114,DIS 100% FI WM,DIS PRD WM,"108115,108172,108229,108286,108366,108371,108376,108381,108386,108391,108396,108401,108406",2020,No practices in plist (no valid comparison found)?.
+NJ0147,Domasi- Wheat Regulated furrow irrigation ,Domasi- Wheat Unregulated furrow irrigation ,"109658,109662",2020,No practices in plist (no valid comparison found)?.
+NJ0147,Domasi- Maize Regulated furrow irrigation ,Domasi- Maize Unregulated furrow irrigation ,"109659,109661",2020,No practices in plist (no valid comparison found)?.
+NJ0147,Domasi- Rice Regulated furrow irrigation ,Domasi- Rice Unregulated furrow irrigation ,"109660,109663",2020,No practices in plist (no valid comparison found)?.
+NJ0151,SI1D1,SI4D1,"110055,110063,110071,110076,110081,110086,110091,110096,110101,110106,110111,110116,110121",2020,No practices in plist (no valid comparison found)?.
+JS0290,T D1 Con,T D2 Lablab,121515,skinny_cow_2022,No practices in plist (no valid comparison found)?.
+NN0203,T CON WS+A,T WS+A+CP,"122091,122096",skinny_cow_2022,No practices in plist (no valid comparison found)?.
+NN0203,T WS+A+PL,T WS+A+PL+CP,"122093,122098",skinny_cow_2022,No practices in plist (no valid comparison found)?.
+LM0128,H300D12 male...H300D12 female,100 mg (H100) male...100 mg (H100) female,"122971,122994,123017,123035",skinny_cow_2022,No practices in plist (no valid comparison found)?.
+LM0128,H300D12 male...H300D12 female,200 mg (H200) male...200 mg (H200) female,"122972,122995,123018,123036",skinny_cow_2022,No practices in plist (no valid comparison found)?.
+LM0128,H300D12 male...H300D12 female,300 mg (H300) male...300 mg (H300) female,"122973,122996,123019,123037",skinny_cow_2022,No practices in plist (no valid comparison found)?.
+LM0128,H300D12 male...H300D12 female,400 mg (H400) male...400 mg (H400) female,"122974,122997,123020,123038",skinny_cow_2022,No practices in plist (no valid comparison found)?.
+LM0128,H300D12 male...H300D12 female,500 mg (H500) male...500 mg (H500) female,"122975,122998,123021,123039",skinny_cow_2022,No practices in plist (no valid comparison found)?.
+LM0128,H300D6 male...H300D6 female,100 mg (H100) male...100 mg (H100) female,"122976,122999,123022,123040",skinny_cow_2022,No practices in plist (no valid comparison found)?.
+LM0128,H300D6 male...H300D6 female,200 mg (H200) male...200 mg (H200) female,"122977,123000,123023,123041",skinny_cow_2022,No practices in plist (no valid comparison found)?.
+LM0128,H300D6 male...H300D6 female,300 mg (H300) male...300 mg (H300) female,"122978,123001,123024,123042",skinny_cow_2022,No practices in plist (no valid comparison found)?.
+LM0128,H300D6 male...H300D6 female,400 mg (H400) male...400 mg (H400) female,"122979,123002,123025,123043",skinny_cow_2022,No practices in plist (no valid comparison found)?.
+LM0128,H300D6 male...H300D6 female,500 mg (H500) male...500 mg (H500) female,"122980,123003,123026,123044",skinny_cow_2022,No practices in plist (no valid comparison found)?.
+LM0128,H0D0 male...H0D0 female,0 mg (H0) male...0 mg (H0) female,"122981,123004,123027,123047",skinny_cow_2022,No practices in plist (no valid comparison found)?.
+LM0129,T D1 HPS  Con Bundle2 FEMALE...T D1 HPS  Con Bundle2 MALE,T D1 MP+FM Con Bundle1 FEMALE...T D1 MP+FM Con Bundle1 MALE,"123061,123070",skinny_cow_2022,No practices in plist (no valid comparison found)?.

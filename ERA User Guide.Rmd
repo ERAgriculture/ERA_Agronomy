@@ -9,6 +9,10 @@ output:
     code_folding: hide
 ---
 
+::: {style="display: flex; align-items: center; gap: 20px;"}
+<img src="images/Era_Logo_FINAL_Colour.png" width="100" style="margin-top: 10px;"/>
+:::
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -66,7 +70,7 @@ We will cover the following:
 
 *1. Downloading the ERA.Compiled data*
 
-*2. Downloading the metadata*
+*2. Downloading the data tables*
 
 ***Exploring the data:***
 
@@ -134,6 +138,10 @@ Over the years of ERA, several versions of the extraction template have been dev
 
 The link to this extraction template can be found here: <https://github.com/CIAT/ERA_dev/blob/main/data_entry/industrious_elephant_2023/excel_data_extraction_template/V2.0.28%20-%20Industrious%20Elephant.xlsm>
 
+***Click on the image below to watch a short tutorial on the extraction template***
+
+[![Watch on YouTube](images/extraction_template.png)](https://youtu.be/0Ad-JPmFSOg)
+
 ## Understanding the different data formats of ERA
 
 Each of the tables within the front end of the excel feeds into tables behind the scenes.
@@ -164,10 +172,10 @@ The main tables are :
 -   Out.Econ : Economic outcomes
 -   Data.Out : Measured outcomes for concerned practice and product.
 
-The above tables are what we refer to as the metadata, or raw data within ERA. These tables provide you with detail information from each study, e.g fertilizer applied, timing of fertilizer and so on. In an attempt to make the data easily usable, ERA.Compiled is created.\
-ERA.Compiled is a flat excel file that pulls only essential fields from each metadata table to create rows or treatment versus control.
+The above tables are what we refer to as the data tables, or raw data within ERA. These tables provide you with **detail information** from each study, e.g fertilizer applied, timing of fertilizer and so on. In an attempt to make the data easily usable, ERA.Compiled is created.\
+ERA.Compiled is a flat excel file that pulls **only essential fields** from each data tables table to create rows of **treatment versus control. This treatment versus control data excluded detailed description of management practices.** It simply captures the 'with' or 'without' a practice.
 
-Below is a simple conceptional framework of how ERA.Compiled is generated from the metadata.
+Below is a simple conceptional framework of how ERA.Compiled is generated from the data tables.
 
 ![](images/metadata_to_compiled.png)
 
@@ -175,9 +183,9 @@ Below is a simple conceptional framework of how ERA.Compiled is generated from t
 
 Data is available and can be downloaded from the S3 Bucket `s3://digital-atlas/era/data/`
 
-## Downloading the metadata
+## Downloading the data tables
 
-Unhide the code the view the steps to download the metadata.
+Unhide the code the view the steps to download the data tables.
 
 ```{r downloading data from S3 bucket,echo=T, message=TRUE}
 # Create an S3 filesystem handle
@@ -201,7 +209,7 @@ if (!file.exists(save_path)) {
   s3$file_download(target_file, save_path, overwrite = TRUE)
 }
 
-# Load the livestock data using the miceadds package
+# Load the agronomy data using the miceadds package
 agronomic_data <- miceadds::load.Rdata2(
   file = basename(save_path),
   path = dirname(save_path)
@@ -219,34 +227,39 @@ To get a better understanding of what the variable codes mean, download the docu
 
 ```{r importing the vocad, echo=T, message=F}
 
-# Some of the columns should be described in the ERA metadata, which can be found in our master vocabulary (we will be updating the metadata soon)
-    # 4.3.1) Download the era master vocab ######
-  era_vocab_url<-"https://github.com/peetmate/era_codes/raw/main/era_master_sheet.xlsx"
-  era_vocab_local<-file.path(getwd(),basename(era_vocab_url))
-  download.file(era_vocab_url, era_vocab_local, mode = "wb")  # Download and write in binary mode
+# 4.3.1) Download the era master vocab ######
+era_vocab_url <- "https://github.com/peetmate/era_codes/raw/main/era_master_sheet.xlsx"
+era_vocab_local <- file.path(getwd(), basename(era_vocab_url))
+download.file(era_vocab_url, era_vocab_local, mode = "wb")  # Download and write in binary mode
 
 # Import the vocab
-  # Get names of all sheets in the workbook
-  sheet_names <- readxl::excel_sheets(era_vocab_local)
-  sheet_names<-sheet_names[!grepl("sheet|Sheet",sheet_names)]
-  
-  # Read each sheet into a list
-  master_codes <- sapply(sheet_names, FUN=function(x){data.table(readxl::read_excel(era_vocab_local, sheet = x))},USE.NAMES=T)
-  
-  era_fields<-master_codes$era_fields
-  era_fields[Table=="Animals.Diet",.(Field,Field_Description)]
-  
-#Display the table 
-    #	Display	the	summary	table	of	diets
+sheet_names <- readxl::excel_sheets(era_vocab_local)
+sheet_names <- sheet_names[!grepl("sheet|Sheet", sheet_names)]
+
+# Read each sheet into a list named downloaded_data
+downloaded_data <- sapply(
+  sheet_names,
+  FUN = function(x) {
+    data.table::data.table(readxl::read_excel(era_vocab_local, sheet = x))
+  },
+  USE.NAMES = TRUE
+)
+
+# Access era_fields from downloaded_data
+era_fields <- downloaded_data$era_fields
+
+
+# Display the full table as a scrollable datatable
 DT::datatable(
-  era_fields,
+  era_fields[, 1:12],
   options = list(
-    scrollY = "400px",  # Set vertical scroll height
-    scrollX = TRUE,     # Enable horizontal scrolling
-    pageLength = 20,    # Initial number of rows displayed
-    fixedHeader = FALSE  # Keep column headers fixed while scrolling
+    scrollY = "400px",
+    scrollX = TRUE,
+    pageLength = 20,
+    fixedHeader = FALSE
   )
 )
+
 ```
 
 ## Downloading ERA.Compiled
@@ -255,37 +268,53 @@ ERA.Compiled is part of the `ERAg` package and is generated through a processing
 
 To download this data for the package, running the following code:
 
-`ERA.Compiled<- ERA.Compiled`
-
-To view the field descript, run the following line:\
-\
-`ERAg::ERACompiledFields`
-
 ```{r downloading era.compiled and descriptions, echo=T, message=F}
-ERA.Compiled<- ERA.Compiled
+s3 <- s3fs::S3FileSystem$new(anonymous = TRUE)
+era_s3 <- "s3://digital-atlas/era"
 
-ERACompiledFields<- ERAg::ERACompiledFields
+# List files in the s3 bucket
+all_files <- s3$dir_ls(file.path(era_s3, "data"))
+
+# Filter for the "agronomic" RData file, selecting the most recent version
+# Filter for the correct compiled comparison CSV
+target_file_compiled <- all_files[
+  grepl("era_compiled", all_files, ignore.case = TRUE) &
+    grepl("majestic_hippo", all_files, ignore.case = TRUE) &
+    grepl("\\.csv$", all_files) &
+    !grepl("econ", all_files, ignore.case = TRUE) &
+    !grepl("no", all_files, ignore.case = TRUE)
+] |> tail(1)
+
+
+# Define a local path for saving the downloaded file
+save_path <- file.path(getwd(), dl_dir, basename(target_file_compiled))
+
+# Download the file if it does not exist already
+if (!file.exists(save_path)) {
+  s3$file_download(target_file_compiled, save_path, overwrite = TRUE)
+}
+
+# Load the livestock data using the miceadds package
+ERA_Compiled <- read.csv(save_path, stringsAsFactors = FALSE)
 
 #Display the table 
-    #	Display	the	summary	table	of	diets
+    #	Display	the	summary	table	of	era compiled
+
 DT::datatable(
-  ERACompiledFields,
-  options = list(
-    scrollY = "400px",  # Set vertical scroll height
-    scrollX = TRUE,     # Enable horizontal scrolling
-    pageLength = 20,    # Initial number of rows displayed
-    fixedHeader = FALSE  # Keep column headers fixed while scrolling
-  )
+  ERA_Compiled[, c("Code", "Country", "M.Year", "Product", "Out.SubInd","PrName","T.Descrip","C.Descrip")],  # example cols
+  options = list(scrollX = TRUE, pageLength = 20)
 )
+
+
 
 ```
 
 You can also explore descriptions of major ERA concepts (Practices, Outcomes, Products)
 
 ```{r view practices, outcomes and products, echo=T, message=F}
-practices<- ERAg::PracticeCodes
-outcomes<- ERAg::OutcomeCodes
-products<- ERAg::EUCodes
+practices<- downloaded_data$prac
+outcomes<- downloaded_data$out
+products<- downloaded_data$prod
 
 DT::datatable(
   practices,
@@ -318,13 +347,13 @@ DT::datatable(
 )
 ```
 
-# Exploring the data
+# Exploring the data (ERA.Compiled)
 
 ## Subsetting the data to agronomy
 
 ERA has a diverse range of practices, from agronomy to livestock and a few papers on postharvest storage. We will therefore focus on Agronomy for this User Guide. If you are interest in livestock practices, please explore our Livestock User Guide (<https://eragriculture.github.io/ERL/Guide-to-Livestock-Data-Analysis-in-the-ERA-Dataset--STATIC.html>)
 
-Unhide the code to see how we sub-set the data to agronomy papers only.
+Unhide the code to see how we sub-set the data to agronomy papers only. Product.Type has either Animal or Plant and therefore in this example, we will subset to Plant
 
 ```{r subset to agronomy, echo=T, message=F}
 ERA.Compiled_ag <-ERA.Compiled[grepl("Plant", Product.Type)]
@@ -333,7 +362,7 @@ ERA.Compiled_ag <-ERA.Compiled[grepl("Plant", Product.Type)]
 
 ## Exploring geographic locations of studies available
 
-We collected country, site name paraphrased from study, and spatial coordinates when given. Location\'s coordinates were verified in Google Maps, as they were often inaccurately reported. Enumerators also recorded a measure of spatial uncertainty. When authors reported decimal degrees and there was no correction required to the co-ordinates, then uncertainty was measured in terms of the value\'s precision. When the location was estimated using Google Maps, the spatial uncertainty value was measured in terms of the precision of the site location description (e.g., a single farm or region) and the enumerator\'s visual interpretation of land use at and near the coordinates. Observation\'s geographic coordinates were collected to facilitate linking the data compiled in ERA to external databases, for example related to climatic and environmental factors not necessarily reported in the original study.
+We collected country, site name paraphrased from study, and spatial coordinates when given. Location's coordinates were verified in Google Maps, as they were often inaccurately reported. Enumerators also recorded a measure of spatial uncertainty. When authors reported decimal degrees and there was no correction required to the co-ordinates, then uncertainty was measured in terms of the value's precision. When the location was estimated using Google Maps, the spatial uncertainty value was measured in terms of the precision of the site location description (e.g., a single farm or region) and the enumerator's visual interpretation of land use at and near the coordinates. Observation's geographic coordinates were collected to facilitate linking the data compiled in ERA to external databases, for example related to climatic and environmental factors not necessarily reported in the original study.
 
 ```{r plotting the distribution of data, echo=T, message=F}
 # Ensure coordinates are numeric
@@ -402,6 +431,20 @@ map
 
 ## Exploring the products of studies available
 
+The `Product.Subtype` column in the `ERA.Compiled_ag` dataset contains the specific **crop types** examined in each study (e.g., `"Maize"`, `"Rice"`, `"Wheat"`).
+
+To accurately **count how many unique studies (identified by `Code`)** examined each crop, the following code processes and summarizes the data.
+
+The figure below displays the distribution of crop categories in the dataset. It highlights the relative focus of studies across different crop types.
+
+-    The **largest category** by far is **Cereals**, indicating that most studies in ERA are focused on cereal crops such as maize, wheat, rice, and sorghum.
+
+-    This is followed by **Legumes**, **Starchy Staples**, and **Vegetables**, which also appear frequently in the dataset.
+
+-    Categories such as **Fodders**, **Cash Crops**, and **Fruits** are represented to a lesser extent.
+
+Each tile represents a crop category, and its size reflects the **number of unique studies** (`Code`) that included at least one crop from that category. The number in parentheses shows the count of studies for that group.
+
 ```{r plotting products, echo=T, message=F}
 prod_counts <- ERA.Compiled_ag %>%
   separate_rows(Product.Subtype, sep = "-") %>% 
@@ -430,8 +473,10 @@ tree_plot
 
 ## Exploring the agronomic practices within studies available
 
-Say something about era practices............
-.............................................
+The following analysis explores the types of **agronomic practices**-referred to as **"Themes"** in the dataset.
+
+Each study in ERA may be associated with multiple practices---for example, a study might examine both Soil Management and Nutrient Management. \
+For example, the theme 'Soil Management' include practices like green manure, crop residue, pH control, tillage, improved fallows. 'Nutrient Management' includes organic and inorganic fertilizer. This can be found in the practices within the mastercodes \
 
 ```{r plotting practices, echo=T, message=F}
 
@@ -473,11 +518,9 @@ waffle_plot
 
 ```
 
-
 ## Exploring outcomes reported in the studies available
 
-Say something about outcomes............................
-........................................................
+The ERA dataset tracks outcomes of agronomic interventions across several broad categories---called **Pillars**---such as productivity, environmental impact, and more. Each pillar includes more specific **indicators** like *yield*, *GHG emissions*, *soil organic carbon*, and others.
 
 ```{r plotting Outcomes, echo=T, message=F}
 # Aggregate data by pillar and indicator
@@ -536,27 +579,25 @@ bar_plot <- ggplot(out_counts, aes(
 bar_plot
 ```
 
-# An example of an analysis you could do with ERA
+# An example of an analysis you could do with ERA.Compiled
 
-Lets assume you want to explore the impact of agriculture technologies on Maize yields.
-ERA only considers treatment comparisons. Each observation encodes a comparison between two treatments.
-
+Lets assume you want to explore the impact of agriculture technologies on Maize yields. ERA only considers treatment comparisons. Each observation encodes a comparison between two treatments.
 
 The following principles assisted in consistent comparisons of treatment outcomes across studies:
 
-1. New versus common treatment. A new technology versus a control, which is typically farmers’ conventional technologies.
+1.  New versus common treatment. A new technology versus a control, which is typically farmers' conventional technologies.
 
-2. Additive complexity. An improved technology / set of technologies to a simpler option, e.g., agroforestry+fertilizer vs agroforestry alone.
+2.  Additive complexity. An improved technology / set of technologies to a simpler option, e.g., agroforestry+fertilizer vs agroforestry alone.
 
-3. Agriculture to agriculture. Agricultural systems are never compared to natural systems. For example, we can compare soil organic carbon in mulch versus no mulch systems, but not versus natural or semi-natural vegetation.
+3.  Agriculture to agriculture. Agricultural systems are never compared to natural systems. For example, we can compare soil organic carbon in mulch versus no mulch systems, but not versus natural or semi-natural vegetation.
 
-4. Same implementation levels. Comparisons were made within the same ‘level’ of implementation. For example, 40 kg N/ha was compared with other treatments using 40 kgN/ha but not 20 kgN/ha.
+4.  Same implementation levels. Comparisons were made within the same 'level' of implementation. For example, 40 kg N/ha was compared with other treatments using 40 kgN/ha but not 20 kgN/ha.
 
-5. All treatment details. All major characteristics of the treatments were coded, including seed variety, tillage type, weed control, tree species, and chemical applications, among others, up to 13 labels per treatment.
+5.  All treatment details. All major characteristics of the treatments were coded, including seed variety, tillage type, weed control, tree species, and chemical applications, among others, up to 13 labels per treatment.
 
-6. In-year comparisons. Only comparisons of treatments and outcomes that occur in the same year or season were included. Residual effects, e.g., of phosphorus applied in year one with yield in year three, were not recorded.
+6.  In-year comparisons. Only comparisons of treatments and outcomes that occur in the same year or season were included. Residual effects, e.g., of phosphorus applied in year one with yield in year three, were not recorded.
 
-7. Include all possible treatments. All treatments, and their component technologies, in a study were coded if they formed part of valid comparison.
+7.  Include all possible treatments. All treatments, and their component technologies, in a study were coded if they formed part of valid comparison.
 
 Based this, a response ratio is calculated by MeanT/MeanC
 
@@ -608,4 +649,3 @@ ridge_plot <- ggplot(ridge_data, aes(x = yi, y = PrName, fill = ..x..)) +
 
 ridge_plot
 ```
-
