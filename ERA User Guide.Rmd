@@ -437,11 +437,11 @@ To accurately **count how many unique studies (identified by `Code`)** examined 
 
 The figure below displays the distribution of crop categories in the dataset. It highlights the relative focus of studies across different crop types.
 
--    The **largest category** by far is **Cereals**, indicating that most studies in ERA are focused on cereal crops such as maize, wheat, rice, and sorghum.
+-   The **largest category** by far is **Cereals**, indicating that most studies in ERA are focused on cereal crops such as maize, wheat, rice, and sorghum.
 
--    This is followed by **Legumes**, **Starchy Staples**, and **Vegetables**, which also appear frequently in the dataset.
+-   This is followed by **Legumes**, **Starchy Staples**, and **Vegetables**, which also appear frequently in the dataset.
 
--    Categories such as **Fodders**, **Cash Crops**, and **Fruits** are represented to a lesser extent.
+-   Categories such as **Fodders**, **Cash Crops**, and **Fruits** are represented to a lesser extent.
 
 Each tile represents a crop category, and its size reflects the **number of unique studies** (`Code`) that included at least one crop from that category. The number in parentheses shows the count of studies for that group.
 
@@ -475,8 +475,8 @@ tree_plot
 
 The following analysis explores the types of **agronomic practices**-referred to as **"Themes"** in the dataset.
 
-Each study in ERA may be associated with multiple practices---for example, a study might examine both Soil Management and Nutrient Management. \
-For example, the theme 'Soil Management' include practices like green manure, crop residue, pH control, tillage, improved fallows. 'Nutrient Management' includes organic and inorganic fertilizer. This can be found in the practices within the mastercodes \
+Each study in ERA may be associated with multiple practices---for example, a study might examine both Soil Management and Nutrient Management.\
+For example, the theme 'Soil Management' include practices like green manure, crop residue, pH control, tillage, improved fallows. 'Nutrient Management' includes organic and inorganic fertilizer. This can be found in the practices within the mastercodes\
 
 ```{r plotting practices, echo=T, message=F}
 
@@ -649,3 +649,12 @@ ridge_plot <- ggplot(ridge_data, aes(x = yi, y = PrName, fill = ..x..)) +
 
 ridge_plot
 ```
+
+# For more details or to explore collaborative opportunities: 
+
+Please visit our GitHub repository: <https://github.com/ERAgriculture/ERA_Agronomy.git>
+
+Or contact: \
+Peter Steward (Scientist II): [p.steward\@cgiar.org](mailto:p.steward@cgiar.org){.email} \
+Namita Joshi (Senior Research Associate): [n.joshi\@cgiar.org](mailto:n.joshi@cgiar.org){.email} \
+Todd Rosenstock (Principal Scientist): [t.rosenstock\@cgiar.org](mailto:t.rosenstock@cgiar.org){.email}
