@@ -20,6 +20,11 @@ Explore the rendered HTML files for detailed documentation:
 - Details data sources, processing scripts, and methods for calculating seasonal indicators like GDD, Eratio, and waterlogging.  
 - Includes instructions for accessing pre-processed data from S3 and merging it with the ERA dataset.
 
+- 3. **[Guide to ERA Agronomy Data Model](https://eragriculture.github.io/ERA_Agronomy/ERA-Create-Agronomy-Data-Model.html)**  
+- Describes how to construct a relational data model for the ERA agronomic dataset using the `dm` package.  
+- Includes steps for downloading data from S3, cleaning tables, and defining primary/foreign keys.  
+- Enables robust quality checks and schema visualization to support complex querying and analysis.
+
 ---
 ## Background
 
