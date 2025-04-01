@@ -9,6 +9,7 @@ format:
     toc-expand: 2     
     number-sections: true
     code-fold: false
+    include-in-header: hypothesis.html
 editor: visual
 ---
 
