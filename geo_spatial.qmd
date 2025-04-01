@@ -21,10 +21,20 @@ pacman::p_load(data.table,s3fs,kable,kableExtra,knitr,arrow)
 
 #  ERA Geospatial Data and Climate Enrichment
 
+**Intended Users**
+
+This documentation is intended for technical users working with the ERA meta-dataset who wish to integrate seasonally relevant climate statistics into agronomic observations. Users do not need to rerun the calculations—preprocessed climate data are provided on S3—but may use this guide to understand:
+
+- What climate indicators were generated
+- How planting dates and season lengths were determined
+- Where to find the data and how to merge them with ERA observations
+- Where to find the code used to generate and process data
+
+**Background**
+
 We developed a geospatial enrichment pipeline to augment ERA’s agronomic experiments with high-resolution climate, soil, and elevation data, linked to specific crops, locations, and growing seasons. Each observation is connected to daily weather time series and soil attributes based on its site coordinates and reported or inferred planting and harvest dates. Where precise dates are unavailable, the pipeline uses a tiered imputation approach—drawing on published planting windows, nearby analogs, and agroclimatic indicators such as rainfall onset—to estimate a plausible growing season. This enables the calculation of detailed climate statistics for the period most relevant to crop development, while excluding records with excessive spatial or temporal uncertainty.
 
 The enrichment process applies only to crop-based experiments. Climate statistics are generated only where both spatial and temporal resolution meet defined quality thresholds—specifically, where the site location is known within 50 km and the cropping calendar can be clearly determined. Records from animal feed experiments, as well as spatially or temporally aggregated data (e.g., regional summaries or multi-year averages), are not included. As a result, only a subset of ERA observations receive climate enrichment—those with sufficient detail to anchor the analysis in a specific place and season.
-
 
 ## Data Sources
 
@@ -42,12 +52,9 @@ Below are the datasets used and the script locations.
 - **Dataset**: CHIRPS Daily Rainfall
 - **Resolution**: 0.05° (~5.5 km)
 - **Coverage**: Africa and globally, 1981–present
-- **Download Source**:  
-  [`https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_daily/tifs/p05/`](https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_daily/tifs/p05/)
-- **Download Script**:  
-  [`R/add_geodata/chirps.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/chirps.R)
-- **Download Function**:  
-  [`R/add_geodata/functions/download_chirps.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/functions/download_chirps.R)  
+- **Download Source**: [`https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_daily/tifs/p05/`](https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_daily/tifs/p05/)
+- **Download Script**: [`R/add_geodata/chirps.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/chirps.R)
+- **Download Function**: [`R/add_geodata/functions/download_chirps.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/functions/download_chirps.R)  
   → `download_chirps()`
 - **Notes**: Filenames include the date (e.g. `chirps.2023.01.01.tif.gz`). Versioning is inferred from file date.
 
@@ -657,6 +664,7 @@ era_comparisons_gdd[!is.na(Plant.Start) &
 ## Foundational datasets
 
 ### Rainfall
+Rainfall data are downloaded using [`R/add_geodata/functions/download_chirps.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/functions/download_chirps.R)  and processed using the script [`R/add_geodata/chirps.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/chirps.R).
 
 #### Access
 
@@ -751,10 +759,12 @@ head(chirps_ltavg) |>
 
 
 ### POWER
+POWER data are downloaded using [`R/add_geodata/functions/download_power.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/functions/download_power.R)  and processed using the script [`R/add_geodata/power.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/power.R).
+
+#### Access
 
 The annual and long-term average datasets are small, we can simply download them from the ERA s3 bucket.
 
-#### Access
 ```{r,warning=F}
 # Set the remote S3 path and local save path
 s3_data_dir <- "s3://digital-atlas/era/geodata"
