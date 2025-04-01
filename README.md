@@ -11,9 +11,14 @@ Explore the rendered HTML files for detailed documentation:
 - **Metadata Exploration**: Connects outcomes with metadata for contextual insights.
 ---
 ## Repository Contents
-1. **Guide to Agronomy Data Analysis in ERA Dataset**: https://eragriculture.github.io/ERA_Agronomy/ERA-User-Guide.html
+1. [**Guide to Agronomy Data Analysis in ERA Dataset**](https://eragriculture.github.io/ERA_Agronomy/ERA-User-Guide.html)
 - Provides a roadmap for leveraging ERA datasets.
 - Includes practical steps for data cleaning, visualization, and advanced analysis.
+
+2. **[Guide to Climate and Soil Data in ERA](https://eragriculture.github.io/ERA_Agronomy/ERA%20Climate%20and%20Soils.html)**  
+- Explains how ERA observations are enriched with geospatial climate and soil data.  
+- Details data sources, processing scripts, and methods for calculating seasonal indicators like GDD, Eratio, and waterlogging.  
+- Includes instructions for accessing pre-processed data from S3 and merging it with the ERA dataset.
 
 ---
 ## Background
