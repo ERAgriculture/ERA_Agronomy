@@ -72,7 +72,7 @@ We will cover the following:
 
 ***Downloading the data:***
 
-*1. Downloading the ERA.Compiled data*
+*1. Downloading the ERA.Compiled pre-cooked comparisons data*
 
 *2. Downloading the data tables*
 
@@ -221,7 +221,7 @@ agronomic_data <- miceadds::load.Rdata2(
 
 ```
 
-Once the data is download, it will appear as the screenshot below.
+Once the data is downloaded, it will appear as the screenshot below.
 
 Each of the tables can be extracted individual and combined with one another based on a common piece of information. For example, the B.Code, which is present in each tab, can be used to match information from one particular paper across all these tables.
 
@@ -231,9 +231,9 @@ To get a better understanding of what the variable codes mean, download the docu
 
 ```{r importing the vocad, echo=T, message=F}
 
-# 4.3.1) Download the era master vocab ######
+# Download the era master vocab ######
 era_vocab_url <- "https://github.com/peetmate/era_codes/raw/main/era_master_sheet.xlsx"
-era_vocab_local <- file.path(getwd(), basename(era_vocab_url))
+era_vocab_local <- file.path(dl_dir, basename(era_vocab_url))
 download.file(era_vocab_url, era_vocab_local, mode = "wb")  # Download and write in binary mode
 
 # Import the vocab
@@ -351,7 +351,7 @@ DT::datatable(
 )
 ```
 
-# Exploring the data (ERA.Compiled)
+# Exploring the comparisons data (`ERA.Compiled`)
 
 ## Subsetting the data to agronomy
 
@@ -583,7 +583,7 @@ bar_plot <- ggplot(out_counts, aes(
 bar_plot
 ```
 
-# An example of an analysis you could do with ERA.Compiled
+# An example of an analysis you could do with `ERA.Compiled`
 
 Lets assume you want to explore the impact of agriculture technologies on Maize yields. ERA only considers treatment comparisons. Each observation encodes a comparison between two treatments.
 
