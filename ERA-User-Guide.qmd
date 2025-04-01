@@ -9,6 +9,7 @@ format:
     toc-expand: 2   
     number-sections: true
     code_folding: hide
+    include-in-header: hypothesis.html
 editor: visual
 ---
 
@@ -57,7 +58,7 @@ if(!dir.exists(dl_dir)){
 
 ```
 
-This vignetter will guide you throgh the agronomy data available within the Evidence for Resilient Agriculture (ERA) The dataset serves as a critical resource for understanding agricultural resilience, specifically focusing on agriculture systems and their adaptation to climate change.
+This vignette will guide you throgh the agronomy data available within the Evidence for Resilient Agriculture (ERA) The dataset serves as a critical resource for understanding agricultural resilience, specifically focusing on agriculture systems and their adaptation to climate change.
 
 We will cover the following:
 
