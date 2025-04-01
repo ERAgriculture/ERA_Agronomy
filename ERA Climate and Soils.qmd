@@ -1,6 +1,7 @@
 ---
-title: "Geospatial Data in ERA"
+title: "Climate & Soils Data in ERA"
 author: "Alliance of Bioversity International & CIAT"
+date: "`r Sys.Date()`"
 format:
   html:
     toc: true
@@ -11,6 +12,10 @@ format:
 editor: visual
 ---
 
+::: {style="display: flex; align-items: center; gap: 20px;"}
+<img src="images/Era_Logo_FINAL_Colour.png" width="100" style="margin-top: 10px;"/>
+:::
+
 ```{r load required packages,echo=F,warning=F,message=F}
 if (!require("pacman", character.only = TRUE)) {
   install.packages("pacman")
@@ -19,7 +24,7 @@ if (!require("pacman", character.only = TRUE)) {
 pacman::p_load(data.table,s3fs,kable,kableExtra,knitr,arrow)
 ```
 
-#  ERA Geospatial Data and Climate Enrichment
+#  How ERA Connects to Geospatial Climate and Soils Data
 
 **Intended Users**
 
@@ -55,7 +60,6 @@ Below are the datasets used and the script locations.
 - **Download Source**: [`https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_daily/tifs/p05/`](https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_daily/tifs/p05/)
 - **Download Script**: [`R/add_geodata/chirps.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/chirps.R)
 - **Download Function**: [`R/add_geodata/functions/download_chirps.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/functions/download_chirps.R)  
-  → `download_chirps()`
 - **Notes**: Filenames include the date (e.g. `chirps.2023.01.01.tif.gz`). Versioning is inferred from file date.
 
 ---
@@ -162,7 +166,7 @@ To access the climate statistics generated for ERA observations, download the ha
 
 You can download the file using the `s3fs` interface as follows:
 
-```{r,warning=F}
+```{r download_climdat1,warning=F}
 # Set the remote S3 path and local save path
 s3_data_dir <- "s3://digital-atlas/era/geodata"
 local_data_dir <- "downloaded_data"
@@ -182,7 +186,7 @@ s3$file_download(files_s3, files_local)
 
 Once downloaded, load the .RData file using:
 
-```{r}
+```{r download_climdat2}
 # Load the harmonized climate data into your environment
 clim_data <- miceadds::load.Rdata2(file = basename(files_local), path = dirname(files_local))
 ```
@@ -191,7 +195,7 @@ clim_data <- miceadds::load.Rdata2(file = basename(files_local), path = dirname(
 
 `clim_dat` is a named list of data tables, created by `generate_climate_stats.R`.
 
-```{r}
+```{r climdat_structure1}
 names(clim_data)
 ```
 
@@ -205,7 +209,7 @@ of season length.
 
 #### Site, year, season, & study
 
-```{r}
+```{r climdat_structure2}
 head(unique(clim_data$site_data[,.(Site.Key,Code,M.Year,Latitude,Longitude,M.Year,M.Year.Code,M.Season)]))|>
   kable(format = "html") |>
   kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
@@ -226,7 +230,7 @@ head(unique(clim_data$site_data[,.(Site.Key,Code,M.Year,Latitude,Longitude,M.Yea
 
 These fields contain thresholds that define a crop's temperature response curve and come from EcoCrop. They can also be used to calculate growing degree days, stress indices, or suitability zones under historical or future climate conditions.
 
-```{r}
+```{r climdat_structure3}
 head(unique(clim_data$site_data[,.(Product,EU,Topt.low,Topt.high,Tlow,Thigh)]))|>
   kable(format = "html") |>
   kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
@@ -247,7 +251,7 @@ These thresholds define a crop's temperature response curve and come from EcoCro
 #### Planting dates
 `site_data` contains information about planting dates and their estimation:
 
-```{r}
+```{r climdat_structure4}
 head(clim_data$site_data[,.(Plant.Start,Plant.End,Plant.Diff.Raw,Data.PS.Date,Data.PE.Date,SOS,P.Date.Merge,P.Date.Merge.Source,PlantingDate)])|>
   kable(format = "html") |>
   kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
@@ -267,7 +271,7 @@ head(clim_data$site_data[,.(Plant.Start,Plant.End,Plant.Diff.Raw,Data.PS.Date,Da
 
 **Explanation of `P.Date.Merge.Source` values:**
 
-```{r}
+```{r climdat_structure5}
 clim_data$site_data[,unique(P.Date.Merge.Source)]|>
   kable(format = "html") |>
   kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
@@ -290,7 +294,7 @@ This hierarchy reflects a logical preference: **Directly observed data > Nearby 
 #### Season length
 `site_data` contains information about reported harvest dates and season length. Season length may use the reported dates or be estimated.
 
-```{r}
+```{r climdat_structure6}
 head(clim_data$site_data[,.(Harvest.Start,Harvest.End,SLen,Data.SLen,SLen.EcoCrop,SLen.Source,SeasonLength.Data,SeasonLength.EcoCrop)])|>
   kable(format = "html") |>
   kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
@@ -308,7 +312,7 @@ head(clim_data$site_data[,.(Harvest.Start,Harvest.End,SLen,Data.SLen,SLen.EcoCro
 
 
 **Explanation of SLen.Source values:**
-```{r}
+```{r climdat_structure7}
 clim_data$site_data[,unique(SLen.Source)]
 ```
 
@@ -340,7 +344,7 @@ Each of these climate window datasets contains a set of summary tables—one per
 
 **`PDate.SLen.P30`**  `site_data$P.Date.Merge` is used to determine the start date of the climate window, and the end date is fixed to 30 days after planting. This represent the post-planting climate, which can be a particularly sensitive period for many crops.
 
-```{r}
+```{r climdat_structure8}
 names(clim_data$PDate.SLen.Data)|>
   kable(format = "html") |>
   kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
@@ -382,7 +386,7 @@ Additionally these shared fields are present:
 
 #### gdd
 
-```{r}
+```{r climdat_gdd}
 head(clim_data$PDate.SLen.Data$gdd)|>
   kable(format = "html") |>
   kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
@@ -395,7 +399,7 @@ This table contains Growing Degree Day (GDD) statistics calculated over the defi
 - **`gdd_abovemax`**: Cumulative GDD **above the maximum threshold**, indicating **heat stress** or potentially damaging conditions.  
 
 #### temperature
-```{r}
+```{r climdat_temp}
 head(clim_data$PDate.SLen.Data$temperature) |>
   kable(format = "html") |>
   kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
@@ -447,7 +451,7 @@ These capture broader temperature behavior during the season:
 These metrics provide a comprehensive description of **temperature variability and extremes** during the growing season.
 
 #### rainfall
-```{r}
+```{r climdat_rain}
 head(clim_data$PDate.SLen.Data$temperature) |>
   kable(format = "html") |>
   kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
@@ -484,7 +488,7 @@ Thresholds used:
 These variables help identify **drought risk**, **intra-seasonal dry periods**, and **rainfall distribution** relevant to crop growth.
 
 #### eratio
-```{r}
+```{r climdat_eratio}
 head(clim_data$PDate.SLen.Data$eratio) |>
   kable(format = "html") |>
   kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
@@ -531,7 +535,7 @@ Thresholds represent escalating levels of water stress:
 These metrics can be used to **identify seasonal water stress risk**, **evaluate drought periods**, and **inform adaptive irrigation or planting strategies**.
 
 #### logging
-```{r}
+```{r climdat_logging}
 head(clim_data$PDate.SLen.Data$logging) |>
   kable(format = "html") |>
   kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
@@ -583,7 +587,7 @@ These indicators help assess **excess moisture risks**, which can influence **ro
 ## Connecting climate stats back to the ERA database
 ### ERA Comparisons Table
 
-```{r}
+```{r era_comparisons_table1,warning=F}
 
 # Set the remote S3 path and local save path
 s3_data_dir <- "s3://digital-atlas/era/data"
@@ -592,7 +596,7 @@ local_data_dir <- "downloaded_data"
 # List and filter files
 s3<-s3fs::S3FileSystem$new(anonymous = T)
 files_s3 <- s3$dir_ls(s3_data_dir)
-files_s3 <- grep("compiled.*parquet", files_s3, value = TRUE)
+files_s3 <- grep("compiled.*mh.*parquet", files_s3, value = TRUE)
 
 # Filter to most recent version of dataset
 (files_s3 <- tail(files_s3, 1))
@@ -607,7 +611,7 @@ if(!file.exists(files_local)){
 era_comparisons<-arrow::read_parquet(files_local)
 ```
 
-```{r}
+```{r era_comparisons_table2}
 key_fields<-c("Site.Key","M.Year","Product.Simple","Plant.Start","Plant.End","Harvest.Start","Harvest.End")
 
 # Climate data to merge
@@ -631,7 +635,7 @@ head(era_comparisons_gdd[!is.na(gdd_subopt),c(key_fields,grep("gdd",colnames(era
 ```
 
 How many observations have we enriched?
-```{r}
+```{r era_comparisons_table13}
 era_comparisons_gdd[!is.na(gdd_subopt),.N]
 era_comparisons_gdd[!is.na(gdd_subopt),.N]/era_comparisons_gdd[,.N]
 ```
@@ -643,7 +647,7 @@ Why is this less than half of the total data available?
 - 4. Climate statistics have not been calculated for animal experiments.
 - 5. Climate statistics are not calculated for spatially aggregated sites, products or time periods.
 
-```{r}
+```{r era_comparisons_table4}
 era_comparisons_gdd[!is.na(gdd_subopt),.N]/era_comparisons_gdd[!is.na(Plant.Start) & 
                                                                  Buffer<50000 &
                                                                  !grepl("[.][.]",Site.ID) & 
@@ -653,7 +657,7 @@ era_comparisons_gdd[!is.na(gdd_subopt),.N]/era_comparisons_gdd[!is.na(Plant.Star
 
 
 Non-matches, if present, indicate missing data in the era climate stats pipeline, please let us know and check for updates.
-```{r}
+```{r era_comparisons_table5}
 era_comparisons_gdd[!is.na(Plant.Start) & 
                          Buffer<50000 &
                          !grepl("[.][.]",Site.ID) & 
@@ -670,7 +674,7 @@ Rainfall data are downloaded using [`R/add_geodata/functions/download_chirps.R`]
 
 The annual and long-term average datasets are small, we can simply download them from the ERA s3 bucket.
 
-```{r,warning=F}
+```{r rainfall_access,warning=F}
 # Set the remote S3 path and local save path
 s3_data_dir <- "s3://digital-atlas/era/geodata"
 
@@ -704,7 +708,7 @@ chirps_annual<-arrow::read_parquet(files_local[2])
 The daily CHIRPS dataset id quite large, let's use the arrow package to download the head of the data only. To learn more about using the arrow package to access parquet data in R see [https://arrow.apache.org/docs/r/](https://arrow.apache.org/docs/r/).  
 In future ERA updates we will optimize the partition structure of parquet tables to faciliate faster access, in the short-term we suggest working locally with files is still the best option.
 
-```{r,warning=F}
+```{r rainfall_structure,warning=F}
 # Load head of daily data only
 files_s3 <- s3$dir_ls(s3_data_dir)
 
@@ -734,7 +738,7 @@ if(!file.exists(files_local)){
 #### Structure
 
 **Daily precipitation**
-```{r}
+```{r rainfall_prec}
 head(chirps_daily) |>
   kable(format = "html") |>
   kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
@@ -742,7 +746,7 @@ head(chirps_daily) |>
 ```
 
 **Annual precipitation**
-```{r}
+```{r rainfall_annual}
 head(chirps_annual) |>
   kable(format = "html") |>
   kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
@@ -750,7 +754,7 @@ head(chirps_annual) |>
 ```
 
 **Long-term average precipitation**
-```{r}
+```{r rainfall_ltavg}
 head(chirps_ltavg) |>
   kable(format = "html") |>
   kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
@@ -765,7 +769,7 @@ POWER data are downloaded using [`R/add_geodata/functions/download_power.R`](htt
 
 The annual and long-term average datasets are small, we can simply download them from the ERA s3 bucket.
 
-```{r,warning=F}
+```{r power_access1,warning=F}
 # Set the remote S3 path and local save path
 s3_data_dir <- "s3://digital-atlas/era/geodata"
 
@@ -796,7 +800,7 @@ power_ltavg<-arrow::read_parquet(files_local[1])
 power_annual<-arrow::read_parquet(files_local[2])
 ```
 
-```{r,warning=F}
+```{r power_access2,warning=F}
 files_s3 <- s3$dir_ls(s3_data_dir)
 
 file_daily<-grep("POWER.*parquet", files_s3, value = TRUE)
@@ -822,7 +826,7 @@ if(!file.exists(files_local)){
 #### Structure
 
 **Daily power**
-```{r}
+```{r power_daily}
 head(power_daily) |>
   kable(format = "html") |>
   kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
@@ -830,7 +834,7 @@ head(power_daily) |>
 ```
 
 **Annual power**
-```{r}
+```{r power_annual}
 head(power_annual) |>
   kable(format = "html") |>
   kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
@@ -838,7 +842,7 @@ head(power_annual) |>
 ```
 
 **Long-term average power**
-```{r}
+```{r power_latavg}
 head(power_ltavg) |>
   kable(format = "html") |>
   kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
@@ -849,7 +853,7 @@ head(power_ltavg) |>
 ### Soilgrids
 
 #### Access
-```{r,warning=F}
+```{r soilgrids_access,warning=F}
 # Set the remote S3 path and local save path
 s3_data_dir <- "s3://digital-atlas/era/geodata"
 
@@ -886,7 +890,7 @@ isda<-arrow::read_parquet(files_local[2])
 #### Structure
 
 **Soil grids**
-```{r}
+```{r soilgrids_structure1}
 head(soilgrids) |>
   kable(format = "html") |>
   kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
@@ -894,7 +898,7 @@ head(soilgrids) |>
 ```
 
 
-```{r,warning=F}
+```{r soilgrids_structure2,warning=F}
 files_s3 <- s3$dir_ls(s3_data_dir)
 (files_s3<-grep("soilgrids2.0.*metadata", files_s3, value = TRUE))
 
@@ -904,7 +908,7 @@ http_path <- gsub("^s3://([^/]+)/(.*)$", "https://\\1.s3.amazonaws.com/\\2", fil
 soilgrids_metadata<-fread(http_path)
 ```
 
-```{r}
+```{r soilgrids_structure3}
 head(soilgrids_metadata) |>
   kable(format = "html") |>
   kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
@@ -912,14 +916,14 @@ head(soilgrids_metadata) |>
 ```
 
 **isda**
-```{r}
+```{r isda_structure1}
 head(isda) |>
   kable(format = "html") |>
   kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
   scroll_box(width = "100%", height = "250px")
 ```
 
-```{r}
+```{r isda_structure2}
 files_s3 <- s3$dir_ls(s3_data_dir)
 files_s3<-grep("isda.*metadata", files_s3, value = TRUE)
 
@@ -929,7 +933,7 @@ http_path <- gsub("^s3://([^/]+)/(.*)$", "https://\\1.s3.amazonaws.com/\\2", fil
 isda_metadata<-fread(http_path)
 ```
 
-```{r}
+```{r isda_structure3}
 head(isda_metadata) |>
   kable(format = "html") |>
   kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
@@ -939,9 +943,9 @@ head(isda_metadata) |>
 ### Elevation
 
 #### Access
-```{r, warning=F}
+```{r elevation_access, warning=F}
 files_s3 <- s3$dir_ls(s3_data_dir)
-files_s3<-grep("elevation.*csv", files_s3, value = TRUE)
+files_s3<-grep("elevation.*parquet", files_s3, value = TRUE)
 (files_s3 <- tail(files_s3, 1))
 
 # Create local file path and download
@@ -951,11 +955,11 @@ files_local <- gsub(s3_data_dir, local_data_dir, files_s3)
     s3$file_download(files_s3, files_local)
   }
 
-elevation<-fread(files_local)
+elevation<-arrow::read_parquet(files_local)
 ```
 
 #### Structure
-```{r}
+```{r elevation_structure}
 head(elevation) |>
   kable(format = "html") |>
   kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
@@ -982,7 +986,7 @@ head(elevation) |>
 
 ### SOS
 #### Access
-```{r,warning=F}
+```{r sos_access,warning=F}
 files_s3 <- s3$dir_ls(s3_data_dir)
 
 files_s3<-grep("sos_.*RData", files_s3, value = TRUE)
@@ -1009,7 +1013,7 @@ We do not provide detailed descriptions of all the field present in the sos tabl
 
 0. `metadata`
 
-```{r, warning=F}
+```{r sos_structure1, warning=F}
 files_s3 <- s3$dir_ls(s3_data_dir)
 files_s3<-grep("sos.*metadata.*csv", files_s3, value = TRUE)
 (files_s3 <- tail(files_s3, 1))
@@ -1020,7 +1024,7 @@ http_path <- gsub("^s3://([^/]+)/(.*)$", "https://\\1.s3.amazonaws.com/\\2", fil
 sos_metadata<-fread(http_path)
 ```
 
-```{r}
+```{r sos_structure2}
 head(sos_metadata) |>
   kable(format = "html") |>
   kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
@@ -1049,7 +1053,7 @@ head(sos_metadata) |>
      - Proportions indicating seasonal transitions across calendar years.
    - **Purpose:** Summarizes seasonal behavior over the full record, highlighting variability and central tendencies.  
    
-```{r}
+```{r sos_structure3}
 head(sos$LTAvg_SOS2[,.(Site.Key,SOS.min,SOS.mean,SOS.max,EOS,LGP,Tot.Rain,Seasons)]) |>
   kable(format = "html") |>
   kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
@@ -1089,7 +1093,7 @@ This structure supports detailed analysis and decision-making in agricultural an
 
 ### AEZ
 #### Access
-```{r,warning=F}
+```{r aez_access,warning=F}
 files_s3 <- s3$dir_ls(s3_data_dir)
 
 files_s3<-grep("aez_.*parquet", files_s3, value = TRUE)
@@ -1105,7 +1109,7 @@ aez<-arrow::read_parquet(files_local)
 ```
 
 #### Structure
-```{r}
+```{r aez_structure}
 head(aez) |>
   kable(format = "html") |>
   kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
@@ -1138,7 +1142,7 @@ This model simulates **daily soil water availability**, **evaporative demand**, 
   - Used to flag **moisture stress due to excess rainfall or poor drainage**.
   
 #### Access
-```{r,warning=F}
+```{r soil_moisture_access,warning=F}
 files_s3 <- s3$dir_ls(s3_data_dir)
 
 # Substitute isda for soilgrids to access the isda soil grids data (for african site)
@@ -1157,7 +1161,7 @@ watbal<-arrow::read_parquet(files_local)
 ```
 
 #### Structure
-```{r}
+```{r soil_moisture_structure}
 head(watbal) |>
   kable(format = "html") |>
   kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
@@ -1186,3 +1190,13 @@ Each row represents a unique site-day combination.
 ### Bioclim
 
 This will be made available in future updates. If you have a critical need for this information then please contact the ERA team and we can prioritize these data.
+
+# Contact Us
+For more details or to explore collaborative opportunities: 
+
+Please visit our GitHub repository: <https://github.com/ERAgriculture/ERA_Agronomy.git>
+
+Or contact: 
+Peter Steward (Scientist II): [p.steward\@cgiar.org](mailto:p.steward@cgiar.org){.email} \
+Namita Joshi (Senior Research Associate): [n.joshi\@cgiar.org](mailto:n.joshi@cgiar.org){.email} \
+Todd Rosenstock (Principal Scientist): [t.rosenstock\@cgiar.org](mailto:t.rosenstock@cgiar.org){.email}
