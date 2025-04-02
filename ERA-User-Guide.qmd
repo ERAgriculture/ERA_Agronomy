@@ -56,6 +56,9 @@ dl_dir <- "downloaded_data"
 if(!dir.exists(dl_dir)){
   dir.create(dl_dir, showWarnings = FALSE)
 }
+
+# Should the era vocab be updated?
+update_vocab<-F
 ```
 
 ```{r pre-load era compiled, echo=F, message=F}
@@ -89,47 +92,53 @@ ERA_Compiled <- arrow::read_parquet(save_path, stringsAsFactors = FALSE)
 era_version<-gsub(".parquet","",basename(target_file_compiled))
 ```
 
-This vignette will guide you throgh the agronomy data available within the Evidence for Resilient Agriculture (ERA). The dataset serves as a critical resource for understanding agricultural resilience, specifically focusing on agriculture systems and their adaptation to climate change. If you are interested in livestock please see [ERL](https://github.com/ERAgriculture/ERL).
+This vignette will guide you through the agronomy data available within the Evidence for Resilient Agriculture (ERA). The data set serves as a critical resource for understanding agricultural outcome trade-offs and synergies between yield, economic performance, sustianability indicators, and climate resilience.  It focuses on peer-reviewed data from experimental or observation agriculture systems. If you are interested in livestock please see [ERL](https://github.com/ERAgriculture/ERL).
 
 We will cover the following:
 
 ***What is ERA:***
 
-*1. Introduction*
-
-*2. Extraction template*
-
-*3. Understanding the different data formats of ERA*
+* Introduction – What ERA is, where it comes from, and what it contains  
+* Extraction template – How the ERA Excel template structures studies and practices  
+* Understanding the ERA data model – Structure and content of the raw data tables  
+* Comparisons table – A simplified format for quick meta-analysis  
+* Controlled vocabulary – ERA’s structured codes for harmonized interpretation  
+* Spatial locations and uncertainty – How geographic context is handled  
 
 ***Downloading the data:***
 
-*1. Downloading the ERA.Compiled pre-cooked comparisons data*
-
-*2. Downloading the data tables*
+* Downloading the ERA.Compiled comparisons table  
+* Downloading the data model tables  
+* Downloading the controlled vocabulary  
+* Viewing the data catalog  
 
 ***Exploring the data:***
 
-*1. Sub-setting the data to agronomy*
+* Sub-setting the data to agronomy  
+* Exploring geographic locations of studies  
+* Exploring crop types (products) in the data  
+* Exploring agronomic practices used in the studies  
+* Exploring the outcomes reported  
 
-*2. Exploring geographic locations of studies available*
+***Worked Example:***
 
-*3. Exploring the agronomic practices of studies available*
+* Analyzing maize yield response using the comparisons table  
 
-*4. Common outcomes reported*
+***Additional tools and learning:***
 
-***An example of an analysis you could do with ERA***
+* Vignettes from the `ERAg` package – Further worked examples and methods  
 
 # What is ERA?
 
 ## Introduction
 
-*Evidence for Resilient Agriculture* (ERA) helps address the gap. Started in 2012, ERA was envisaged to evaluate the evidence base of Climate-Smart Agriculture (CSA)---that is, agriculture that delivers productivity, resilience, and climate change mitigation outcomes simultaneously. However, the technologies included within ERA such as agroforestry, intercropping, and crop rotations, among many others are common features of agroecology, regenerative agriculture, nature-based solutions, ecosystem-based adaptation, sustainable land management, and other approaches as are many of the outcome indicators such as yield, net economic returns, soil organic carbon, land equivalent ratio, labour required, and more. This means that ERA is relevant for various perspectives on development and is flexible to allow users to define 'effectiveness' or 'work' consistently with their worldview.
+The *Evidence for Resilient Agriculture* (ERA) initiative was launched in 2012 to address the need for a robust evidence base on how agricultural practices perform under different conditions. Originally developed to evaluate the outcomes of Climate-Smart Agriculture (CSA), ERA has since evolved to include a wide range of technologies and practices relevant to agroecology, regenerative agriculture, ecosystem-based adaptation, and nature-based solutions.
 
-ERA is a comparatively large agricultural meta-dataset in terms of number of technologies, outcomes, and studies. ERA (version = `r era_version`) includes `r ERA_Compiled[,.N]` observations from `r ERA_Compiled[,length(unique(Code))]` peer-reviewed agricultural experiments that took place in Africa between `r ERA_Compiled[,min(M.Year.Start,na.rm=T)]` and `r ERA_Compiled[!M.Year.End>2050,max(M.Year.End,na.rm=T)]`. Together, these data compare how changing more than `r ERA_Compiled[,length(unique(PrName))]` combinations of agronomic, livestock, or tree management technologies affect more than `r ERA_Compiled[,length(unique(Out.SubInd))]` indicators of productivity, resilience, and greenhouse gas emissions and/or carbon stocks. The experiments were identified via *Web of Science* and *Scopus* and were evaluated against predetermined inclusion criteria: (i) location, (ii) technology and outcome relevance, (iii) data on both a new and conventional technology, and (iv) inclusion of primary data. 
+ERA provides a large, structured meta-dataset of agricultural experiments, harmonized using a common data model and controlled vocabulary. The current version of the dataset (version = `r era_version`) includes `r ERA_Compiled[,.N]` observations from `r ERA_Compiled[,length(unique(Code))]` peer-reviewed agricultural studies conducted in Africa between `r ERA_Compiled[,min(M.Year.Start,na.rm=T)]` and `r ERA_Compiled[!M.Year.End>2050,max(M.Year.End,na.rm=T)]`. These observations cover more than `r ERA_Compiled[,length(unique(PrName))]` unique combinations of practices, and assess their effects on over `r ERA_Compiled[,length(unique(Out.SubInd))]` outcome indicators, including yield, soil health, and emissions.
 
-Data are extracted using an excel template to create a complex data-model describing the context of a numerical experimental result. Control vs treatment comparison are **not** defined in the extraction template. Instead complex logic is applied to the data model to generate a simplified table of valid comparisons (we refer to this as `ERA.Compiled`).
+Experiments were identified through systematic searches in *Web of Science* and *Scopus* and were screened against predefined criteria: geographic location, technology and outcome relevance, inclusion of both conventional and alternative treatments, and availability of primary data. The extracted data are structured using a detailed Excel-based template, enabling flexible and precise representation of treatments, outcomes, experimental design, and context.
 
-The comparison table includes over 135 fields describing each study's geospatial location in WGS1984 (EPSG:4326) co-ordinate system,  (`Latitude`,`Longitude`), planting, harvest, and outcome measurement dates,  experimental design, management treatments (i.e., which are combinations of technologies used), and outcomes. The system can handle intercropping and temporal sequences of management activities including crop rotations. The comparison table can be  enriched by connecting back to the complex data model.
+A derived product, the `ERA.Compiled` table, simplifies the dataset into treatment-control comparisons, making it easier to analyze the effects of agricultural interventions. While the compiled table is ideal for quick analysis, it remains linked to the full data model, allowing users to retrieve detailed metadata and contextual information where needed.
 
 ## Extraction template
 
@@ -261,6 +270,134 @@ The most up-to-date version of the vocabulary can be accessed here:
 
 **[ERA Master Vocabulary (Excel)](https://github.com/peetmate/era_codes/raw/main/era_master_sheet.xlsx)**
 
+## Spatial locations and uncertainty
+
+ERA captures the geographic context of each experiment to support spatial analyses and linkages to climate, soil, and other environmental datasets. Coordinates are reported in **decimal degrees (WGS84; EPSG:4326)**.
+
+Each observation includes a **spatial uncertainty estimate**, recorded in the field `Buffer` (in meters), which represents the radius around the point location within which the true experimental site is likely to fall. This allows users to account for geolocation confidence when integrating with gridded datasets.
+
+Spatial metadata is included in the `Site.Out` table of the data model, the comparisons table and in a reference sheet called `era_master_codes$site_list` within the controlled vocabulary workbook. Spatial fields include:
+
+- Standardized site name (`Site.ID`): Unique names used to identify experimental sites across studies. These are harmonized for locations that appear in multiple studies under varying names. When multiple sites are aggregated in a single observation, their names are joined with ".." (e.g., "Mbinga..Nkhata Bay").
+- `Latitude` and `Longitude`: Verified coordinates in WGS 1984 (EPSG:4326), either reported by authors or manually geolocated by curators.
+- Uncertainty radius (`Buffer`): Numeric value in meters, reflecting spatial precision of the location (e.g., village, district, coordinates with varying decimal precision).
+- Site type (`Site.Type`): Describes whether the site is an on-farm trial, experimental station, or another type of location.
+- Site key (`Site.Key`): A standardized code combining the latitude (to 4 decimal places), longitude (to 4 decimal places), and Buffer value. This uniquely identifies the geospatial footprint of a site across the entire dataset. For example, "06.7170 -1.5333 B500" refers to a site at latitude 6.7170, longitude –1.5333, with a 500m uncertainty radius. This field is used to cluster spatially similar sites and support spatial matching.
+
+`R code:`
+```{r r_site_density_map, echo=T, message=F}
+library(ggplot2)
+library(data.table)
+library(rnaturalearth)
+library(rnaturalearthdata)
+library(sf)
+library(viridis)
+
+# 1. Subset ERA.Compiled to unique study x lat/lon combinations (non-missing)
+site_locs <- ERA_Compiled[!is.na(Latitude) & !is.na(Longitude), .(Latitude, Longitude, Buffer,Code)]
+site_locs <- unique(site_locs)
+
+# 2. Load Africa country shapes as sf object
+africa <- ne_countries(continent = "Africa", scale = "medium", returnclass = "sf")
+
+# 3. Plot with hex bins
+ggplot() +
+  geom_sf(data = africa, fill = "grey95", color = "grey70", linewidth = 0.3) +
+  geom_hex(
+    data = site_locs,
+    aes(x = Longitude, y = Latitude),
+    bins = 80,                   
+    alpha = 0.8
+  ) +
+  scale_fill_viridis_c(
+    option = "turbo",
+    direction = 1,
+    na.value = "transparent"
+  ) +
+  coord_sf(xlim = c(-20, 55), ylim = c(-35, 38), expand = FALSE) +
+  theme_minimal() +
+  labs(
+    title = "ERA Experiment Location Density (Hexbin)",
+    x = "Longitude",
+    y = "Latitude"
+  ) +
+  theme(
+    panel.grid = element_blank()
+  )
+```
+
+`python code:`
+```{r py_site_density_map, echo=T, eval=F}
+# Python equivalent code:
+
+import pandas as pd
+import geopandas as gpd
+import matplotlib.pyplot as plt
+import matplotlib as mpl
+
+# 1. Subset ERA_Compiled to unique study x lat/lon combinations (non-missing)
+site_locs = (
+    ERA_Compiled
+    .dropna(subset=['Latitude', 'Longitude'])
+    [['Latitude', 'Longitude', 'Buffer', 'Code']]
+    .drop_duplicates()
+)
+
+# 2. Load Africa country shapes as a GeoDataFrame
+world = gpd.read_file(gpd.datasets.get_path('naturalearth_lowres'))
+africa = world[world['continent'] == "Africa"]
+
+# 3. Plot with hex bins
+fig, ax = plt.subplots(figsize=(10, 8))
+
+# Plot Africa boundaries with a light grey fill and slightly darker borders
+africa.plot(ax=ax, color="grey95", edgecolor="grey70", linewidth=0.3)
+
+# Create a hexbin plot for site locations with gridsize=80 and alpha transparency
+hb = ax.hexbin(
+    site_locs['Longitude'], 
+    site_locs['Latitude'],
+    gridsize=80,
+    cmap=mpl.cm.get_cmap("turbo"),
+    alpha=0.8
+)
+
+# Add a colorbar to indicate the count scale
+cb = fig.colorbar(hb, ax=ax)
+cb.set_label('Count')
+
+# Set coordinate limits to match the original R plot
+ax.set_xlim(-20, 55)
+ax.set_ylim(-35, 38)
+
+# Add title and axis labels
+ax.set_title("ERA Experiment Location Density (Hexbin)", fontsize=14)
+ax.set_xlabel("Longitude", fontsize=12)
+ax.set_ylabel("Latitude", fontsize=12)
+
+# Remove grid lines to mimic a minimal theme
+ax.grid(False)
+
+plt.show()
+
+```
+
+The `site_list` contains standardized locations for agricultural research or demonstration facilities to help standardize and harmonize location reporting during data extraction and compilation.
+
+For all locations—whether reported as coordinates by the original authors or estimated—ERA applies a rigorous **two-stage human validation** process. This includes:  
+- Checking that the coordinates correspond to **agriculturally plausible areas** (e.g., not in oceans, mountains, or cities). 
+- Ensuring consistency with the **site description in the publication**. 
+- **Correcting erroneous coordinates** (e.g., swapped lat/lon, misplaced decimals). 
+- **Geolocating sites** where no coordinates were given, based on textual descriptions. 
+- Assigning an appropriate **uncertainty radius** depending on location specificity (e.g., “county” vs “village” vs “research station”). 
+
+This spatial verification process ensures ERA’s location data is suitable for integration with remote sensing, climate, and other geospatial datasets.
+
+In some cases, a single observation may represent results **aggregated across multiple spatial locations**. These cases are identified in the `Site.ID` field using a `..` delimiter (e.g., `"Kiberashi..Mbinga..Nkhata Bay"`). Each component site is described individually in the `site_list`, including its coordinates and uncertainty radius. For aggregated sites, ERA computes a **centroid of all included sites**, and the **overall spatial uncertainty (`Buffer`)** is calculated as the distance from this centroid to the edge of the furthest site's uncertainty buffer. This ensures that even spatially aggregated results are represented with an appropriate spatial footprint.
+
+Spatial locations connect ERA to wider geospatial information, find out more in the [Guide to Climate and Soil Data in ERA](https://eragriculture.github.io/ERA_Agronomy/ERA%20Climate%20and%20Soils.html).
+
+
 # Download the data
 
 Data is openly available for download from the S3 Bucket `s3://digital-atlas/era/data/`.
@@ -275,8 +412,10 @@ This section downloads and imports the ERA controlled vocabulary, which standard
 # Download the era master vocab ######
 era_vocab_url <- "https://github.com/peetmate/era_codes/raw/main/era_master_sheet.xlsx"
 era_vocab_local <- file.path(dl_dir, basename(era_vocab_url))
-download.file(era_vocab_url, era_vocab_local, mode = "wb")  # Download and write in binary mode
-
+if(!file.exists(era_vocab_local)|update_vocab){
+  download.file(era_vocab_url, era_vocab_local, mode = "wb")  # Download and write in binary mode
+}
+  
 # Import the vocab
 sheet_names <- readxl::excel_sheets(era_vocab_local)
 sheet_names <- sheet_names[!grepl("sheet|Sheet", sheet_names)]
@@ -595,6 +734,7 @@ DT::datatable(
 )
 ```
 
+### Data catalog
 To get a better understanding of what the fields in the comparisons table are you can view data a catalog by running the following code:
 
 `R code:`
@@ -1260,7 +1400,39 @@ plt.show()
 ```
 
 
-# For more details or to explore collaborative opportunities: 
+
+
+# The ERAg package
+
+The [ERAg](https://eia2030.github.io/ERAg/index.html) R package was developed to support users working with an earlier version of the ERA.Compiled dataset (as of 2018). While the package has not been updated to reflect the latest additions to the dataset, it remains a useful resource for exploring functionality, accessing sample code, and understanding how to work with ERA’s comparisons table.
+
+Although the comparison table included in the package is now out of date, many of the functions remain valid and may simplify analysis workflows using the more recent ERA.Compiled object loaded in this guide.
+
+	⚠️ Note: The package is written in R only. There is currently no Python version available.
+
+We plan to update the ERAg package in the near future to reflect the latest data and metadata structures. Keep an eye on the GitHub repository for announcements.
+
+## ERAg vignettes
+
+The `ERAg` R package provides a set of worked examples to help users explore, analyze, and better understand the ERA dataset. These vignettes illustrate key workflows and methods using the standardized ERA data model and should still be largely relevant to the more recent versions of `ERA.Compiled` stored on S3.
+
+- [**ERA-Introduction**](https://eia2030.github.io/ERAg/articles/ERA-Introduction.html)  
+**Overview of the ERA dataset structure and access.**  
+This vignette introduces the main components of the ERAg package, such as the master sheet, comparisons table, and coded variables. It demonstrates how to load and inspect ERA data for meta-analysis.
+
+- [**ERA-Explore-and-Analyze**](https://eia2030.github.io/ERAg/articles/ERA-Explore-and-Analyze.html)  
+**Basic workflows for summary statistics and visualization.**  
+Covers how to calculate treatment effects, filter observations by practice or outcome, and visualize impacts (e.g. on yield or soil organic carbon) using reproducible R code.
+
+- [**ERA-Search-Protocol**](https://eia2030.github.io/ERAg/articles/ERA-Search-Protocol.html)  
+**Systematic review methods and Boolean search strings.**  
+Details the structured search strategy used to compile the ERA dataset across Web of Science and Scopus (1970–2018), including practice and outcome keywords, inclusion criteria, and screening workflow.
+
+- [**ERA-Yield-Stability**](https://eia2030.github.io/ERAg/articles/ERA-Yield-Stability.html)  
+**Measuring long-term performance using stability metrics.**  
+Explains how to compute absolute and relative yield stability based on multi-year ERA data, inspired by methods from Knapp et al. (2018). Includes code for generating comparative stability plots.
+
+# Contact Us 
 
 Please visit our GitHub repository: <https://github.com/ERAgriculture/ERA_Agronomy.git> or our development GitHub: <https://github.com/CIAT/ERA_dev>
 
