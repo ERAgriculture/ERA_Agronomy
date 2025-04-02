@@ -1,6 +1,6 @@
 ---
 title: "Introduction to ERA"
-author: "Namita Joshi"
+author: "Namita Joshi & Peter Steward (Alliance of Bioversity International & CIAT)"
 date: "`r Sys.Date()`"
 format:
   html:
@@ -8,6 +8,7 @@ format:
     toc-depth: 4
     toc-expand: 2   
     number-sections: true
+    code-fold: true
     code_folding: hide
     include-in-header: hypothesis.html
 editor: visual
@@ -17,7 +18,7 @@ editor: visual
 <img src="images/Era_Logo_FINAL_Colour.png" width="100" style="margin-top: 10px;"/>
 :::
 
-```{r setup, include=FALSE}
+```{r setup, include=F}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -27,7 +28,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r packages, include=FALSE, echo=FALSE}
+```{r packages & functions, include=F, echo=F}
 
 if (!requireNamespace("pacman", quietly = TRUE)) {
   install.packages("pacman")
@@ -55,10 +56,40 @@ dl_dir <- "downloaded_data"
 if(!dir.exists(dl_dir)){
   dir.create(dl_dir, showWarnings = FALSE)
 }
-
 ```
 
-This vignette will guide you throgh the agronomy data available within the Evidence for Resilient Agriculture (ERA) The dataset serves as a critical resource for understanding agricultural resilience, specifically focusing on agriculture systems and their adaptation to climate change.
+```{r pre-load era compiled, echo=F, message=F}
+s3 <- s3fs::S3FileSystem$new(anonymous = TRUE)
+era_s3 <- "s3://digital-atlas/era"
+
+# List files in the s3 bucket
+all_files <- s3$dir_ls(file.path(era_s3, "data"))
+
+# Filter for the "agronomic" RData file, selecting the most recent version
+# Filter for the correct compiled comparison CSV
+target_file_compiled <- all_files[
+  grepl("era_compiled", all_files, ignore.case = TRUE) &
+    grepl("mh", all_files, ignore.case = TRUE) &
+    grepl("\\.parquet$", all_files) &
+    !grepl("econ", all_files, ignore.case = TRUE)
+] |> tail(1)
+
+
+# Define a local path for saving the downloaded file
+save_path <- file.path(getwd(), dl_dir, basename(target_file_compiled))
+
+# Download the file if it does not exist already
+if (!file.exists(save_path)) {
+  s3$file_download(target_file_compiled, save_path, overwrite = TRUE)
+}
+
+# Load the livestock data using the miceadds package
+ERA_Compiled <- arrow::read_parquet(save_path, stringsAsFactors = FALSE)
+
+era_version<-gsub(".parquet","",basename(target_file_compiled))
+```
+
+This vignette will guide you throgh the agronomy data available within the Evidence for Resilient Agriculture (ERA). The dataset serves as a critical resource for understanding agricultural resilience, specifically focusing on agriculture systems and their adaptation to climate change. If you are interested in livestock please see [ERL](https://github.com/ERAgriculture/ERL).
 
 We will cover the following:
 
@@ -88,13 +119,17 @@ We will cover the following:
 
 ***An example of an analysis you could do with ERA***
 
-# What is ERA
+# What is ERA?
 
 ## Introduction
 
-*Evidence for Resilient Agriculture* (ERA) v1.0.1 helps address the gap. Started in 2012, ERA was envisaged to evaluate the evidence base of Climate-Smart Agriculture (CSA)---that is, agriculture that delivers productivity, resilience, and climate change mitigation outcomes simultaneously. However, the technologies included within ERA such as agroforestry, intercropping, and crop rotations, among many others are common features of agroecology, regenerative agriculture, nature-based solutions, ecosystem-based adaptation, sustainable land management, and other approaches as are many of the outcome indicators such as yield, net economic returns, soil organic carbon, land equivalent ratio, labour required, and more. This means that ERA is relevant for various perspectives on development and is flexible to allow users to define 'effectiveness' or 'work' consistently with their worldview.
+*Evidence for Resilient Agriculture* (ERA) helps address the gap. Started in 2012, ERA was envisaged to evaluate the evidence base of Climate-Smart Agriculture (CSA)---that is, agriculture that delivers productivity, resilience, and climate change mitigation outcomes simultaneously. However, the technologies included within ERA such as agroforestry, intercropping, and crop rotations, among many others are common features of agroecology, regenerative agriculture, nature-based solutions, ecosystem-based adaptation, sustainable land management, and other approaches as are many of the outcome indicators such as yield, net economic returns, soil organic carbon, land equivalent ratio, labour required, and more. This means that ERA is relevant for various perspectives on development and is flexible to allow users to define 'effectiveness' or 'work' consistently with their worldview.
 
-ERA is a comparatively large agricultural meta-dataset in terms of number of technologies, outcomes, and studies. ERA v1.0.1 includes data from 2,011 agricultural experiments that took place in Africa between 1934 and 2018. Together, these data compare how changing more than 364 combinations of agronomic, livestock, or tree management technologies affect more than 87 indicators of productivity, resilience, and greenhouse gas emissions and/or carbon stocks. The experiments were identified via *Web of Science* and *Scopus* and were evaluated against predetermined inclusion criteria: (i) location, (ii) technology and outcome relevance, (iii) data on both a new and conventional technology, and (iv) inclusion of primary data. Extracted data from over 3,000 studies include 135 fields describing each study's context, experimental design, management treatments (i.e., which are combinations of technologies used), and outcomes.
+ERA is a comparatively large agricultural meta-dataset in terms of number of technologies, outcomes, and studies. ERA (version = `r era_version`) includes `r ERA_Compiled[,.N]` observations from `r ERA_Compiled[,length(unique(Code))]` peer-reviewed agricultural experiments that took place in Africa between `r ERA_Compiled[,min(M.Year.Start,na.rm=T)]` and `r ERA_Compiled[!M.Year.End>2050,max(M.Year.End,na.rm=T)]`. Together, these data compare how changing more than `r ERA_Compiled[,length(unique(PrName))]` combinations of agronomic, livestock, or tree management technologies affect more than `r ERA_Compiled[,length(unique(Out.SubInd))]` indicators of productivity, resilience, and greenhouse gas emissions and/or carbon stocks. The experiments were identified via *Web of Science* and *Scopus* and were evaluated against predetermined inclusion criteria: (i) location, (ii) technology and outcome relevance, (iii) data on both a new and conventional technology, and (iv) inclusion of primary data. 
+
+Data are extracted using an excel template to create a complex data-model describing the context of a numerical experimental result. Control vs treatment comparison are **not** defined in the extraction template. Instead complex logic is applied to the data model to generate a simplified table of valid comparisons (we refer to this as `ERA.Compiled`).
+
+The comparison table includes over 135 fields describing each study's geospatial location in WGS1984 (EPSG:4326) co-ordinate system,  (`Latitude`,`Longitude`), planting, harvest, and outcome measurement dates,  experimental design, management treatments (i.e., which are combinations of technologies used), and outcomes. The system can handle intercropping and temporal sequences of management activities including crop rotations. The comparison table can be  enriched by connecting back to the complex data model.
 
 ## Extraction template
 
@@ -132,11 +167,15 @@ Over the years of ERA, several versions of the extraction template have been dev
 
     -   Weed = Physical (not chemical) weeding events (typically hand weeding).
 
-5)  Make.Trt = create & name treatments by combining the experimental practices entered in the practice tabs.
+5)  Make.Trt = Create & name treatments by combining the experimental practices entered in the practice tabs.
 
-6)  EU&Out = Experimental Unit & Outcomes: Choose the products (typically crop commodities) and experimental outcomes for which data are presented.
+6)  Intercropping = Combine the crop specific treatments created in the Make.Trt tab to describe intercropping systems.
 
-7)  Times = Select the cropping seasons or years for which data are presented.
+7)  Time.Seq (Rotations) = Create temporal sequences of treatments and/or intercrops to reflect, for example, crop rotations or fallows. 
+
+6)  EU&Out = Experimental Unit & Outcomes: Choose the experimental units (typically crop or animal commodities) and experimental outcomes for which data are presented.
+
+7) Times = Select the cropping seasons or years for which data are presented.
 
 8)  EnterData = Captures values and associated errors for the experimental treatments, products, outcomes and times specified in the previous tabs. Do not start data entry until you've completed all the previous tabs.
 
@@ -146,52 +185,220 @@ The link to this extraction template can be found here: <https://github.com/CIAT
 
 [![Watch on YouTube](images/extraction_template.png)](https://youtu.be/0Ad-JPmFSOg)
 
-## Understanding the different data formats of ERA
+## Data model (raw data)
 
-Each of the tables within the front end of the excel feeds into tables behind the scenes.
+Each of the tables within the front end of the excel feeds are imported using `R` to generate tables that form a data model. These tables provide you with **detailed information** from each study, e.g fertilizer applied, timing of fertilizer and so on. 
 
-The main tables are :
+The main tables are:  
 
--   Pub.Out : Publication information, DOIs, ERA version
--   Site.Out : Location, coordinates
--   ExpD.Out : Experimental design
--   Times.Out : Timeline of the experiment
--   Times.Clim : Climate information for the location
--   Prod.Out : Product
--   Var.Out : Variety
--   Till.Out : Information on tillage during the experiment
--   Plant.Out : Planting information
--   PD.Out: Planting dates (Linked codes in table PD.Codes)
--   Fert.Out : Information on fertilizer use during the experiment (Linked method in table Fert.Method)
--   Chems.AI : Chemical active ingredients
--   Chems.Out : Information on chemicals use during the experiment (Linked codes in table Chems.Codes)
--   Res.Out : Information on residues during the experiment (Linked method in table Res.Method)
--   Har.Out : Information on harvesting during the experiment
--   pH.Out : Information on pH control during the experiment
--   WH.Out : Information on water harvesting during the experiment (Irrigation information can be found in Irrig.Codes and Irrig.Method)
--   AF.Out : Information on agroforestry during the experiment (Linked Tree information in table AF.Trees )
--   Int.Out : Information on intercropping during the experiment
--   Rot.Out : Information on crop rotation during the experiment (Linked Rotation Sequence in table Rot.Seq )
--   Out.Out : Outcomes. Outcomes
--   Out.Econ : Economic outcomes
--   Data.Out : Measured outcomes for concerned practice and product.
+-   `Pub.Out` : Publication information, DOIs, ERA template version and project. 
+-   `Site.Out`,`Soils.Out` : Location, coordinates, location uncertainty radius, site/location type, site soils. 
+-   `ExpD.Out` : Experimental design. 
+-   `Times.Out` : Measurement periods for which experimental results are reported (typically growing seasons). 
+-   `Times.Clim` : Climate information for locations x measurement periods recorded in Times.Out (e.g. rainfall for  particular growing season). 
+-   `Prod.Out` : Crop or animal commodity. 
+-   `Var.Out` : Variety and any usual associated information reported. 
+-   `Till.Out` : Tillage management. 
+-   `Plant.Out`,`Plant.Method` : Planting information (density, arrangement, thinning, etc.). 
+-   `PD.Codes`,`PD.Out`: Management practices that relate to improved timing of planting activities and information on planting and harvest dates. 
+-   `Fert.Out`,`Fert.Method`,`Fert.Comp`: Detailed fertilizer management and composition of organic fertilizers. 
+-   `Chems.Code`,`Chems.Out`,`Chems.AI` : Chemicals applications (pesticides, veterinary medicines, and chemicals that do not fit the definition of a fertilizer). 
+-   `Res.Out`,`Res.Method`,`Res.Comp` : Information on mulching or crop residue management. 
+-   `Har.Out` :Improved harvesting. 
+-   `pH.Out` : pH management. 
+-   `WH.Out` : Water harvesting practices. 
+-   `Irrig.Codes`,`Irrig.Methods`: Irrigation management practices and applications. 
+-   `AF.Out`,`AF.Trees`: Agroforestry management and tree species and density.  
+-   `Int.Out` : Intercropping management. 
+-   `Rot.Out``Rot.Seq`,`Rot.Seq.Summ` : Crop rotations or other temporal sequence of managment activities. 
+-   `Out.Out`,`Out.Econ` : The Outcomes reported in the experiment and any additional context required for understanding them (e.g. discount rate and time period for economic outcomes). 
+-   `Data.Out` : Reported values and errors for combinations of outcome, commodity, management (treatment, intercrop, and/or rotation), location, and time (measurement period). 
 
-The above tables are what we refer to as the data tables, or raw data within ERA. These tables provide you with **detail information** from each study, e.g fertilizer applied, timing of fertilizer and so on. In an attempt to make the data easily usable, ERA.Compiled is created.\
-ERA.Compiled is a flat excel file that pulls **only essential fields** from each data tables table to create rows of **treatment versus control. This treatment versus control data excluded detailed description of management practices.** It simply captures the 'with' or 'without' a practice.
+The data model also makes use of a large controlled vocabulary (the `master codes`), which is described later in this document. We aspire to develop the controlled vocabulary into an ontology for agricultural meta-analysis. A beta-version for livestock can be found here
 
-Below is a simple conceptional framework of how ERA.Compiled is generated from the data tables.
+More detailed documentation of the ERA agronomy data model is available [here](https://eragriculture.github.io/ERA_Agronomy/ERA-Create-Agronomy-Data-Model.html).
+
+![](images/data model.png)
+
+## Comparisons table 
+
+In an attempt to make ERA data easily usable, we provide a table of control vs. treatment comparisons (`ERA.Compiled`).
+This is a flat excel file that pulls **only essential fields** from each data table table to create rows of treatment versus control. The table does not include detailed descriptions of management practices, but it can be connected back to the ERA data model if specific management information is required.
+
+It should be noted that **more studies** are available in the comparisons table than the data model. This is because the earliest iteration of ERA used this flat template (`ERA.Compiled`) to extract data. We do not have the resources to convert all extractions to the data model.
+
+Below is a simple conceptional framework of how ERA.Compiled is generated from the data tables. 
 
 ![](images/metadata_to_compiled.png)
 
-# Downloading the data
+## Controlled vocabulary
 
-Data is available and can be downloaded from the S3 Bucket `s3://digital-atlas/era/data/`
+ERA uses a structured **controlled vocabulary** to ensure consistency and harmonization across thousands of experimental observations. This vocabulary underpins the data model and comparison table by standardizing the names and attributes of practices, outcomes, and management components. It is compiled into an Excel workbook (`era_master_sheet.xlsx`) and is essential for:
 
-## Downloading the data tables
+- Defining **practice types** (e.g., fertilizer, tillage, variety)
+- Classifying **input materials** (e.g., specific fertilizer types or tree species)
+- Linking **outcomes** to clear definitions and measurement units
+- Supporting **interoperability** and reproducibility in meta-analyses
 
-Unhide the code the view the steps to download the data tables.
+The vocabulary is organized into multiple sheets, each corresponding to a different concept area, including:
 
-```{r downloading data from S3 bucket,echo=T, message=TRUE}
+- `prod`: commodity types and product subtypes
+- `fert`: fertilizer types
+- `chem`: chemical types (e.g. pesticides)
+- `chem.comm`: commercial chemical names
+- `chem.ai`: active ingredients
+- `trees`: agroforestry tree species
+- `vars`: crop varieties and associated traits
+- `out`: outcome subindicators
+- `prac`: subpractices and method types (e.g. planting method, tillage type)
+- `residues`: residue management material types
+
+These vocabularies are linked to the main ERA data tables via foreign key relationships in the `dm` data model. For example, the `Fert.Method` table contains a column `F.Type`, which links to the `fert` sheet of the master codes. This structure ensures that the dataset can be queried and interpreted accurately at scale.
+
+A future goal is to evolve this vocabulary into a full ontology for agricultural meta-analysis, aligning it with existing semantic web and ontology standards. A beta-version of the **livestock ontology** is already underway.
+
+The most up-to-date version of the vocabulary can be accessed here:
+
+**[ERA Master Vocabulary (Excel)](https://github.com/peetmate/era_codes/raw/main/era_master_sheet.xlsx)**
+
+# Download the data
+
+Data is openly available for download from the S3 Bucket `s3://digital-atlas/era/data/`.
+
+## Download controlled vocabulary
+
+This section downloads and imports the ERA controlled vocabulary, which standardizes the naming of practices, products, and outcomes across studies. Both R and Python code examples are provided.
+
+`R code:`
+```{r R_importing_the_vocab, echo=T, message=F,}
+
+# Download the era master vocab ######
+era_vocab_url <- "https://github.com/peetmate/era_codes/raw/main/era_master_sheet.xlsx"
+era_vocab_local <- file.path(dl_dir, basename(era_vocab_url))
+download.file(era_vocab_url, era_vocab_local, mode = "wb")  # Download and write in binary mode
+
+# Import the vocab
+sheet_names <- readxl::excel_sheets(era_vocab_local)
+sheet_names <- sheet_names[!grepl("sheet|Sheet", sheet_names)]
+
+# Read each sheet into a list named era_master_codes
+era_master_codes <- sapply(
+  sheet_names,
+  FUN = function(x) {
+    data.table::data.table(readxl::read_excel(era_vocab_local, sheet = x))
+  },
+  USE.NAMES = TRUE
+)
+```
+
+`python code:` 
+```{r py_importing_the_vocab, eval=F}
+# Note: This is a GPT-generated Python translation and requires validation.
+import os
+import requests
+import pandas as pd
+
+# Define download directory
+dl_dir = "era_master_codes"
+os.makedirs(dl_dir, exist_ok=True)
+
+# Define URL and local path
+era_vocab_url = "https://github.com/peetmate/era_codes/raw/main/era_master_sheet.xlsx"
+era_vocab_local = os.path.join(dl_dir, os.path.basename(era_vocab_url))
+
+# Download the file if it doesn't already exist
+if not os.path.exists(era_vocab_local):
+    response = requests.get(era_vocab_url)
+    with open(era_vocab_local, "wb") as f:
+        f.write(response.content)
+
+# Read all sheets except those with "sheet" in the name
+xls = pd.ExcelFile(era_vocab_local)
+sheet_names = [s for s in xls.sheet_names if "sheet" not in s.lower()]
+
+# Load each sheet into a dictionary
+era_master_codes = {
+    sheet: xls.parse(sheet) for sheet in sheet_names
+}
+```
+
+How you can explore descriptions of major ERA concepts (Practices, Outcomes, Products):
+
+`R code:`
+```{r r_view_pracs, echo=T, message=F}
+practices<- era_master_codes$prac[,.(Code,Theme,Practice,Subpractice,Definition)]
+
+DT::datatable(
+  practices,
+  options = list(
+    scrollY = "400px",scrollX = TRUE,pageLength = 50,fixedHeader = FALSE 
+  ),
+    caption = htmltools::tags$caption(
+    style = "caption-side: top; text-align: left; font-weight: bold; font-size: 1.1em;",
+    "management practice definitions"
+    ),
+    class = "nowrap"
+)
+```
+
+`R code:`
+```{r r_view_outcomes, echo=T, message=F}
+outcomes<- era_master_codes$out[,.(Code,Pillar,Pillar.Code,Subpillar,Indicator,Subindicator,Definition)]
+DT::datatable(
+  outcomes,
+  options = list(
+    scrollY = "400px",scrollX = TRUE,pageLength = 20,fixedHeader = FALSE,
+    columnDefs = list(
+      list(width = '100px', targets = which(names(outcomes) == "Definition") - 1)
+    )
+  ),
+  class = "nowrap",
+  caption = htmltools::tags$caption(
+    style = "caption-side: top; text-align: left; font-weight: bold; font-size: 1.1em;",
+    "outcome definitions"
+    )
+)
+```
+
+`R code:`
+```{r r_view_products, echo=T, message=F}
+products<- era_master_codes$prod[,.(EU,Product.Type,Product.Subtype,Product,Product.Simple,Component,Latin.Name)]
+DT::datatable(
+  products,
+  options = list(
+    scrollY = "400px",scrollX = TRUE,pageLength = 50,fixedHeader = FALSE 
+
+  ),
+ caption = htmltools::tags$caption(
+    style = "caption-side: top; text-align: left; font-weight: bold; font-size: 1.1em;",
+    "products (a.k.a. experimental units)"
+    )
+)
+```
+
+`python code:` 
+```{r py_view_practices_outcomes_products, eval=F, echo=T}
+import pandas as pd
+from IPython.display import display
+
+# Extract tables from the loaded Excel sheets
+practices = era_master_codes["prac"]
+outcomes = era_master_codes["out"]
+products = era_master_codes["prod"]
+
+# Display tables with scrollable options in JupyterLab/Notebook
+with pd.option_context('display.max_rows', 20, 'display.max_columns', None):
+    display(practices.style.set_table_attributes("style='display:inline; float:left; margin-right:20px;'"))
+    display(outcomes.style.set_table_attributes("style='display:inline; float:left; margin-right:20px;'"))
+    display(products.style.set_table_attributes("style='display:inline; float:left; margin-right:20px;'"))
+```
+
+## Download data model
+
+This section connects to the public S3 bucket, identifies the latest agronomic ERA data set, downloads it locally, and loads it into memory.
+
+`R code:`
+```{r R downloading data from S3 bucket,echo=T, message=TRUE}
 # Create an S3 filesystem handle
 s3 <- s3fs::S3FileSystem$new(anonymous = TRUE)
 era_s3 <- "s3://digital-atlas/era"
@@ -206,7 +413,7 @@ target_file <- tail(
 )
 
 # Define a local path for saving the downloaded file
-save_path <- file.path(getwd(), dl_dir, basename(target_file))
+save_path <- file.path(dl_dir, basename(target_file))
 
 # Download the file if it does not exist already
 if (!file.exists(save_path)) {
@@ -221,41 +428,79 @@ agronomic_data <- miceadds::load.Rdata2(
 
 ```
 
+`python code:`
+```{r py downloading data from S3 bucket,echo=T, eval=F}
+# Note: This is a GPT-generated Python translation and requires validation.
+import os
+import s3fs
+import re
+
+# Define download directory
+dl_dir = "downloaded_data"
+os.makedirs(dl_dir, exist_ok=True)
+
+# Set up anonymous S3 filesystem
+s3 = s3fs.S3FileSystem(anon=True)
+era_s3 = "digital-atlas/era/data"
+
+# List files in the S3 bucket
+all_files = s3.ls(era_s3)
+
+# Filter for latest agronomic .RData file
+agronomic_files = [f for f in all_files if "agronomic" in f and f.endswith(".RData")]
+target_file = sorted(agronomic_files)[-1] if agronomic_files else None
+
+# Define local save path
+save_path = os.path.join(dl_dir, os.path.basename(target_file))
+
+# Download file if not already present
+if not os.path.exists(save_path):
+    with s3.open(target_file, 'rb') as src, open(save_path, 'wb') as dst:
+        dst.write(src.read())
+
+# Note: RData file loading requires R. Consider using `rpy2` if needed.
+```
+
 Once the data is downloaded, it will appear as the screenshot below.
 
 Each of the tables can be extracted individual and combined with one another based on a common piece of information. For example, the B.Code, which is present in each tab, can be used to match information from one particular paper across all these tables.
 
 ![](images/metadata.png)
 
-To get a better understanding of what the variable codes mean, download the documentation by running the following code:
+To get a better understanding of what the fields in the data model are you can view data a catalog by running the following code:
 
-```{r importing the vocad, echo=T, message=F}
+`R code:`
+```{r R importing the vocab, echo=T, message=F}
 
-# Download the era master vocab ######
-era_vocab_url <- "https://github.com/peetmate/era_codes/raw/main/era_master_sheet.xlsx"
-era_vocab_local <- file.path(dl_dir, basename(era_vocab_url))
-download.file(era_vocab_url, era_vocab_local, mode = "wb")  # Download and write in binary mode
+# Access era_fields from era_master_codes
+era_fields <- era_master_codes$era_fields_v2
 
-# Import the vocab
-sheet_names <- readxl::excel_sheets(era_vocab_local)
-sheet_names <- sheet_names[!grepl("sheet|Sheet", sheet_names)]
+# Filter to the version relevant to the agronomy data model
+era_fields<-era_fields[industrious_elephant_2023==T,.(Table,Field,Display_Name,Field_Description,Data_Type)]
 
-# Read each sheet into a list named downloaded_data
-downloaded_data <- sapply(
-  sheet_names,
-  FUN = function(x) {
-    data.table::data.table(readxl::read_excel(era_vocab_local, sheet = x))
-  },
-  USE.NAMES = TRUE
-)
+names(era_fields)
+```
 
-# Access era_fields from downloaded_data
-era_fields <- downloaded_data$era_fields
+`python code:`
+```{r py importing the vocab, echo=T, eval=F}
+# Access and filter the era_fields_v2 sheet
+era_fields_df = era_master_codes["era_fields_v2"]
+
+# Filter to the version relevant to the agronomy data model
+filtered_fields = era_fields_df[era_fields_df["industrious_elephant_2023"] == True]
+
+# Select specific columns
+era_fields = filtered_fields[["Table", "Field", "Display_Name", "Field_Description", "Data_Type"]]
+
+# Show column names
+print(era_fields.columns.tolist())
+```
 
 
+```{r show era_fields_v2,echo=F}
 # Display the full table as a scrollable datatable
 DT::datatable(
-  era_fields[, 1:12],
+  era_fields,
   options = list(
     scrollY = "400px",
     scrollX = TRUE,
@@ -266,13 +511,16 @@ DT::datatable(
 
 ```
 
-## Downloading ERA.Compiled
+Note the data catalog  `era_master_codes$era_fields_v2` is a work in progress, we are currently revising it and it should be completed by May 2025.
 
-ERA.Compiled is part of the `ERAg` package and is generated through a processing script that performs several key functions, including harmonizing units, aligning entries with the ERA ontology, creating treatment--control comparisons, and computing response ratios.
+See our [agronomy data model page](https://eragriculture.github.io/ERA_Agronomy/ERA-Create-Agronomy-Data-Model.html) for more information how the data tables are connected.
 
-To download this data for the package, running the following code:
+## Download comparisons table
 
-```{r downloading era.compiled and descriptions, echo=T, message=F}
+This section retrieves the most recent version of the ERA.Compiled comparisons table from the ERA S3 bucket, saves it locally, and loads it for use.
+
+`R code:`
+```{r r_download_compiled, echo=T, message=F,eval=T}
 s3 <- s3fs::S3FileSystem$new(anonymous = TRUE)
 era_s3 <- "s3://digital-atlas/era"
 
@@ -281,94 +529,131 @@ all_files <- s3$dir_ls(file.path(era_s3, "data"))
 
 # Filter for the "agronomic" RData file, selecting the most recent version
 # Filter for the correct compiled comparison CSV
-target_file_compiled <- all_files[
-  grepl("era_compiled", all_files, ignore.case = TRUE) &
-    grepl("majestic_hippo", all_files, ignore.case = TRUE) &
-    grepl("\\.csv$", all_files) &
-    !grepl("econ", all_files, ignore.case = TRUE) &
-    !grepl("no", all_files, ignore.case = TRUE)
-] |> tail(1)
+(target_file_compiled <- all_files[
+  grepl("era_compiled.*mh.*csv$", all_files, ignore.case = TRUE) &
+    !grepl("econ", all_files, ignore.case = TRUE) 
+] |> tail(1))
 
+# The file will start era_compiled, should not contain econ and the most recent version will have the most recent
+# date at the end of the file name.
 
 # Define a local path for saving the downloaded file
-save_path <- file.path(getwd(), dl_dir, basename(target_file_compiled))
+save_path <- file.path(dl_dir, basename(target_file_compiled))
 
 # Download the file if it does not exist already
 if (!file.exists(save_path)) {
   s3$file_download(target_file_compiled, save_path, overwrite = TRUE)
 }
 
-# Load the livestock data using the miceadds package
-ERA_Compiled <- read.csv(save_path, stringsAsFactors = FALSE)
+# Load the data
+ERA_Compiled <- fread(save_path)
+```
 
-#Display the table 
-    #	Display	the	summary	table	of	era compiled
+`python code:`
+```{r py_download_compiled, echo=T,eval=F}
+import os
+import s3fs
+import pandas as pd
 
+# Set up S3 access
+fs = s3fs.S3FileSystem(anon=True)
+era_s3 = "digital-atlas/era/data"
+dl_dir = "era_master_codes"
+os.makedirs(dl_dir, exist_ok=True)
+
+# List files in the S3 directory
+all_files = fs.ls(era_s3)
+
+# Filter for most recent compiled CSV (excluding "econ")
+compiled_files = sorted([
+    f for f in all_files
+    if "era_compiled" in f.lower()
+    and "mh" in f.lower()
+    and f.lower().endswith(".csv")
+    and "econ" not in f.lower()
+])
+
+# Select the most recent file
+target_file = compiled_files[-1]
+save_path = os.path.join(dl_dir, os.path.basename(target_file))
+
+# Download if not already saved
+if not os.path.exists(save_path):
+    with fs.open(target_file, 'rb') as fsrc, open(save_path, 'wb') as fdst:
+        fdst.write(fsrc.read())
+
+# Load the data
+ERA_Compiled = pd.read_csv(save_path)
+```
+
+An example of the content of `ERA.Compiled`
+```{r,echo=F}
+#	Display	the	summary	table	of	era compiled
 DT::datatable(
-  ERA_Compiled[, c("Code", "Country", "M.Year", "Product", "Out.SubInd","PrName","T.Descrip","C.Descrip")],  # example cols
-  options = list(scrollX = TRUE, pageLength = 20)
+  ERA_Compiled[, c("Code", "Country", "M.Year", "Product", "Out.SubInd","PrName","T.Descrip","C.Descrip","MeanT","MeanC")],  # example cols
+  options = list(scrollX = TRUE, pageLength = 10)
 )
+```
 
+To get a better understanding of what the fields in the comparisons table are you can view data a catalog by running the following code:
 
+`R code:`
+```{r r_era_fieldsv1, echo=T, message=F}
+# Access era_fields from era_master_codes
+era_fields_comp <- era_master_codes$era_fields_v1
 
 ```
 
-You can also explore descriptions of major ERA concepts (Practices, Outcomes, Products)
-
-```{r view practices, outcomes and products, echo=T, message=F}
-practices<- downloaded_data$prac
-outcomes<- downloaded_data$out
-products<- downloaded_data$prod
-
-DT::datatable(
-  practices,
-  options = list(
-    scrollY = "400px",  # Set vertical scroll height
-    scrollX = TRUE,     # Enable horizontal scrolling
-    pageLength = 20,    # Initial number of rows displayed
-    fixedHeader = FALSE  # Keep column headers fixed while scrolling
-  )
-)
-
-DT::datatable(
-  outcomes,
-  options = list(
-    scrollY = "400px",  # Set vertical scroll height
-    scrollX = TRUE,     # Enable horizontal scrolling
-    pageLength = 20,    # Initial number of rows displayed
-    fixedHeader = FALSE  # Keep column headers fixed while scrolling
-  )
-)
-
-DT::datatable(
-  products,
-  options = list(
-    scrollY = "400px",  # Set vertical scroll height
-    scrollX = TRUE,     # Enable horizontal scrolling
-    pageLength = 20,    # Initial number of rows displayed
-    fixedHeader = FALSE  # Keep column headers fixed while scrolling
-  )
-)
+`python code:`
+```{r py_era_fieldsv1, echo=T, eval=F}
+# Access and filter the era_fields_v2 sheet
+era_fields_comp = era_master_codes["era_fields_v1"]
 ```
+
+
+```{r show r_era_fieldsv1,echo=F}
+# Display the full table as a scrollable datatable
+DT::datatable(
+  era_fields,
+  options = list(
+    scrollY = "400px",
+    scrollX = TRUE,
+    pageLength = 20,
+    fixedHeader = FALSE
+  )
+)
+
+```
+
+Note the data catalog  `era_master_codes$era_fields_v2` is a work in progress, we are currently revising it and it should be completed by May 2025.
 
 # Exploring the comparisons data (`ERA.Compiled`)
 
 ## Subsetting the data to agronomy
 
-ERA has a diverse range of practices, from agronomy to livestock and a few papers on postharvest storage. We will therefore focus on Agronomy for this User Guide. If you are interest in livestock practices, please explore our Livestock User Guide (<https://eragriculture.github.io/ERL/Guide-to-Livestock-Data-Analysis-in-the-ERA-Dataset--STATIC.html>)
+ERA has a diverse range of practices, from agronomy to livestock and a few papers on postharvest storage. We will therefore focus on Agronomy for this User Guide. If you are interest in livestock practices, please explore our [Livestock User Guide](https://eragriculture.github.io/ERL/Guide-to-Livestock-Data-Analysis-in-the-ERA-Dataset--STATIC.html).
 
-Unhide the code to see how we sub-set the data to agronomy papers only. Product.Type has either Animal or Plant and therefore in this example, we will subset to Plant
+Unhide the code to see how we sub-set the data to agronomy papers only. Product.Type has either Animal or Plant and therefore in this example, we will subset to Plant.
 
-```{r subset to agronomy, echo=T, message=F}
+`R code:`
+```{r r_subset to agronomy, echo=T, message=F}
 ERA.Compiled_ag <-ERA.Compiled[grepl("Plant", Product.Type)]
+```
 
+`python code:`
+```{r py_subset,echo=T,eval=F}
+import pandas as pd
+
+# Assuming ERA_Compiled is your DataFrame
+ERA_Compiled_ag = ERA_Compiled[ERA_Compiled['Product.Type'].str.contains("Plant", na=False)]
 ```
 
 ## Exploring geographic locations of studies available
 
 We collected country, site name paraphrased from study, and spatial coordinates when given. Location's coordinates were verified in Google Maps, as they were often inaccurately reported. Enumerators also recorded a measure of spatial uncertainty. When authors reported decimal degrees and there was no correction required to the co-ordinates, then uncertainty was measured in terms of the value's precision. When the location was estimated using Google Maps, the spatial uncertainty value was measured in terms of the precision of the site location description (e.g., a single farm or region) and the enumerator's visual interpretation of land use at and near the coordinates. Observation's geographic coordinates were collected to facilitate linking the data compiled in ERA to external databases, for example related to climatic and environmental factors not necessarily reported in the original study.
 
-```{r plotting the distribution of data, echo=T, message=F}
+`R code:`
+```{r r_plotting the distribution of data, echo=T, message=F}
 # Ensure coordinates are numeric
 ERA.Compiled_ag <- ERA.Compiled_ag %>%
   mutate(
@@ -433,6 +718,82 @@ map<- ggplot() +
 map
 ```
 
+`python code:`
+```{r py_plotting the distribution of data,echo=T,eval=F}
+# Python equivalent code:
+
+import pandas as pd
+import numpy as np
+import geopandas as gpd
+import matplotlib.pyplot as plt
+
+# Ensure coordinates are numeric
+ERA_Compiled_ag['Latitude'] = pd.to_numeric(ERA_Compiled_ag['Latitude'], errors='coerce')
+ERA_Compiled_ag['Longitude'] = pd.to_numeric(ERA_Compiled_ag['Longitude'], errors='coerce')
+ERA_Compiled_ag = ERA_Compiled_ag.dropna(subset=['Latitude', 'Longitude'])
+
+# Count the number of papers per country
+paper_counts = (
+    ERA_Compiled_ag
+    .groupby('Country')
+    .agg(N_Papers=('Code', 'nunique'))
+    .reset_index()
+)
+
+# Load only African countries using Natural Earth data
+world = gpd.read_file(gpd.datasets.get_path('naturalearth_lowres'))
+world = world[world['continent'] == 'Africa']
+
+# Fix Tanzania name if needed
+world['admin'] = world['admin'].replace("United Republic of Tanzania", "Tanzania")
+
+# Ensure CRS is consistent
+world = world.to_crs(epsg=4326)
+
+# Convert ERA_Compiled_ag to spatial data
+sites_sf = gpd.GeoDataFrame(
+    ERA_Compiled_ag,
+    geometry=gpd.points_from_xy(ERA_Compiled_ag['Longitude'], ERA_Compiled_ag['Latitude']),
+    crs="EPSG:4326"
+)
+
+# Join paper counts to map: select only country names and geometry, rename and merge
+map_data = world[['admin', 'geometry']].rename(columns={'admin': 'Country'})
+map_data = map_data.merge(paper_counts, on='Country', how='left')
+
+# Plot the map
+fig, ax = plt.subplots(figsize=(10, 8))
+
+# Plot African countries colored by N_Papers; missing values will appear in light gray
+map_data.plot(
+    column='N_Papers',
+    ax=ax,
+    edgecolor='white',
+    cmap='viridis',
+    missing_kwds={'color': 'gray95', 'edgecolor': 'white'}
+)
+
+# Plot site locations
+sites_sf.plot(
+    ax=ax,
+    marker='o',
+    color='white',
+    edgecolor='black',
+    markersize=50,
+    alpha=0.5
+)
+
+# Set plot limits to match the original R code coordinates
+ax.set_xlim(-20, 55)
+ax.set_ylim(-35, 38)
+ax.axis('off')
+
+# Add legend (customization may be needed to mirror ggplot's style)
+plt.legend(title='Agronomy Papers', loc='lower center', ncol=3)
+plt.tight_layout()
+plt.show()
+```
+
 ## Exploring the products of studies available
 
 The `Product.Subtype` column in the `ERA.Compiled_ag` dataset contains the specific **crop types** examined in each study (e.g., `"Maize"`, `"Rice"`, `"Wheat"`).
@@ -449,7 +810,8 @@ The figure below displays the distribution of crop categories in the dataset. It
 
 Each tile represents a crop category, and its size reflects the **number of unique studies** (`Code`) that included at least one crop from that category. The number in parentheses shows the count of studies for that group.
 
-```{r plotting products, echo=T, message=F}
+`R code:`
+```{r r_plotting products, echo=T, message=F}
 prod_counts <- ERA.Compiled_ag %>%
   separate_rows(Product.Subtype, sep = "-") %>% 
   group_by(Product.Subtype) %>%
@@ -475,6 +837,47 @@ tree_plot<- ggplot(prod_counts, aes(area = Count, fill = Count, label = label)) 
 tree_plot
 ```
 
+`python code:`
+```{r py_plotting products, echo=T, eval=F}
+# Python equivalent code:
+import pandas as pd
+import squarify
+import matplotlib.pyplot as plt
+
+# Separate rows by "-" in the "Product.Subtype" column
+prod_counts = (
+    ERA_Compiled_ag
+    .assign(Product_Subtype=ERA_Compiled_ag['Product.Subtype'].str.split('-'))
+    .explode('Product_Subtype')
+    .groupby('Product_Subtype')
+    .agg(Count=('Code', 'nunique'))
+    .reset_index()
+)
+
+# Create label as "Product.Subtype (Count)"
+prod_counts['label'] = prod_counts['Product_Subtype'] + " (" + prod_counts['Count'].astype(str) + ")"
+
+# Plot the treemap
+plt.figure(figsize=(10, 8))
+sizes = prod_counts['Count'].values
+labels = prod_counts['label'].values
+
+# Normalize sizes for colormap mapping
+normed = sizes / sizes.max()
+colors = plt.cm.Greens(normed)
+
+squarify.plot(sizes=sizes, label=labels, color=colors, alpha=0.7)
+plt.axis('off')
+plt.title('Products Treemap', fontsize=14, fontweight='bold')
+
+# Set white borders for each rectangle
+for patch in plt.gca().patches:
+    patch.set_linewidth(1)
+    patch.set_edgecolor('white')
+
+plt.show()
+```
+
 ## Exploring the agronomic practices within studies available
 
 The following analysis explores the types of **agronomic practices**-referred to as **"Themes"** in the dataset.
@@ -482,7 +885,8 @@ The following analysis explores the types of **agronomic practices**-referred to
 Each study in ERA may be associated with multiple practices---for example, a study might examine both Soil Management and Nutrient Management.\
 For example, the theme 'Soil Management' include practices like green manure, crop residue, pH control, tillage, improved fallows. 'Nutrient Management' includes organic and inorganic fertilizer. This can be found in the practices within the mastercodes\
 
-```{r plotting practices, echo=T, message=F}
+`R code:`
+```{r r_plotting practices, echo=T, message=F}
 
 ag_counts <- ERA.Compiled_ag %>%
   separate_rows(Theme, sep = "-") %>% 
@@ -522,11 +926,67 @@ waffle_plot
 
 ```
 
+`python code:`
+```{r py_plotting practices, echo=T, eval=F}
+# Python equivalent code:
+
+import pandas as pd
+import numpy as np
+from pywaffle import Waffle
+import matplotlib.pyplot as plt
+import matplotlib as mpl
+
+# Separate rows by "-" in the "Theme" column and count unique 'Code's
+ag_counts = (
+    ERA_Compiled_ag
+    .assign(Theme=ERA_Compiled_ag['Theme'].str.split('-'))
+    .explode('Theme')
+    .groupby('Theme')
+    .agg(Count=('Code', 'nunique'))
+    .reset_index()
+)
+ag_counts['label'] = ag_counts['Theme'] + " (" + ag_counts['Count'].astype(str) + ")"
+
+# Define parts per square (e.g. 1 square = 20 studies)
+parts_per_square = 20
+
+# Prepare waffle input: compute squares per theme
+waffle_data = ag_counts.copy()
+waffle_data['squares'] = (waffle_data['Count'] / parts_per_square).round().astype(int)
+waffle_data = waffle_data[waffle_data['squares'] > 0]
+
+# Create a dictionary for the waffle plot: keys are labels, values are squares
+waffle_vec = dict(zip(waffle_data['label'], waffle_data['squares']))
+
+# Generate a color palette similar to RColorBrewer "Blues"
+n_categories = len(waffle_data)
+colors = [mpl.cm.Blues(i) for i in np.linspace(0.3, 0.7, n_categories)]
+
+# Plot the waffle chart
+fig = plt.figure(
+    FigureClass=Waffle,
+    rows=10,
+    values=waffle_vec,
+    colors=colors,
+    legend={
+        'loc': 'lower center',
+        'bbox_to_anchor': (0.5, -0.1),
+        'ncol': 3,
+        'fontsize': 10
+    },
+    title={'label': 'Practices Waffle Chart', 'loc': 'center'},
+    figsize=(10, 8)
+)
+
+plt.show()
+```
+
 ## Exploring outcomes reported in the studies available
 
 The ERA dataset tracks outcomes of agronomic interventions across several broad categories---called **Pillars**---such as productivity, environmental impact, and more. Each pillar includes more specific **indicators** like *yield*, *GHG emissions*, *soil organic carbon*, and others.
 
-```{r plotting Outcomes, echo=T, message=F}
+`R code:`
+```{r r_plotting Outcomes, echo=T, message=F}
 # Aggregate data by pillar and indicator
 out_counts <- ERA.Compiled_ag %>%
   mutate(Out.Pillar = trimws(as.character(Out.Pillar))) %>%
@@ -583,6 +1043,80 @@ bar_plot <- ggplot(out_counts, aes(
 bar_plot
 ```
 
+`python code:`
+```{r py_plotting Outcomes, echo=T, eval=F}
+# Python equivalent code:
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Aggregate data by pillar and indicator
+# Trim whitespace from 'Out.Pillar' and filter out empty/missing values
+out_counts = ERA_Compiled_ag.copy()
+out_counts['Out.Pillar'] = out_counts['Out.Pillar'].astype(str).str.strip()
+out_counts = out_counts[
+    (out_counts['Out.Pillar'] != "") &
+    (out_counts['Out.Pillar'].notna()) &
+    (out_counts['Out.Ind'].notna())
+]
+
+# Group by Out.Pillar and Out.Ind, counting unique 'Code'
+out_counts = (
+    out_counts.groupby(['Out.Pillar', 'Out.Ind'], as_index=False)
+    .agg(Num_Papers=('Code', 'nunique'))
+)
+
+# Rename columns: Pillar = Out.Pillar, Indicator = Out.Ind
+out_counts = out_counts.rename(columns={'Out.Pillar': 'Pillar', 'Out.Ind': 'Indicator'})
+
+# Sort indicators within each pillar
+out_counts = out_counts.sort_values(by=['Pillar', 'Indicator'])
+
+# Set categorical ordering:
+# For Indicator, levels are based on order of appearance
+indicator_levels = out_counts['Indicator'].unique().tolist()
+out_counts['Indicator'] = pd.Categorical(out_counts['Indicator'], categories=indicator_levels, ordered=True)
+# For Pillar, use a fixed order
+pillar_order = ["Productivity", "Resilience", "Mitigation"]
+out_counts['Pillar'] = pd.Categorical(out_counts['Pillar'], categories=pillar_order, ordered=True)
+
+# Define pillar colors
+pillar_colors = {
+    "Productivity": "#FFCC66",
+    "Resilience": "#990000",
+    "Mitigation": "#8B4513"
+}
+
+# Create faceted bar plot: one subplot per Pillar
+pillars = [p for p in pillar_order if p in out_counts['Pillar'].cat.categories]
+num_pillars = len(pillars)
+fig, axes = plt.subplots(1, num_pillars, figsize=(5 * num_pillars, 5), sharey=False)
+
+# Ensure axes is iterable when only one subplot exists
+if num_pillars == 1:
+    axes = [axes]
+
+for ax, pillar in zip(axes, pillars):
+    subset = out_counts[out_counts['Pillar'] == pillar]
+    ax.bar(subset['Indicator'], subset['Num_Papers'],
+           color=pillar_colors.get(pillar, "gray70"), width=0.8)
+    ax.set_xlabel("Outcome Indicator", fontsize=12, fontweight='bold', labelpad=10)
+    ax.set_ylabel("Number of Papers", fontsize=12, fontweight='bold')
+    ax.tick_params(axis='x', labelsize=10, rotation=45)
+    ax.tick_params(axis='y', labelsize=10)
+    ax.set_ylim(0, subset['Num_Papers'].max() + 50)
+    ax.set_title(pillar, fontsize=12, fontweight='bold')
+    # Remove grid and extra spines to mimic theme_minimal()
+    ax.grid(False)
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+
+plt.tight_layout()
+plt.show()
+```
+
 # An example of an analysis you could do with `ERA.Compiled`
 
 Lets assume you want to explore the impact of agriculture technologies on Maize yields. ERA only considers treatment comparisons. Each observation encodes a comparison between two treatments.
@@ -605,7 +1139,8 @@ The following principles assisted in consistent comparisons of treatment outcome
 
 Based this, a response ratio is calculated by MeanT/MeanC
 
-```{r analysis, echo=T, message=T}
+`R code:`
+```{r r_analysis, echo=T, message=T}
 filtered_data <- ERA.Compiled_ag %>%
   filter(Product == "Maize", Out.SubInd == "Crop Yield", !is.na(yi))
 
@@ -654,11 +1189,82 @@ ridge_plot <- ggplot(ridge_data, aes(x = yi, y = PrName, fill = ..x..)) +
 ridge_plot
 ```
 
+`python code:`
+```{r py_analysis, echo=T, eval=F}
+# Python equivalent code:
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import joypy
+
+# Step 1: Filter data for Product "Maize", Out.SubInd "Crop Yield", and non-missing yi
+filtered_data = ERA_Compiled_ag[
+    (ERA_Compiled_ag['Product'] == "Maize") &
+    (ERA_Compiled_ag['Out.SubInd'] == "Crop Yield") &
+    (ERA_Compiled_ag['yi'].notna())
+].copy()
+
+# Step 2: Keep only practices with at least 3 values and some variation in yi
+def valid_group(df):
+    return (len(df) >= 3) and (df['yi'].std(ddof=0) > 0)
+
+valid_practices = filtered_data.groupby('PrName').filter(valid_group)
+
+# Step 3: Get top 5 PrName by number of rows
+top_practices = (valid_practices['PrName']
+                 .value_counts()
+                 .nlargest(5)
+                 .index
+                 .tolist())
+
+# Step 4: Final filtered data
+ridge_data = valid_practices[valid_practices['PrName'].isin(top_practices)].copy()
+
+# Step 5: Plot ridgeline plot using joypy
+
+# Compute the mean of yi for each practice for summary points
+mean_values = ridge_data.groupby('PrName')['yi'].mean()
+
+# Create the ridgeline plot
+fig, axes = joypy.joyplot(
+    ridge_data,
+    by="PrName",
+    column="yi",
+    kind="kde",
+    overlap=1,
+    colormap=plt.cm.viridis,
+    linewidth=1,
+    linecolor="black",
+    fade=True,
+    figsize=(10, 6)
+)
+
+# Add a vertical dashed line at x = 0
+plt.axvline(x=0, linestyle="dashed", color="blue")
+
+# Add mean points for each practice
+# Joypy orders groups alphabetically by default; get that order for accurate y positions
+practices = sorted(ridge_data['PrName'].unique())
+y_positions = {pr: i for i, pr in enumerate(practices)}
+for pr, mean_val in mean_values.items():
+    # The y position for each group corresponds to its index in the sorted list
+    y = y_positions[pr]
+    plt.plot(mean_val, y, marker="D", color="black", markersize=6)
+
+plt.title("Response Ratios for Maize - Crop Yield", fontsize=14, fontweight="bold")
+plt.xlabel("Response Ratio (yi)", fontsize=12, fontweight="bold")
+plt.ylabel("Practice", fontsize=12, fontweight="bold")
+plt.tight_layout()
+plt.show()
+```
+
+
 # For more details or to explore collaborative opportunities: 
 
-Please visit our GitHub repository: <https://github.com/ERAgriculture/ERA_Agronomy.git>
+Please visit our GitHub repository: <https://github.com/ERAgriculture/ERA_Agronomy.git> or our development GitHub: <https://github.com/CIAT/ERA_dev>
 
-Or contact: \
+Or contact: 
 Peter Steward (Scientist II): [p.steward\@cgiar.org](mailto:p.steward@cgiar.org){.email} \
 Namita Joshi (Senior Research Associate): [n.joshi\@cgiar.org](mailto:n.joshi@cgiar.org){.email} \
 Todd Rosenstock (Principal Scientist): [t.rosenstock\@cgiar.org](mailto:t.rosenstock@cgiar.org){.email}
