@@ -251,6 +251,8 @@ ERA uses a structured **controlled vocabulary** to ensure consistency and harmon
 
 The vocabulary is organized into multiple sheets, each corresponding to a different concept area, including:
 
+- `era_fields_v1`: data catalog for comparisons table (`ERA.Compiled`)
+- `era_fields_v2`: data catalog for data model (work in progress)
 - `prod`: commodity types and product subtypes
 - `fert`: fertilizer types
 - `chem`: chemical types (e.g. pesticides)
@@ -261,6 +263,9 @@ The vocabulary is organized into multiple sheets, each corresponding to a differ
 - `out`: outcome subindicators
 - `prac`: subpractices and method types (e.g. planting method, tillage type)
 - `residues`: residue management material types
+- `lookup_levels`: controlled values for data entry lookups
+- `site_list`: standardized locations for agricultural experiment or demonstration sites
+- `unit_harmonization`: harmonization table to standardize unit naming
 
 These vocabularies are linked to the main ERA data tables via foreign key relationships in the `dm` data model. For example, the `Fert.Method` table contains a column `F.Type`, which links to the `fert` sheet of the master codes. This structure ensures that the dataset can be queried and interpreted accurately at scale.
 
