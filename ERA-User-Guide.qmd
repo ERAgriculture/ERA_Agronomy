@@ -37,7 +37,7 @@ pacman::p_load(
   sf, knitr, rnaturalearth, rnaturalearthdata, 
   ggplot2, viridis, shiny, dplyr, treemap, treemapify, plotly, data.table,
   s3fs, arrow, devtools, gh, htmlwidgets,remotes,gridExtra, DT, tidyverse, waffle,
-  ggridges
+  ggridges, jsonlite
 )
 
 if(!require(ERAgON)){
@@ -92,41 +92,41 @@ ERA_Compiled <- arrow::read_parquet(save_path, stringsAsFactors = FALSE)
 era_version<-gsub(".parquet","",basename(target_file_compiled))
 ```
 
-This vignette will guide you through the agronomy data available within the Evidence for Resilient Agriculture (ERA). The data set serves as a critical resource for understanding agricultural outcome trade-offs and synergies between yield, economic performance, sustianability indicators, and climate resilience.  It focuses on peer-reviewed data from experimental or observation agriculture systems. If you are interested in livestock please see [ERL](https://github.com/ERAgriculture/ERL).
+This vignette will guide you through the agronomy data available within the Evidence for Resilient Agriculture (ERA). The data set serves as a critical resource for understanding agricultural outcome trade-offs and synergies between yield, economic performance, sustianability indicators, and climate resilience. It focuses on peer-reviewed data from experimental or observation agriculture systems. If you are interested in livestock please see [ERL](https://github.com/ERAgriculture/ERL).
 
 We will cover the following:
 
 ***What is ERA:***
 
-* Introduction – What ERA is, where it comes from, and what it contains  
-* Extraction template – How the ERA Excel template structures studies and practices  
-* Understanding the ERA data model – Structure and content of the raw data tables  
-* Comparisons table – A simplified format for quick meta-analysis  
-* Controlled vocabulary – ERA’s structured codes for harmonized interpretation  
-* Spatial locations and uncertainty – How geographic context is handled  
+-   Introduction -- What ERA is, where it comes from, and what it contains\
+-   Extraction template -- How the ERA Excel template structures studies and practices\
+-   Understanding the ERA data model -- Structure and content of the raw data tables\
+-   Comparisons table -- A simplified format for quick meta-analysis\
+-   Controlled vocabulary -- ERA's structured codes for harmonized interpretation\
+-   Spatial locations and uncertainty -- How geographic context is handled
 
 ***Downloading the data:***
 
-* Downloading the ERA.Compiled comparisons table  
-* Downloading the data model tables  
-* Downloading the controlled vocabulary  
-* Viewing the data catalog  
+-   Downloading the ERA.Compiled comparisons table\
+-   Downloading the data model tables\
+-   Downloading the controlled vocabulary\
+-   Viewing the data catalog
 
 ***Exploring the data:***
 
-* Sub-setting the data to agronomy  
-* Exploring geographic locations of studies  
-* Exploring crop types (products) in the data  
-* Exploring agronomic practices used in the studies  
-* Exploring the outcomes reported  
+-   Sub-setting the data to agronomy\
+-   Exploring geographic locations of studies\
+-   Exploring crop types (products) in the data\
+-   Exploring agronomic practices used in the studies\
+-   Exploring the outcomes reported
 
 ***Worked Example:***
 
-* Analyzing maize yield response using the comparisons table  
+-   Analyzing maize yield response using the comparisons table
 
 ***Additional tools and learning:***
 
-* Vignettes from the `ERAg` package – Further worked examples and methods  
+-   Vignettes from the `ERAg` package -- Further worked examples and methods
 
 # What is ERA?
 
@@ -180,13 +180,13 @@ Over the years of ERA, several versions of the extraction template have been dev
 
 6)  Intercropping = Combine the crop specific treatments created in the Make.Trt tab to describe intercropping systems.
 
-7)  Time.Seq (Rotations) = Create temporal sequences of treatments and/or intercrops to reflect, for example, crop rotations or fallows. 
+7)  Time.Seq (Rotations) = Create temporal sequences of treatments and/or intercrops to reflect, for example, crop rotations or fallows.
 
-6)  EU&Out = Experimental Unit & Outcomes: Choose the experimental units (typically crop or animal commodities) and experimental outcomes for which data are presented.
+8)  EU&Out = Experimental Unit & Outcomes: Choose the experimental units (typically crop or animal commodities) and experimental outcomes for which data are presented.
 
-7) Times = Select the cropping seasons or years for which data are presented.
+9)  Times = Select the cropping seasons or years for which data are presented.
 
-8)  EnterData = Captures values and associated errors for the experimental treatments, products, outcomes and times specified in the previous tabs. Do not start data entry until you've completed all the previous tabs.
+10) EnterData = Captures values and associated errors for the experimental treatments, products, outcomes and times specified in the previous tabs. Do not start data entry until you've completed all the previous tabs.
 
 The link to this extraction template can be found here: <https://github.com/CIAT/ERA_dev/blob/main/data_entry/industrious_elephant_2023/excel_data_extraction_template/V2.0.28%20-%20Industrious%20Elephant.xlsm>
 
@@ -196,47 +196,46 @@ The link to this extraction template can be found here: <https://github.com/CIAT
 
 ## Data model (raw data)
 
-Each of the tables within the front end of the excel feeds are imported using `R` to generate tables that form a data model. These tables provide you with **detailed information** from each study, e.g fertilizer applied, timing of fertilizer and so on. 
+Each of the tables within the front end of the excel feeds are imported using `R` to generate tables that form a data model. These tables provide you with **detailed information** from each study, e.g fertilizer applied, timing of fertilizer and so on.
 
-The main tables are:  
+The main tables are:
 
--   `Pub.Out` : Publication information, DOIs, ERA template version and project. 
--   `Site.Out`,`Soils.Out` : Location, coordinates, location uncertainty radius, site/location type, site soils. 
--   `ExpD.Out` : Experimental design. 
--   `Times.Out` : Measurement periods for which experimental results are reported (typically growing seasons). 
--   `Times.Clim` : Climate information for locations x measurement periods recorded in Times.Out (e.g. rainfall for  particular growing season). 
--   `Prod.Out` : Crop or animal commodity. 
--   `Var.Out` : Variety and any usual associated information reported. 
--   `Till.Out` : Tillage management. 
--   `Plant.Out`,`Plant.Method` : Planting information (density, arrangement, thinning, etc.). 
--   `PD.Codes`,`PD.Out`: Management practices that relate to improved timing of planting activities and information on planting and harvest dates. 
--   `Fert.Out`,`Fert.Method`,`Fert.Comp`: Detailed fertilizer management and composition of organic fertilizers. 
--   `Chems.Code`,`Chems.Out`,`Chems.AI` : Chemicals applications (pesticides, veterinary medicines, and chemicals that do not fit the definition of a fertilizer). 
--   `Res.Out`,`Res.Method`,`Res.Comp` : Information on mulching or crop residue management. 
--   `Har.Out` :Improved harvesting. 
--   `pH.Out` : pH management. 
--   `WH.Out` : Water harvesting practices. 
--   `Irrig.Codes`,`Irrig.Methods`: Irrigation management practices and applications. 
--   `AF.Out`,`AF.Trees`: Agroforestry management and tree species and density.  
--   `Int.Out` : Intercropping management. 
--   `Rot.Out``Rot.Seq`,`Rot.Seq.Summ` : Crop rotations or other temporal sequence of managment activities. 
--   `Out.Out`,`Out.Econ` : The Outcomes reported in the experiment and any additional context required for understanding them (e.g. discount rate and time period for economic outcomes). 
--   `Data.Out` : Reported values and errors for combinations of outcome, commodity, management (treatment, intercrop, and/or rotation), location, and time (measurement period). 
+-   `Pub.Out` : Publication information, DOIs, ERA template version and project.
+-   `Site.Out`,`Soils.Out` : Location, coordinates, location uncertainty radius, site/location type, site soils.
+-   `ExpD.Out` : Experimental design.
+-   `Times.Out` : Measurement periods for which experimental results are reported (typically growing seasons).
+-   `Times.Clim` : Climate information for locations x measurement periods recorded in Times.Out (e.g. rainfall for particular growing season).
+-   `Prod.Out` : Crop or animal commodity.
+-   `Var.Out` : Variety and any usual associated information reported.
+-   `Till.Out` : Tillage management.
+-   `Plant.Out`,`Plant.Method` : Planting information (density, arrangement, thinning, etc.).
+-   `PD.Codes`,`PD.Out`: Management practices that relate to improved timing of planting activities and information on planting and harvest dates.
+-   `Fert.Out`,`Fert.Method`,`Fert.Comp`: Detailed fertilizer management and composition of organic fertilizers.
+-   `Chems.Code`,`Chems.Out`,`Chems.AI` : Chemicals applications (pesticides, veterinary medicines, and chemicals that do not fit the definition of a fertilizer).
+-   `Res.Out`,`Res.Method`,`Res.Comp` : Information on mulching or crop residue management.
+-   `Har.Out` :Improved harvesting.
+-   `pH.Out` : pH management.
+-   `WH.Out` : Water harvesting practices.
+-   `Irrig.Codes`,`Irrig.Methods`: Irrigation management practices and applications.
+-   `AF.Out`,`AF.Trees`: Agroforestry management and tree species and density.\
+-   `Int.Out` : Intercropping management.
+-   ``` Rot.Out``Rot.Seq ```,`Rot.Seq.Summ` : Crop rotations or other temporal sequence of managment activities.
+-   `Out.Out`,`Out.Econ` : The Outcomes reported in the experiment and any additional context required for understanding them (e.g. discount rate and time period for economic outcomes).
+-   `Data.Out` : Reported values and errors for combinations of outcome, commodity, management (treatment, intercrop, and/or rotation), location, and time (measurement period).
 
 The data model also makes use of a large controlled vocabulary (the `master codes`), which is described later in this document. We aspire to develop the controlled vocabulary into an ontology for agricultural meta-analysis. A beta-version for livestock can be found here
 
 More detailed documentation of the ERA agronomy data model is available [here](https://eragriculture.github.io/ERA_Agronomy/ERA-Create-Agronomy-Data-Model.html).
 
-![](images/data model.png)
+![](images/data%20model.png)
 
-## Comparisons table 
+## Comparisons table
 
-In an attempt to make ERA data easily usable, we provide a table of control vs. treatment comparisons (`ERA.Compiled`).
-This is a flat excel file that pulls **only essential fields** from each data table table to create rows of treatment versus control. The table does not include detailed descriptions of management practices, but it can be connected back to the ERA data model if specific management information is required.
+In an attempt to make ERA data easily usable, we provide a table of control vs. treatment comparisons (`ERA.Compiled`). This is a flat excel file that pulls **only essential fields** from each data table table to create rows of treatment versus control. The table does not include detailed descriptions of management practices, but it can be connected back to the ERA data model if specific management information is required.
 
 It should be noted that **more studies** are available in the comparisons table than the data model. This is because the earliest iteration of ERA used this flat template (`ERA.Compiled`) to extract data. We do not have the resources to convert all extractions to the data model.
 
-Below is a simple conceptional framework of how ERA.Compiled is generated from the data tables. 
+Below is a simple conceptional framework of how ERA.Compiled is generated from the data tables.
 
 ![](images/metadata_to_compiled.png)
 
@@ -244,28 +243,28 @@ Below is a simple conceptional framework of how ERA.Compiled is generated from t
 
 ERA uses a structured **controlled vocabulary** to ensure consistency and harmonization across thousands of experimental observations. This vocabulary underpins the data model and comparison table by standardizing the names and attributes of practices, outcomes, and management components. It is compiled into an Excel workbook (`era_master_sheet.xlsx`) and is essential for:
 
-- Defining **practice types** (e.g., fertilizer, tillage, variety)
-- Classifying **input materials** (e.g., specific fertilizer types or tree species)
-- Linking **outcomes** to clear definitions and measurement units
-- Supporting **interoperability** and reproducibility in meta-analyses
+-   Defining **practice types** (e.g., fertilizer, tillage, variety)
+-   Classifying **input materials** (e.g., specific fertilizer types or tree species)
+-   Linking **outcomes** to clear definitions and measurement units
+-   Supporting **interoperability** and reproducibility in meta-analyses
 
 The vocabulary is organized into multiple sheets, each corresponding to a different concept area, including:
 
-- `era_fields_v1`: data catalog for comparisons table (`ERA.Compiled`)
-- `era_fields_v2`: data catalog for data model (work in progress)
-- `prod`: commodity types and product subtypes
-- `fert`: fertilizer types
-- `chem`: chemical types (e.g. pesticides)
-- `chem.comm`: commercial chemical names
-- `chem.ai`: active ingredients
-- `trees`: agroforestry tree species
-- `vars`: crop varieties and associated traits
-- `out`: outcome subindicators
-- `prac`: subpractices and method types (e.g. planting method, tillage type)
-- `residues`: residue management material types
-- `lookup_levels`: controlled values for data entry lookups
-- `site_list`: standardized locations for agricultural experiment or demonstration sites
-- `unit_harmonization`: harmonization table to standardize unit naming
+-   `era_fields_v1`: data catalog for comparisons table (`ERA.Compiled`)
+-   `era_fields_v2`: data catalog for data model (work in progress)
+-   `prod`: commodity types and product subtypes
+-   `fert`: fertilizer types
+-   `chem`: chemical types (e.g. pesticides)
+-   `chem.comm`: commercial chemical names
+-   `chem.ai`: active ingredients
+-   `trees`: agroforestry tree species
+-   `vars`: crop varieties and associated traits
+-   `out`: outcome subindicators
+-   `prac`: subpractices and method types (e.g. planting method, tillage type)
+-   `residues`: residue management material types
+-   `lookup_levels`: controlled values for data entry lookups
+-   `site_list`: standardized locations for agricultural experiment or demonstration sites
+-   `unit_harmonization`: harmonization table to standardize unit naming
 
 These vocabularies are linked to the main ERA data tables via foreign key relationships in the `dm` data model. For example, the `Fert.Method` table contains a column `F.Type`, which links to the `fert` sheet of the master codes. This structure ensures that the dataset can be queried and interpreted accurately at scale.
 
@@ -273,7 +272,7 @@ A future goal is to evolve this vocabulary into a full ontology for agricultural
 
 The most up-to-date version of the vocabulary can be accessed here:
 
-**[ERA Master Vocabulary (Excel)](https://github.com/peetmate/era_codes/raw/main/era_master_sheet.xlsx)**
+[**ERA Master Vocabulary (Excel)**](https://github.com/peetmate/era_codes/raw/main/era_master_sheet.xlsx)
 
 ## Spatial locations and uncertainty
 
@@ -283,13 +282,14 @@ Each observation includes a **spatial uncertainty estimate**, recorded in the fi
 
 Spatial metadata is included in the `Site.Out` table of the data model, the comparisons table and in a reference sheet called `era_master_codes$site_list` within the controlled vocabulary workbook. Spatial fields include:
 
-- Standardized site name (`Site.ID`): Unique names used to identify experimental sites across studies. These are harmonized for locations that appear in multiple studies under varying names. When multiple sites are aggregated in a single observation, their names are joined with ".." (e.g., "Mbinga..Nkhata Bay").
-- `Latitude` and `Longitude`: Verified coordinates in WGS 1984 (EPSG:4326), either reported by authors or manually geolocated by curators.
-- Uncertainty radius (`Buffer`): Numeric value in meters, reflecting spatial precision of the location (e.g., village, district, coordinates with varying decimal precision).
-- Site type (`Site.Type`): Describes whether the site is an on-farm trial, experimental station, or another type of location.
-- Site key (`Site.Key`): A standardized code combining the latitude (to 4 decimal places), longitude (to 4 decimal places), and Buffer value. This uniquely identifies the geospatial footprint of a site across the entire dataset. For example, "06.7170 -1.5333 B500" refers to a site at latitude 6.7170, longitude –1.5333, with a 500m uncertainty radius. This field is used to cluster spatially similar sites and support spatial matching.
+-   Standardized site name (`Site.ID`): Unique names used to identify experimental sites across studies. These are harmonized for locations that appear in multiple studies under varying names. When multiple sites are aggregated in a single observation, their names are joined with ".." (e.g., "Mbinga..Nkhata Bay").
+-   `Latitude` and `Longitude`: Verified coordinates in WGS 1984 (EPSG:4326), either reported by authors or manually geolocated by curators.
+-   Uncertainty radius (`Buffer`): Numeric value in meters, reflecting spatial precision of the location (e.g., village, district, coordinates with varying decimal precision).
+-   Site type (`Site.Type`): Describes whether the site is an on-farm trial, experimental station, or another type of location.
+-   Site key (`Site.Key`): A standardized code combining the latitude (to 4 decimal places), longitude (to 4 decimal places), and Buffer value. This uniquely identifies the geospatial footprint of a site across the entire dataset. For example, "06.7170 -1.5333 B500" refers to a site at latitude 6.7170, longitude --1.5333, with a 500m uncertainty radius. This field is used to cluster spatially similar sites and support spatial matching.
 
 `R code:`
+
 ```{r r_site_density_map, echo=T, message=F}
 library(ggplot2)
 library(data.table)
@@ -332,6 +332,7 @@ ggplot() +
 ```
 
 `python code:`
+
 ```{r py_site_density_map, echo=T, eval=F}
 # Python equivalent code:
 
@@ -389,19 +390,14 @@ plt.show()
 
 The `site_list` contains standardized locations for agricultural research or demonstration facilities to help standardize and harmonize location reporting during data extraction and compilation.
 
-For all locations—whether reported as coordinates by the original authors or estimated—ERA applies a rigorous **two-stage human validation** process. This includes:  
-- Checking that the coordinates correspond to **agriculturally plausible areas** (e.g., not in oceans, mountains, or cities). 
-- Ensuring consistency with the **site description in the publication**. 
-- **Correcting erroneous coordinates** (e.g., swapped lat/lon, misplaced decimals). 
-- **Geolocating sites** where no coordinates were given, based on textual descriptions. 
-- Assigning an appropriate **uncertainty radius** depending on location specificity (e.g., “county” vs “village” vs “research station”). 
+For all locations---whether reported as coordinates by the original authors or estimated---ERA applies a rigorous **two-stage human validation** process. This includes:\
+- Checking that the coordinates correspond to **agriculturally plausible areas** (e.g., not in oceans, mountains, or cities). - Ensuring consistency with the **site description in the publication**. - **Correcting erroneous coordinates** (e.g., swapped lat/lon, misplaced decimals). - **Geolocating sites** where no coordinates were given, based on textual descriptions. - Assigning an appropriate **uncertainty radius** depending on location specificity (e.g., "county" vs "village" vs "research station").
 
-This spatial verification process ensures ERA’s location data is suitable for integration with remote sensing, climate, and other geospatial datasets.
+This spatial verification process ensures ERA's location data is suitable for integration with remote sensing, climate, and other geospatial datasets.
 
 In some cases, a single observation may represent results **aggregated across multiple spatial locations**. These cases are identified in the `Site.ID` field using a `..` delimiter (e.g., `"Kiberashi..Mbinga..Nkhata Bay"`). Each component site is described individually in the `site_list`, including its coordinates and uncertainty radius. For aggregated sites, ERA computes a **centroid of all included sites**, and the **overall spatial uncertainty (`Buffer`)** is calculated as the distance from this centroid to the edge of the furthest site's uncertainty buffer. This ensures that even spatially aggregated results are represented with an appropriate spatial footprint.
 
 Spatial locations connect ERA to wider geospatial information, find out more in the [Guide to Climate and Soil Data in ERA](https://eragriculture.github.io/ERA_Agronomy/ERA%20Climate%20and%20Soils.html).
-
 
 # Download the data
 
@@ -412,6 +408,7 @@ Data is openly available for download from the S3 Bucket `s3://digital-atlas/era
 This section downloads and imports the ERA controlled vocabulary, which standardizes the naming of practices, products, and outcomes across studies. Both R and Python code examples are provided.
 
 `R code:`
+
 ```{r R_importing_the_vocab, echo=T, message=F,}
 
 # Download the era master vocab ######
@@ -435,7 +432,8 @@ era_master_codes <- sapply(
 )
 ```
 
-`python code:` 
+`python code:`
+
 ```{r py_importing_the_vocab, eval=F}
 # Note: This is a GPT-generated Python translation and requires validation.
 import os
@@ -469,6 +467,7 @@ era_master_codes = {
 How you can explore descriptions of major ERA concepts (Practices, Outcomes, Products):
 
 `R code:`
+
 ```{r r_view_pracs, echo=T, message=F}
 practices<- era_master_codes$prac[,.(Code,Theme,Practice,Subpractice,Definition)]
 
@@ -486,6 +485,7 @@ DT::datatable(
 ```
 
 `R code:`
+
 ```{r r_view_outcomes, echo=T, message=F}
 outcomes<- era_master_codes$out[,.(Code,Pillar,Pillar.Code,Subpillar,Indicator,Subindicator,Definition)]
 DT::datatable(
@@ -505,6 +505,7 @@ DT::datatable(
 ```
 
 `R code:`
+
 ```{r r_view_products, echo=T, message=F}
 products<- era_master_codes$prod[,.(EU,Product.Type,Product.Subtype,Product,Product.Simple,Component,Latin.Name)]
 DT::datatable(
@@ -520,7 +521,8 @@ DT::datatable(
 )
 ```
 
-`python code:` 
+`python code:`
+
 ```{r py_view_practices_outcomes_products, eval=F, echo=T}
 import pandas as pd
 from IPython.display import display
@@ -542,6 +544,51 @@ with pd.option_context('display.max_rows', 20, 'display.max_columns', None):
 This section connects to the public S3 bucket, identifies the latest agronomic ERA data set, downloads it locally, and loads it into memory.
 
 `R code:`
+
+```{r test downloading,echo=T, message=TRUE}
+# Load required packages
+library(s3fs)
+library(arrow)
+library(jsonlite)
+
+# Set S3 path and initialize
+s3 <- s3fs::S3FileSystem$new(anonymous = TRUE)
+era_s3 <- "s3://digital-atlas/era"
+bundle_dir <- file.path(era_s3, "data", "packaged")
+
+# Get the latest bundle
+all_files <- s3$dir_ls(bundle_dir)
+latest_bundle <- tail(sort(grep("era_agronomy_bundle.*\\.tar\\.gz$", all_files, value = TRUE)), 1)
+
+# Define download and extraction paths
+dl_dir <- "downloaded_data"
+dir.create(dl_dir, showWarnings = FALSE)
+bundle_local <- file.path(dl_dir, basename(latest_bundle))
+extract_dir <- file.path(dl_dir, tools::file_path_sans_ext(tools::file_path_sans_ext(basename(latest_bundle))))
+
+# Download and extract
+if (!file.exists(bundle_local)) {
+  s3$file_download(latest_bundle, bundle_local, overwrite = TRUE)
+}
+if (!dir.exists(extract_dir)) {
+  dir.create(extract_dir)
+  utils::untar(bundle_local, exdir = extract_dir)
+}
+
+# Locate files
+json_agronomic <- list.files(extract_dir, pattern = "^agronomic_.*\\.json$", full.names = TRUE)
+json_master <- list.files(extract_dir, pattern = "^era_master_codes.*\\.json$", full.names = TRUE)
+parquet_file <- list.files(extract_dir, pattern = "^era_compiled.*\\.parquet$", full.names = TRUE)
+
+# Load into variables
+ERA_Compiled <- arrow::read_parquet(parquet_file)
+agronomic_data <- jsonlite::fromJSON(json_agronomic)
+era_master_codes <- jsonlite::fromJSON(json_master)
+
+
+```
+
+
 ```{r R downloading data from S3 bucket,echo=T, message=TRUE}
 # Create an S3 filesystem handle
 s3 <- s3fs::S3FileSystem$new(anonymous = TRUE)
@@ -573,6 +620,7 @@ agronomic_data <- miceadds::load.Rdata2(
 ```
 
 `python code:`
+
 ```{r py downloading data from S3 bucket,echo=T, eval=F}
 # Note: This is a GPT-generated Python translation and requires validation.
 import os
@@ -614,6 +662,7 @@ Each of the tables can be extracted individual and combined with one another bas
 To get a better understanding of what the fields in the data model are you can view data a catalog by running the following code:
 
 `R code:`
+
 ```{r R importing the vocab, echo=T, message=F}
 
 # Access era_fields from era_master_codes
@@ -626,6 +675,7 @@ names(era_fields)
 ```
 
 `python code:`
+
 ```{r py importing the vocab, echo=T, eval=F}
 # Access and filter the era_fields_v2 sheet
 era_fields_df = era_master_codes["era_fields_v2"]
@@ -639,7 +689,6 @@ era_fields = filtered_fields[["Table", "Field", "Display_Name", "Field_Descripti
 # Show column names
 print(era_fields.columns.tolist())
 ```
-
 
 ```{r show era_fields_v2,echo=F}
 # Display the full table as a scrollable datatable
@@ -655,7 +704,7 @@ DT::datatable(
 
 ```
 
-Note the data catalog  `era_master_codes$era_fields_v2` is a work in progress, we are currently revising it and it should be completed by May 2025.
+Note the data catalog `era_master_codes$era_fields_v2` is a work in progress, we are currently revising it and it should be completed by May 2025.
 
 See our [agronomy data model page](https://eragriculture.github.io/ERA_Agronomy/ERA-Create-Agronomy-Data-Model.html) for more information how the data tables are connected.
 
@@ -664,6 +713,7 @@ See our [agronomy data model page](https://eragriculture.github.io/ERA_Agronomy/
 This section retrieves the most recent version of the ERA.Compiled comparisons table from the ERA S3 bucket, saves it locally, and loads it for use.
 
 `R code:`
+
 ```{r r_download_compiled, echo=T, message=F,eval=T}
 s3 <- s3fs::S3FileSystem$new(anonymous = TRUE)
 era_s3 <- "s3://digital-atlas/era"
@@ -694,6 +744,7 @@ ERA_Compiled <- fread(save_path)
 ```
 
 `python code:`
+
 ```{r py_download_compiled, echo=T,eval=F}
 import os
 import s3fs
@@ -731,6 +782,7 @@ ERA_Compiled = pd.read_csv(save_path)
 ```
 
 An example of the content of `ERA.Compiled`
+
 ```{r,echo=F}
 #	Display	the	summary	table	of	era compiled
 DT::datatable(
@@ -740,9 +792,11 @@ DT::datatable(
 ```
 
 ### Data catalog
+
 To get a better understanding of what the fields in the comparisons table are you can view data a catalog by running the following code:
 
 `R code:`
+
 ```{r r_era_fieldsv1, echo=T, message=F}
 # Access era_fields from era_master_codes
 era_fields_comp <- era_master_codes$era_fields_v1
@@ -750,11 +804,11 @@ era_fields_comp <- era_master_codes$era_fields_v1
 ```
 
 `python code:`
+
 ```{r py_era_fieldsv1, echo=T, eval=F}
 # Access and filter the era_fields_v2 sheet
 era_fields_comp = era_master_codes["era_fields_v1"]
 ```
-
 
 ```{r show r_era_fieldsv1,echo=F}
 # Display the full table as a scrollable datatable
@@ -770,7 +824,7 @@ DT::datatable(
 
 ```
 
-Note the data catalog  `era_master_codes$era_fields_v2` is a work in progress, we are currently revising it and it should be completed by May 2025.
+Note the data catalog `era_master_codes$era_fields_v2` is a work in progress, we are currently revising it and it should be completed by May 2025.
 
 # Exploring the comparisons data (`ERA.Compiled`)
 
@@ -781,11 +835,13 @@ ERA has a diverse range of practices, from agronomy to livestock and a few paper
 Unhide the code to see how we sub-set the data to agronomy papers only. Product.Type has either Animal or Plant and therefore in this example, we will subset to Plant.
 
 `R code:`
+
 ```{r r_subset to agronomy, echo=T, message=F}
 ERA.Compiled_ag <-ERA.Compiled[grepl("Plant", Product.Type)]
 ```
 
 `python code:`
+
 ```{r py_subset,echo=T,eval=F}
 import pandas as pd
 
@@ -798,6 +854,7 @@ ERA_Compiled_ag = ERA_Compiled[ERA_Compiled['Product.Type'].str.contains("Plant"
 We collected country, site name paraphrased from study, and spatial coordinates when given. Location's coordinates were verified in Google Maps, as they were often inaccurately reported. Enumerators also recorded a measure of spatial uncertainty. When authors reported decimal degrees and there was no correction required to the co-ordinates, then uncertainty was measured in terms of the value's precision. When the location was estimated using Google Maps, the spatial uncertainty value was measured in terms of the precision of the site location description (e.g., a single farm or region) and the enumerator's visual interpretation of land use at and near the coordinates. Observation's geographic coordinates were collected to facilitate linking the data compiled in ERA to external databases, for example related to climatic and environmental factors not necessarily reported in the original study.
 
 `R code:`
+
 ```{r r_plotting the distribution of data, echo=T, message=F}
 # Ensure coordinates are numeric
 ERA.Compiled_ag <- ERA.Compiled_ag %>%
@@ -864,6 +921,7 @@ map
 ```
 
 `python code:`
+
 ```{r py_plotting the distribution of data,echo=T,eval=F}
 # Python equivalent code:
 
@@ -956,6 +1014,7 @@ The figure below displays the distribution of crop categories in the dataset. It
 Each tile represents a crop category, and its size reflects the **number of unique studies** (`Code`) that included at least one crop from that category. The number in parentheses shows the count of studies for that group.
 
 `R code:`
+
 ```{r r_plotting products, echo=T, message=F}
 prod_counts <- ERA.Compiled_ag %>%
   separate_rows(Product.Subtype, sep = "-") %>% 
@@ -983,6 +1042,7 @@ tree_plot
 ```
 
 `python code:`
+
 ```{r py_plotting products, echo=T, eval=F}
 # Python equivalent code:
 import pandas as pd
@@ -1031,6 +1091,7 @@ Each study in ERA may be associated with multiple practices---for example, a stu
 For example, the theme 'Soil Management' include practices like green manure, crop residue, pH control, tillage, improved fallows. 'Nutrient Management' includes organic and inorganic fertilizer. This can be found in the practices within the mastercodes\
 
 `R code:`
+
 ```{r r_plotting practices, echo=T, message=F}
 
 ag_counts <- ERA.Compiled_ag %>%
@@ -1072,6 +1133,7 @@ waffle_plot
 ```
 
 `python code:`
+
 ```{r py_plotting practices, echo=T, eval=F}
 # Python equivalent code:
 
@@ -1131,6 +1193,7 @@ plt.show()
 The ERA dataset tracks outcomes of agronomic interventions across several broad categories---called **Pillars**---such as productivity, environmental impact, and more. Each pillar includes more specific **indicators** like *yield*, *GHG emissions*, *soil organic carbon*, and others.
 
 `R code:`
+
 ```{r r_plotting Outcomes, echo=T, message=F}
 # Aggregate data by pillar and indicator
 out_counts <- ERA.Compiled_ag %>%
@@ -1189,6 +1252,7 @@ bar_plot
 ```
 
 `python code:`
+
 ```{r py_plotting Outcomes, echo=T, eval=F}
 # Python equivalent code:
 
@@ -1285,6 +1349,7 @@ The following principles assisted in consistent comparisons of treatment outcome
 Based this, a response ratio is calculated by MeanT/MeanC
 
 `R code:`
+
 ```{r r_analysis, echo=T, message=T}
 filtered_data <- ERA.Compiled_ag %>%
   filter(Product == "Maize", Out.SubInd == "Crop Yield", !is.na(yi))
@@ -1335,6 +1400,7 @@ ridge_plot
 ```
 
 `python code:`
+
 ```{r py_analysis, echo=T, eval=F}
 # Python equivalent code:
 
@@ -1404,16 +1470,15 @@ plt.tight_layout()
 plt.show()
 ```
 
-
-
-
 # The ERAg package
 
-The [ERAg](https://eia2030.github.io/ERAg/index.html) R package was developed to support users working with an earlier version of the ERA.Compiled dataset (as of 2018). While the package has not been updated to reflect the latest additions to the dataset, it remains a useful resource for exploring functionality, accessing sample code, and understanding how to work with ERA’s comparisons table.
+The [ERAg](https://eia2030.github.io/ERAg/index.html) R package was developed to support users working with an earlier version of the ERA.Compiled dataset (as of 2018). While the package has not been updated to reflect the latest additions to the dataset, it remains a useful resource for exploring functionality, accessing sample code, and understanding how to work with ERA's comparisons table.
 
 Although the comparison table included in the package is now out of date, many of the functions remain valid and may simplify analysis workflows using the more recent ERA.Compiled object loaded in this guide.
 
-	⚠️ Note: The package is written in R only. There is currently no Python version available.
+```         
+⚠️ Note: The package is written in R only. There is currently no Python version available.
+```
 
 We plan to update the ERAg package in the near future to reflect the latest data and metadata structures. Keep an eye on the GitHub repository for announcements.
 
@@ -1421,27 +1486,26 @@ We plan to update the ERAg package in the near future to reflect the latest data
 
 The `ERAg` R package provides a set of worked examples to help users explore, analyze, and better understand the ERA dataset. These vignettes illustrate key workflows and methods using the standardized ERA data model and should still be largely relevant to the more recent versions of `ERA.Compiled` stored on S3.
 
-- [**ERA-Introduction**](https://eia2030.github.io/ERAg/articles/ERA-Introduction.html)  
-**Overview of the ERA dataset structure and access.**  
-This vignette introduces the main components of the ERAg package, such as the master sheet, comparisons table, and coded variables. It demonstrates how to load and inspect ERA data for meta-analysis.
+-   [**ERA-Introduction**](https://eia2030.github.io/ERAg/articles/ERA-Introduction.html)\
+    **Overview of the ERA dataset structure and access.**\
+    This vignette introduces the main components of the ERAg package, such as the master sheet, comparisons table, and coded variables. It demonstrates how to load and inspect ERA data for meta-analysis.
 
-- [**ERA-Explore-and-Analyze**](https://eia2030.github.io/ERAg/articles/ERA-Explore-and-Analyze.html)  
-**Basic workflows for summary statistics and visualization.**  
-Covers how to calculate treatment effects, filter observations by practice or outcome, and visualize impacts (e.g. on yield or soil organic carbon) using reproducible R code.
+-   [**ERA-Explore-and-Analyze**](https://eia2030.github.io/ERAg/articles/ERA-Explore-and-Analyze.html)\
+    **Basic workflows for summary statistics and visualization.**\
+    Covers how to calculate treatment effects, filter observations by practice or outcome, and visualize impacts (e.g. on yield or soil organic carbon) using reproducible R code.
 
-- [**ERA-Search-Protocol**](https://eia2030.github.io/ERAg/articles/ERA-Search-Protocol.html)  
-**Systematic review methods and Boolean search strings.**  
-Details the structured search strategy used to compile the ERA dataset across Web of Science and Scopus (1970–2018), including practice and outcome keywords, inclusion criteria, and screening workflow.
+-   [**ERA-Search-Protocol**](https://eia2030.github.io/ERAg/articles/ERA-Search-Protocol.html)\
+    **Systematic review methods and Boolean search strings.**\
+    Details the structured search strategy used to compile the ERA dataset across Web of Science and Scopus (1970--2018), including practice and outcome keywords, inclusion criteria, and screening workflow.
 
-- [**ERA-Yield-Stability**](https://eia2030.github.io/ERAg/articles/ERA-Yield-Stability.html)  
-**Measuring long-term performance using stability metrics.**  
-Explains how to compute absolute and relative yield stability based on multi-year ERA data, inspired by methods from Knapp et al. (2018). Includes code for generating comparative stability plots.
+-   [**ERA-Yield-Stability**](https://eia2030.github.io/ERAg/articles/ERA-Yield-Stability.html)\
+    **Measuring long-term performance using stability metrics.**\
+    Explains how to compute absolute and relative yield stability based on multi-year ERA data, inspired by methods from Knapp et al. (2018). Includes code for generating comparative stability plots.
 
-# Contact Us 
+# Contact Us
 
 Please visit our GitHub repository: <https://github.com/ERAgriculture/ERA_Agronomy.git> or our development GitHub: <https://github.com/CIAT/ERA_dev>
 
-Or contact: 
-Peter Steward (Scientist II): [p.steward\@cgiar.org](mailto:p.steward@cgiar.org){.email} \
-Namita Joshi (Senior Research Associate): [n.joshi\@cgiar.org](mailto:n.joshi@cgiar.org){.email} \
+Or contact: Peter Steward (Scientist II): [p.steward\@cgiar.org](mailto:p.steward@cgiar.org){.email}\
+Namita Joshi (Senior Research Associate): [n.joshi\@cgiar.org](mailto:n.joshi@cgiar.org){.email}\
 Todd Rosenstock (Principal Scientist): [t.rosenstock\@cgiar.org](mailto:t.rosenstock@cgiar.org){.email}
