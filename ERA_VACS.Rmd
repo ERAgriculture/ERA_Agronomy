@@ -1,0 +1,228 @@
+---
+title: "ERA_VACS"
+author:
+  - name: "Namita Joshi"
+    email: "n.joshi@cgiar.org"
+    orcid: "0000-0002-1623-6910"
+  - name: "Peter Steward"
+    email: "p.steward@cgiar.org"
+    orcid: "0000-0003-3985-4911"
+  - name: "Todd Rosenstock"
+    email: "t.rosenstock@cgiar.org"
+    orcid: "0000-0002-1958-9500"
+date: "2024-12-15"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    code_folding: show
+    self_contained: true
+comments:
+  utterances:
+    repo: ERAgriculture/livestock_diet
+---
+
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  echo = TRUE,  # Temporarily set to TRUE for debugging
+  message = FALSE,
+  warning = FALSE
+)
+```
+
+***This vignette will help us explore the data available for legumes***
+-   Downloading the data\
+-   Sub-setting the data to agronomy and legumes\
+-   Exploring geographic locations of studies\
+-   Exploring crop types (products) in the data\
+-   Exploring agronomic practices used in the studies\
+-   Exploring the outcomes reported
+
+```{r packages,include=T,eval=T,echo=F}
+if (!requireNamespace("pacman", quietly = TRUE)) {
+  install.packages("pacman")
+}
+pacman::p_load(
+  sf, knitr, rnaturalearth, rnaturalearthdata, 
+  ggplot2, viridis, shiny, dplyr, treemap, treemapify, plotly, data.table,
+  s3fs, arrow, devtools, gh, htmlwidgets,remotes,gridExtra, DT
+)
+
+if(!require(ERAgON)){
+  remotes::install_github(repo="https://github.com/EiA2030/ERAgON",build_vignettes = T)
+  library(ERAgON)
+}
+
+if(!require(ERAg)){
+  remotes::install_github(repo="https://github.com/EiA2030/ERAg",build_vignettes = T)
+  library(ERAg)
+}
+# Set a directory for downloaded data
+dl_dir <- "downloaded_data"
+
+# Create the directory if it doesn't already exist
+if(!dir.exists(dl_dir)){
+  dir.create(dl_dir, showWarnings = FALSE)
+}
+
+# Should the era vocab be updated?
+update_vocab<-F
+```
+
+# Downloading the data
+```{r pre-load era compiled, echo=T, message=F}
+# Set S3 path and initialize
+s3 <- s3fs::S3FileSystem$new(anonymous = TRUE)
+era_s3 <- "s3://digital-atlas/era"
+bundle_dir <- file.path(era_s3, "data", "packaged")
+
+# Get the latest bundle
+all_files <- s3$dir_ls(bundle_dir)
+latest_bundle <- tail(sort(grep("era_agronomy_bundle.*\\.tar\\.gz$", all_files, value = TRUE)), 1)
+
+# Define download and extraction paths
+dl_dir <- "downloaded_data"
+dir.create(dl_dir, showWarnings = FALSE)
+bundle_local <- file.path(dl_dir, basename(latest_bundle))
+extract_dir <- file.path(dl_dir, tools::file_path_sans_ext(tools::file_path_sans_ext(basename(latest_bundle))))
+
+# Download and extract
+if (!file.exists(bundle_local)) {
+  s3$file_download(latest_bundle, bundle_local, overwrite = TRUE)
+}
+if (!dir.exists(extract_dir)) {
+  dir.create(extract_dir)
+  utils::untar(bundle_local, exdir = extract_dir)
+}
+
+# Locate files
+json_agronomic <- list.files(extract_dir, pattern = "^agronomic_.*\\.json$", full.names = TRUE)
+json_master <- list.files(extract_dir, pattern = "^era_master_codes.*\\.json$", full.names = TRUE)
+parquet_file <- list.files(extract_dir, pattern = "^era_compiled.*\\.parquet$", full.names = TRUE)
+
+# Load into variables
+ERA_Compiled <- arrow::read_parquet(parquet_file)
+
+```
+
+# Downloading the meta-data
+```{r vocad, echo=T, message=F}
+# Download the era master vocab ######
+era_vocab_url <- "https://github.com/peetmate/era_codes/raw/main/era_master_sheet.xlsx"
+era_vocab_local <- file.path(dl_dir, basename(era_vocab_url))
+if(!file.exists(era_vocab_local)|update_vocab){
+  download.file(era_vocab_url, era_vocab_local, mode = "wb")  # Download and write in binary mode
+}
+  
+# Import the vocab
+sheet_names <- readxl::excel_sheets(era_vocab_local)
+sheet_names <- sheet_names[!grepl("sheet|Sheet", sheet_names)]
+
+# Read each sheet into a list named era_master_codes
+era_master_codes <- sapply(
+  sheet_names,
+  FUN = function(x) {
+    data.table::data.table(readxl::read_excel(era_vocab_local, sheet = x))
+  },
+  USE.NAMES = TRUE
+)
+
+# Access and filter the era_fields_v2 sheet
+era_fields_comp = era_master_codes["era_fields_v1"]
+```
+
+# Subsetting to legumes 
+```{r subsetting to legumes, echo=F, message=F}
+
+# Define the list of products you want
+products_of_interest <- c(
+  "Cowpea", "Soybean", "Lablab", "Kersting's groundnut",
+  "Sesame", "Bambara Nut", "Groundnut", "Pigeon Pea"
+)
+
+# Subset the data
+ERA_Compiled_subset <- ERA_Compiled[Product.Simple %in% products_of_interest]
+
+# Optional: check the result
+DT::datatable(
+  ERA_Compiled_subset,
+  options = list(
+    scrollY = "400px",
+    scrollX = TRUE,
+    pageLength = 20,
+    fixedHeader = FALSE
+  )
+)
+
+
+```
+
+
+# Exploring geographic locations of studies available
+```{r r_plotting the distribution of data, echo=T, message=F}
+# Ensure coordinates are numeric
+ERA_Compiled_subset <- ERA_Compiled_subset %>%
+  mutate(
+    Latitude = as.numeric(Latitude),
+    Longitude = as.numeric(Longitude)
+  ) %>%
+  filter(!is.na(Latitude) & !is.na(Longitude))
+
+# Count the number of papers per country
+paper_counts <- ERA_Compiled_subset %>%
+  group_by(Country) %>%
+  summarise(N_Papers = n_distinct(Code), .groups = "drop")
+
+# Load only African countries
+world <- ne_countries(scale = "medium", continent = "Africa", returnclass = "sf")
+
+# Fix Tanzania name if needed
+world <- world %>%
+  mutate(admin = if_else(admin == "United Republic of Tanzania", "Tanzania", admin))
+
+
+# Ensure CRS is consistent
+world <- st_transform(world, crs = 4326)
+
+# Convert combined_sites to spatial data
+sites_sf <- st_as_sf(ERA_Compiled_subset, coords = c("Longitude", "Latitude"), crs = 4326, remove = FALSE)
+
+# Join paper counts to map
+map_data <- world %>%
+  dplyr::select(admin, geometry) %>%
+  rename(Country = admin) %>%
+  left_join(paper_counts, by = "Country")
+
+# Plot the map
+map<- ggplot() +
+  geom_sf(data = map_data, aes(fill = N_Papers), color = "white") +
+  geom_point(data = sites_sf, aes(x = Longitude, y = Latitude), 
+             shape = 21, color = "black", fill = "white", size = 2, alpha = 0.5) +
+  scale_fill_viridis_c(
+    option = "mako",
+    direction = -1,
+    na.value = "gray95"
+  ) +
+  labs(fill = "Legume Papers") +
+  theme_minimal() +
+  theme(
+    legend.position = "bottom",          # ⬅ Move to bottom
+    legend.direction = "horizontal",     # ⬅ Make it horizontal
+    legend.title = element_text(size = 12, face = "bold"),
+    legend.text = element_text(size = 10),
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    axis.title = element_blank(),
+    panel.grid = element_blank()
+  ) +
+  guides(fill = guide_colorbar(
+    barwidth = 10, barheight = 0.5, title.position = "top", title.hjust = 0.5
+  )) +
+  coord_sf(xlim = c(-20, 55), ylim = c(-35, 38), expand = FALSE)
+
+# Display the map
+map
+```
