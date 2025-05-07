@@ -22,7 +22,6 @@ comments:
     repo: ERAgriculture/livestock_diet
 ---
 
-
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -33,13 +32,12 @@ knitr::opts_chunk$set(
 )
 ```
 
-***This vignette will help us explore the data available for legumes***
--   Downloading the data\
--   Sub-setting the data to agronomy and legumes\
--   Exploring geographic locations of studies\
--   Exploring crop types (products) in the data\
--   Exploring agronomic practices used in the studies\
--   Exploring the outcomes reported
+***This vignette will help us explore the data available for legumes*** - Downloading the data\
+- Sub-setting the data to agronomy and legumes\
+- Exploring geographic locations of studies\
+- Exploring crop types (products) in the data\
+- Exploring agronomic practices used in the studies\
+- Exploring the outcomes reported
 
 ```{r packages,include=T,eval=T,echo=F}
 if (!requireNamespace("pacman", quietly = TRUE)) {
@@ -48,7 +46,7 @@ if (!requireNamespace("pacman", quietly = TRUE)) {
 pacman::p_load(
   sf, knitr, rnaturalearth, rnaturalearthdata, 
   ggplot2, viridis, shiny, dplyr, treemap, treemapify, plotly, data.table,
-  s3fs, arrow, devtools, gh, htmlwidgets,remotes,gridExtra, DT
+  s3fs, arrow, devtools, gh, htmlwidgets,remotes,gridExtra, DT,tidyr
 )
 
 if(!require(ERAgON)){
@@ -72,7 +70,8 @@ if(!dir.exists(dl_dir)){
 update_vocab<-F
 ```
 
-# Downloading the data
+## Downloading the data
+
 ```{r pre-load era compiled, echo=T, message=F}
 # Set S3 path and initialize
 s3 <- s3fs::S3FileSystem$new(anonymous = TRUE)
@@ -108,34 +107,9 @@ ERA_Compiled <- arrow::read_parquet(parquet_file)
 
 ```
 
-# Downloading the meta-data
-```{r vocad, echo=T, message=F}
-# Download the era master vocab ######
-era_vocab_url <- "https://github.com/peetmate/era_codes/raw/main/era_master_sheet.xlsx"
-era_vocab_local <- file.path(dl_dir, basename(era_vocab_url))
-if(!file.exists(era_vocab_local)|update_vocab){
-  download.file(era_vocab_url, era_vocab_local, mode = "wb")  # Download and write in binary mode
-}
-  
-# Import the vocab
-sheet_names <- readxl::excel_sheets(era_vocab_local)
-sheet_names <- sheet_names[!grepl("sheet|Sheet", sheet_names)]
+## Subsetting to legumes
 
-# Read each sheet into a list named era_master_codes
-era_master_codes <- sapply(
-  sheet_names,
-  FUN = function(x) {
-    data.table::data.table(readxl::read_excel(era_vocab_local, sheet = x))
-  },
-  USE.NAMES = TRUE
-)
-
-# Access and filter the era_fields_v2 sheet
-era_fields_comp = era_master_codes["era_fields_v1"]
-```
-
-# Subsetting to legumes 
-```{r subsetting to legumes, echo=F, message=F}
+```{r subsetting to legumes, echo=T, message=F}
 
 # Define the list of products you want
 products_of_interest <- c(
@@ -160,8 +134,39 @@ DT::datatable(
 
 ```
 
+## Downloading the meta-data
 
-# Exploring geographic locations of studies available
+```{r vocad, echo=T, message=F}
+# Download the era master vocab ######
+era_vocab_url <- "https://github.com/peetmate/era_codes/raw/main/era_master_sheet.xlsx"
+era_vocab_local <- file.path(dl_dir, basename(era_vocab_url))
+if(!file.exists(era_vocab_local)|update_vocab){
+  download.file(era_vocab_url, era_vocab_local, mode = "wb")  # Download and write in binary mode
+}
+  
+# Import the vocab
+sheet_names <- readxl::excel_sheets(era_vocab_local)
+sheet_names <- sheet_names[!grepl("sheet|Sheet", sheet_names)]
+
+# Read each sheet into a list named era_master_codes
+era_master_codes <- sapply(
+  sheet_names,
+  FUN = function(x) {
+    data.table::data.table(readxl::read_excel(era_vocab_local, sheet = x))
+  },
+  USE.NAMES = TRUE
+)
+
+# Access and filter the era_fields_v2 sheet
+era_fields_comp = era_master_codes["era_fields_v1"]
+
+
+
+
+```
+
+## Exploring geographic locations of studies available
+
 ```{r r_plotting the distribution of data, echo=T, message=F}
 # Ensure coordinates are numeric
 ERA_Compiled_subset <- ERA_Compiled_subset %>%
@@ -225,4 +230,77 @@ map<- ggplot() +
 
 # Display the map
 map
+```
+
+## Exploring the products of studies available
+
+```{r r_plotting products, echo=T, message=F}
+prod_counts <- ERA_Compiled_subset %>%
+  separate_rows(Product.Simple, sep = "-") %>% 
+  group_by(Product.Simple) %>%
+  summarise(Count = n_distinct(Code), .groups = "drop") %>%
+  mutate(label = paste0(Product.Simple, " (", Count, ")"))
+
+
+tree_plot<- ggplot(prod_counts, aes(area = Count, fill = Count, label = label)) +
+  geom_treemap(color = "white") +
+  geom_treemap_text(
+    colour = "black",
+    place = "centre",
+    grow = FALSE,       # Disable growing to avoid oversized text
+    reflow = TRUE,
+    size = 10            # Adjust this value to control the actual text size
+  ) +
+  scale_fill_distiller(palette = "Greens", direction = 1, guide = "none") +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 14, face = "bold"),
+    legend.position = "none"
+  )
+tree_plot
+
+```
+## Exploring the agronomic practices within studies available
+
+The following analysis explores the types of **agronomic practices**-referred to as **"Themes"** in the dataset.
+
+Each study in ERA may be associated with multiple practices---for example, a study might examine both Soil Management and Nutrient Management.\
+For example, the theme 'Soil Management' include practices like green manure, crop residue, pH control, tillage, improved fallows. 'Nutrient Management' includes organic and inorganic fertilizer. This can be found in the practices within the mastercodes\
+```{r r_plotting practices, echo=T, message=F}
+
+ag_counts <- ERA_Compiled_subset %>%
+  separate_rows(Theme, sep = "-") %>% 
+  group_by(Theme) %>%
+  summarise(Count = n_distinct(Code), .groups = "drop") %>%
+  mutate(label = paste0(Theme, " (", Count, ")"))
+
+# Define parts per square (e.g. 1 square = 10 studies)
+parts_per_square <- 20
+
+# Prepare waffle input
+waffle_data <- ag_counts %>%
+  mutate(
+    squares = round(Count / parts_per_square)
+  ) %>%
+  filter(squares > 0)  # Drop any 0-square items
+
+# Named vector for waffle
+waffle_vec <- setNames(waffle_data$squares, waffle_data$label)
+
+# Waffle plot
+waffle_plot <- waffle::waffle(
+  parts = waffle_vec,
+  rows = 10,
+  size = 0.5,
+  colors = RColorBrewer::brewer.pal(n = nrow(waffle_data), name = "Blues"),
+  legend_pos = "bottom"
+) +
+  theme(
+    legend.position = "bottom",
+    legend.text = element_text(size = 10),
+    legend.title = element_blank()
+  ) +
+  guides(fill = guide_legend(nrow = 3, byrow = TRUE))
+
+waffle_plot
 ```
