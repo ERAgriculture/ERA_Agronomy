@@ -15,6 +15,8 @@ Explore the rendered HTML files for detailed documentation:
 - Provides a roadmap for leveraging ERA datasets.
 - Includes practical steps for data cleaning, visualization, and advanced analysis.
 
+    1.1 ERA_VACS is a subset of the ERA Agronomy data, looking at legumes (https://eragriculture.github.io/ERA_Agronomy/ERA_VACS.html)
+
 2. **[Guide to Climate and Soil Data in ERA](https://eragriculture.github.io/ERA_Agronomy/ERA%20Climate%20and%20Soils.html)**  
 - Explains how ERA observations are enriched with geospatial climate and soil data.  
 - Details data sources, processing scripts, and methods for calculating seasonal indicators like GDD, Eratio, and waterlogging.  
