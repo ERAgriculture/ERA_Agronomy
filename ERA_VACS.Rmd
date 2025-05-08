@@ -22,6 +22,10 @@ comments:
     repo: ERAgriculture/livestock_diet
 ---
 
+::: {style="display: flex; align-items: center; gap: 20px;"}
+<img src="images/Era_Logo_FINAL_Colour.png" width="100" style="margin-top: 10px;"/>
+:::
+
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -32,7 +36,9 @@ knitr::opts_chunk$set(
 )
 ```
 
-***This vignette will help us explore the data available for legumes*** - Downloading the data\
+***This vignette will help us explore the data available for legumes***. It will cover the following:
+
+\- Downloading the data\
 - Sub-setting the data to agronomy and legumes\
 - Exploring geographic locations of studies\
 - Exploring crop types (products) in the data\
@@ -72,6 +78,8 @@ update_vocab<-F
 
 ## Downloading the data
 
+This section retrieves the most recent version of the ERA.Compiled comparisons table from the ERA S3 bucket, saves it locally, and loads it for use.
+
 ```{r pre-load era compiled, echo=T, message=F}
 # Set S3 path and initialize
 s3 <- s3fs::S3FileSystem$new(anonymous = TRUE)
@@ -109,6 +117,8 @@ ERA_Compiled <- arrow::read_parquet(parquet_file)
 
 ## Subsetting to legumes
 
+ERA has a diverse range of practices, from agronomy to livestock and a few papers on postharvest storage. We will therefore focus on Agronomy and legumes for this User Guide. If you are interest in any other crops, subset them in the Products tab. For livestock practices, please explore our [Livestock User Guide](https://eragriculture.github.io/ERL/Guide-to-Livestock-Data-Analysis-in-the-ERA-Dataset--STATIC.html).
+
 ```{r subsetting to legumes, echo=T, message=F}
 
 # Define the list of products you want
@@ -135,6 +145,8 @@ DT::datatable(
 ```
 
 ## Downloading the meta-data
+
+This section downloads and imports the ERA metadata, that will explain each field in the ERA.Compiled data.
 
 ```{r vocad, echo=T, message=F}
 # Download the era master vocab ######
@@ -166,6 +178,8 @@ era_fields_comp = era_master_codes["era_fields_v1"]
 ```
 
 ## Exploring geographic locations of studies available
+
+We collected country, site name paraphrased from study, and spatial coordinates when given. Location's coordinates were verified in Google Maps, as they were often inaccurately reported. Enumerators also recorded a measure of spatial uncertainty. When authors reported decimal degrees and there was no correction required to the co-ordinates, then uncertainty was measured in terms of the value's precision. When the location was estimated using Google Maps, the spatial uncertainty value was measured in terms of the precision of the site location description (e.g., a single farm or region) and the enumerator's visual interpretation of land use at and near the coordinates. Observation's geographic coordinates were collected to facilitate linking the data compiled in ERA to external databases, for example related to climatic and environmental factors not necessarily reported in the original study.
 
 ```{r r_plotting the distribution of data, echo=T, message=F}
 # Ensure coordinates are numeric
@@ -234,6 +248,20 @@ map
 
 ## Exploring the products of studies available
 
+The `Product.Subtype` column in the `ERA.Compiled_ag` dataset contains the specific **crop types** examined in each study (e.g., `"Maize"`, `"Rice"`, `"Wheat"`).
+
+To accurately **count how many unique studies (identified by `Code`)** examined each crop, the following code processes and summarizes the data.
+
+The figure below displays the distribution of crop categories in the dataset. It highlights the relative focus of studies across different crop types.
+
+-   The **largest category** by far is **Cereals**, indicating that most studies in ERA are focused on cereal crops such as maize, wheat, rice, and sorghum.
+
+-   This is followed by **Legumes**, **Starchy Staples**, and **Vegetables**, which also appear frequently in the dataset.
+
+-   Categories such as **Fodders**, **Cash Crops**, and **Fruits** are represented to a lesser extent.
+
+Each tile represents a crop category, and its size reflects the **number of unique studies** (`Code`) that included at least one crop from that category. The number in parentheses shows the count of studies for that group.
+
 ```{r r_plotting products, echo=T, message=F}
 prod_counts <- ERA_Compiled_subset %>%
   separate_rows(Product.Simple, sep = "-") %>% 
@@ -260,47 +288,106 @@ tree_plot<- ggplot(prod_counts, aes(area = Count, fill = Count, label = label)) 
 tree_plot
 
 ```
+
 ## Exploring the agronomic practices within studies available
 
 The following analysis explores the types of **agronomic practices**-referred to as **"Themes"** in the dataset.
 
 Each study in ERA may be associated with multiple practices---for example, a study might examine both Soil Management and Nutrient Management.\
 For example, the theme 'Soil Management' include practices like green manure, crop residue, pH control, tillage, improved fallows. 'Nutrient Management' includes organic and inorganic fertilizer. This can be found in the practices within the mastercodes\
+
 ```{r r_plotting practices, echo=T, message=F}
 
+# Calculate counts
 ag_counts <- ERA_Compiled_subset %>%
-  separate_rows(Theme, sep = "-") %>% 
-  group_by(Theme) %>%
+  separate_rows(PrName, sep = "-") %>%
+  group_by(PrName) %>%
   summarise(Count = n_distinct(Code), .groups = "drop") %>%
-  mutate(label = paste0(Theme, " (", Count, ")"))
+  mutate(label = paste0(PrName, " (", Count, ")"))
 
-# Define parts per square (e.g. 1 square = 10 studies)
-parts_per_square <- 20
-
-# Prepare waffle input
-waffle_data <- ag_counts %>%
-  mutate(
-    squares = round(Count / parts_per_square)
-  ) %>%
-  filter(squares > 0)  # Drop any 0-square items
-
-# Named vector for waffle
-waffle_vec <- setNames(waffle_data$squares, waffle_data$label)
-
-# Waffle plot
-waffle_plot <- waffle::waffle(
-  parts = waffle_vec,
-  rows = 10,
-  size = 0.5,
-  colors = RColorBrewer::brewer.pal(n = nrow(waffle_data), name = "Blues"),
-  legend_pos = "bottom"
-) +
-  theme(
-    legend.position = "bottom",
-    legend.text = element_text(size = 10),
-    legend.title = element_blank()
+# Bar plot
+bar_plot <- ggplot(ag_counts, aes(x = reorder(PrName, Count), y = Count, fill = PrName)) +
+  geom_col(show.legend = FALSE) +
+  coord_flip() +
+  labs(
+    title = "Practice Counts",
+    x = "Practice Name",
+    y = "Number of studies"
   ) +
-  guides(fill = guide_legend(nrow = 3, byrow = TRUE))
+  scale_fill_viridis_d(option = "plasma") +
+  theme_minimal() +
+  theme(
+    axis.text.y = element_text(size = 10),
+    plot.title = element_text(hjust = 0.5)
+  )
 
-waffle_plot
+bar_plot
+```
+
+## Exploring the outcomes reported within studies available
+
+The ERA dataset tracks outcomes of agronomic interventions across several broad categories---called **Pillars**---such as productivity, environmental impact, and more. Each pillar includes more specific **indicators** like *yield*, *GHG emissions*, *soil organic carbon*, and others.
+
+```{r r_plotting Outcomes, echo=T, message=F}
+# Aggregate data by pillar and indicator
+out_counts <- ERA_Compiled_subset %>%
+  mutate(Out.Pillar = trimws(as.character(Out.Pillar))) %>%
+  filter(Out.Pillar != "", !is.na(Out.Pillar), !is.na(Out.Ind)) %>%
+  group_by(Out.Pillar, Out.Ind) %>%
+  summarise(Num_Papers = n_distinct(Code), .groups = "drop") %>%
+  rename(Pillar = Out.Pillar, Indicator = Out.Ind)
+
+
+# Sort indicators within each pillar
+out_counts <- out_counts %>%
+  arrange(Pillar, Indicator) %>%
+  mutate(
+    Indicator = factor(Indicator, levels = unique(Indicator)),
+    Pillar = factor(Pillar, levels = c("Productivity", "Resilience"))
+  )
+
+# Optional: define pillar colors
+pillar_colors <- c(
+  "Productivity" = "#FFCC66",
+  "Resilience" = "#990000"
+)
+
+out_counts <- out_counts %>%
+  filter(
+    !is.na(Pillar), Pillar != "",
+    !is.na(Indicator), Indicator != ""
+  )
+
+
+# Plot
+bar_plot <- ggplot(out_counts, aes(
+  x = Indicator, y = Num_Papers, fill = Pillar
+)) +
+  geom_col(width = 0.8) +
+  labs(
+    y = "Number of Papers",
+    x = "Outcome Indicator"
+  ) +
+  scale_fill_manual(values = pillar_colors, na.value = "gray70") +
+  scale_y_continuous(
+    limits = c(0, max(out_counts$Num_Papers) + 50),
+    expand = c(0, 0)
+  ) +
+  facet_wrap(~Pillar, scales = "free_x", nrow = 1) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(size = 10, angle = 45, hjust = 1),
+    axis.text.y = element_text(size = 10),
+    axis.title.x = element_text(size = 12, face = "bold", margin = margin(t = 10)),
+    axis.title.y = element_text(size = 12, face = "bold"),
+    legend.position = "none",
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    strip.text = element_text(size = 12, face = "bold"),
+    plot.margin = margin(10, 10, 10, 10)
+  )
+
+# Show plot
+bar_plot
+
 ```
