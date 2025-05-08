@@ -73,7 +73,7 @@ if(!dir.exists(dl_dir)){
 }
 
 # Should the era vocab be updated?
-update_vocab<-F
+update_vocab<-T
 ```
 
 ## Downloading the data
@@ -171,9 +171,19 @@ era_master_codes <- sapply(
 
 # Access and filter the era_fields_v2 sheet
 era_fields_comp = era_master_codes["era_fields_v1"]
+metadata<-era_fields_comp$era_fields_v1
+metadata<- metadata %>%
+  filter(!is.na(Field.Name))
 
-
-
+DT::datatable(
+  metadata,
+  options = list(
+    scrollY = "400px",
+    scrollX = TRUE,
+    pageLength = 20,
+    fixedHeader = FALSE
+  )
+)
 
 ```
 
