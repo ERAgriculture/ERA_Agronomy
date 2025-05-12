@@ -16,6 +16,7 @@ Explore the rendered HTML files for detailed documentation:
 - Includes practical steps for data cleaning, visualization, and advanced analysis.
 
     1.1 ERA_VACS is a subset of the ERA Agronomy data, looking at legumes (https://eragriculture.github.io/ERA_Agronomy/ERA_VACS.html)
+    1.2 ERA Agroecology is a subset of the LAC studies (https://eragriculture.github.io/ERA_Agronomy/ERA-Agroecology.html)
 
 2. **[Guide to Climate and Soil Data in ERA](https://eragriculture.github.io/ERA_Agronomy/ERA%20Climate%20and%20Soils.html)**  
 - Explains how ERA observations are enriched with geospatial climate and soil data.  
