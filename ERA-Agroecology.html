@@ -1,0 +1,2421 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Peter Steward &amp; Namita Joshi (Alliance of Bioversity International &amp; CIAT)">
+<meta name="dcterms.date" content="2025-05-12">
+
+<title>Agroecological Agronomy Data in ERA (Maize, Bean &amp; Coffee)</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="ERA-Agroecology_files/libs/clipboard/clipboard.min.js"></script>
+<script src="ERA-Agroecology_files/libs/quarto-html/quarto.js"></script>
+<script src="ERA-Agroecology_files/libs/quarto-html/popper.min.js"></script>
+<script src="ERA-Agroecology_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="ERA-Agroecology_files/libs/quarto-html/anchor.min.js"></script>
+<link href="ERA-Agroecology_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="ERA-Agroecology_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="ERA-Agroecology_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="ERA-Agroecology_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="ERA-Agroecology_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script async="" src="https://hypothes.is/embed.js"></script>
+<script src="ERA-Agroecology_files/libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="ERA-Agroecology_files/libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="2">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview"><span class="header-section-number">1</span> Overview</a></li>
+  <li><a href="#set-up" id="toc-set-up" class="nav-link" data-scroll-target="#set-up"><span class="header-section-number">2</span> Set-up</a>
+  <ul>
+  <li><a href="#load-required-functions-and-packages" id="toc-load-required-functions-and-packages" class="nav-link" data-scroll-target="#load-required-functions-and-packages"><span class="header-section-number">2.1</span> Load Required Functions and Packages</a></li>
+  <li><a href="#download-era-data" id="toc-download-era-data" class="nav-link" data-scroll-target="#download-era-data"><span class="header-section-number">2.2</span> Download ERA Data</a></li>
+  </ul></li>
+  <li><a href="#explore-the-results" id="toc-explore-the-results" class="nav-link" data-scroll-target="#explore-the-results"><span class="header-section-number">3</span> Explore the Results</a>
+  <ul>
+  <li><a href="#treatment-vs-control-comparisons" id="toc-treatment-vs-control-comparisons" class="nav-link" data-scroll-target="#treatment-vs-control-comparisons"><span class="header-section-number">3.1</span> Treatment vs control comparisons</a></li>
+  <li><a href="#field-names-and-descriptions" id="toc-field-names-and-descriptions" class="nav-link" data-scroll-target="#field-names-and-descriptions"><span class="header-section-number">3.2</span> Field Names and Descriptions</a></li>
+  <li><a href="#subset-to-acdc-region" id="toc-subset-to-acdc-region" class="nav-link" data-scroll-target="#subset-to-acdc-region"><span class="header-section-number">3.3</span> Subset to ACDC Region</a></li>
+  <li><a href="#summary-statistics" id="toc-summary-statistics" class="nav-link" data-scroll-target="#summary-statistics"><span class="header-section-number">3.4</span> Summary Statistics</a></li>
+  <li><a href="#study-locations-map" id="toc-study-locations-map" class="nav-link" data-scroll-target="#study-locations-map"><span class="header-section-number">3.5</span> Study Locations Map</a></li>
+  <li><a href="#intersections-of-factors" id="toc-intersections-of-factors" class="nav-link" data-scroll-target="#intersections-of-factors"><span class="header-section-number">3.6</span> Intersections of Factors</a></li>
+  </ul></li>
+  <li><a href="#data-model" id="toc-data-model" class="nav-link" data-scroll-target="#data-model"><span class="header-section-number">4</span> Data Model</a>
+  <ul>
+  <li><a href="#understand-field-definitions" id="toc-understand-field-definitions" class="nav-link" data-scroll-target="#understand-field-definitions"><span class="header-section-number">4.1</span> Understand Field Definitions</a></li>
+  <li><a href="#subset-raw-data-for-acdc" id="toc-subset-raw-data-for-acdc" class="nav-link" data-scroll-target="#subset-raw-data-for-acdc"><span class="header-section-number">4.2</span> Subset Raw Data for ACDC</a></li>
+  </ul></li>
+  <li><a href="#literature-search-and-screening" id="toc-literature-search-and-screening" class="nav-link" data-scroll-target="#literature-search-and-screening"><span class="header-section-number">5</span> Literature Search and Screening</a></li>
+  <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps"><span class="header-section-number">6</span> Next steps</a></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Agroecological Agronomy Data in ERA (Maize, Bean &amp; Coffee)</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Peter Steward &amp; Namita Joshi (Alliance of Bioversity International &amp; CIAT) </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">May 12, 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div style="display: flex; align-items: center; gap: 20px;">
+<p><img src="images/Era_Logo_FINAL_Colour.png" width="100" style="margin-top: 10px;"></p>
+</div>
+<section id="overview" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Overview</h1>
+<p>This vignette introduces the agroecological agronomy dataset for the <strong>Agroecology in the Dry Corridor of Central America (ACDC)</strong> project, created using the Evidence for Resilient Agriculture (ERA) system.</p>
+<p>The purpose of this document is to:</p>
+<ul>
+<li>Provide open access to the ACDC dataset.</li>
+<li>Facilitate exploration and use by researchers, analysts, and decision-makers.</li>
+<li>Demonstrate current contents and structure.</li>
+</ul>
+<p>For full background on ERA and its methods, see the <a href="https://github.com/ERAgriculture/ERA_Agronomy">ERA GitHub repository</a> and the <a href="https://eragriculture.github.io/ERA_Agronomy/ERA-User-Guide.html">ERA User Guide</a>.</p>
+<p>For details on how climate and soils data are integrated into ERA, see the companion vignette: <a href="https://eragriculture.github.io/ERA_Agronomy/ERA%20Climate%20and%20Soils.html">ERA Climate and Soils</a>.</p>
+</section>
+<section id="set-up" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Set-up</h1>
+<section id="load-required-functions-and-packages" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="load-required-functions-and-packages"><span class="header-section-number">2.1</span> Load Required Functions and Packages</h2>
+</section>
+<section id="download-era-data" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="download-era-data"><span class="header-section-number">2.2</span> Download ERA Data</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set S3 path and initialize</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>s3 <span class="ot">&lt;-</span> s3fs<span class="sc">::</span>S3FileSystem<span class="sc">$</span><span class="fu">new</span>(<span class="at">anonymous =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># This is the ERA s3 bucket</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>era_s3 <span class="ot">&lt;-</span> <span class="st">"s3://digital-atlas/era"</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># This is the S3 directory where era data archives can be found</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>(bundle_dir <span class="ot">&lt;-</span> <span class="fu">file.path</span>(era_s3, <span class="st">"data"</span>, <span class="st">"packaged"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "s3://digital-atlas/era/data/packaged"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This is the address of the most recent version of era agronomy</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>era_agronomy_s3<span class="ot">&lt;-</span><span class="st">"s3://digital-atlas/era/data/packaged/era_agronomy_bundle.tar.gz"</span> </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a folder to download the most recent version of era agronomy</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>dl_dir <span class="ot">&lt;-</span> <span class="st">"downloaded_data"</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(dl_dir, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Local file path of downloaded agronomy archive</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>(bundle_local <span class="ot">&lt;-</span> <span class="fu">file.path</span>(dl_dir, <span class="fu">basename</span>(era_agronomy_s3)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "downloaded_data/era_agronomy_bundle.tar.gz"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Name of folder to extract downloaded archive to</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>(extract_dir <span class="ot">&lt;-</span> <span class="fu">file.path</span>(dl_dir, tools<span class="sc">::</span><span class="fu">file_path_sans_ext</span>(tools<span class="sc">::</span><span class="fu">file_path_sans_ext</span>(<span class="fu">basename</span>(era_agronomy_s3)))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "downloaded_data/era_agronomy_bundle"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(update){</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Download archive</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  s3<span class="sc">$</span><span class="fu">file_download</span>(era_agronomy_s3, bundle_local, <span class="at">overwrite =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Extract archive</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dir.create</span>(extract_dir)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  utils<span class="sc">::</span><span class="fu">untar</span>(bundle_local, <span class="at">exdir =</span> extract_dir)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Locate files</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>json_agronomic <span class="ot">&lt;-</span> <span class="fu">list.files</span>(extract_dir, <span class="at">pattern =</span> <span class="st">"^agronomic_.*</span><span class="sc">\\</span><span class="st">.json$"</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>json_master <span class="ot">&lt;-</span> <span class="fu">list.files</span>(extract_dir, <span class="at">pattern =</span> <span class="st">"^era_master_codes.*</span><span class="sc">\\</span><span class="st">.json$"</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>compiled_file <span class="ot">&lt;-</span> <span class="fu">list.files</span>(extract_dir, <span class="at">pattern =</span> <span class="st">"^era_compiled.*</span><span class="sc">\\</span><span class="st">.parquet$"</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the downloaded datasets</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>era_compiled <span class="ot">&lt;-</span> arrow<span class="sc">::</span><span class="fu">read_parquet</span>(compiled_file)</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>era_raw<span class="ot">&lt;-</span> jsonlite<span class="sc">::</span><span class="fu">fromJSON</span>(json_agronomic)</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>era_master_codes <span class="ot">&lt;-</span> jsonlite<span class="sc">::</span><span class="fu">fromJSON</span>(json_master)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="explore-the-results" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Explore the Results</h1>
+<section id="treatment-vs-control-comparisons" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="treatment-vs-control-comparisons"><span class="header-section-number">3.1</span> Treatment vs control comparisons</h2>
+<p>The downloaded <code>era_compiled</code> parquet table contains detailed information on control vs treatment comparisons. This is a large table with many fields.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(era_compiled)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 197731    138</code></pre>
+</div>
+</div>
+</section>
+<section id="field-names-and-descriptions" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="field-names-and-descriptions"><span class="header-section-number">3.2</span> Field Names and Descriptions</h2>
+<p>How do we understand what these fields are? We can look at the <code>era_master_codes</code> to find the data catalog.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>era_dat_fields <span class="ot">&lt;-</span> era_master_codes<span class="sc">$</span>era_fields_v1 <span class="sc">%&gt;%</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Field, Display_Name, Field_Description)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>era_dat_fields[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>,]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          Field           Display_Name
+1        B.Code   ERA Publication Code
+2 B.Author.Last       Author Last Name
+3        B.Date         Year Published
+4     B.Journal                Journal
+5         B.New New Journal Name Used?
+                                            Field_Description
+1 A unique publication code should be automatically assigned.
+2                         Publication first author's surname.
+3                                    The year of publication.
+4              Name of journal this research is published in.
+5                                                          NA</code></pre>
+</div>
+</div>
+</section>
+<section id="subset-to-acdc-region" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="subset-to-acdc-region"><span class="header-section-number">3.3</span> Subset to ACDC Region</h2>
+<p>The era compiled dataset contains information from multiple projects, so next we need to subset to the acdc project. We can do this by selecting data from central and south America.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>lac_countries<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="st">"Ecuador"</span>,<span class="st">"Brazil"</span>,<span class="st">"Peru"</span>,<span class="st">"Guatemala"</span>,<span class="st">"Colombia"</span>,<span class="st">"Venuezela"</span>,<span class="st">"Costa Rica"</span>,</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"Honduras"</span>,<span class="st">"Nicaragua"</span>,<span class="st">"Haiti"</span>,<span class="st">"Mexico"</span>,<span class="st">"El Salvador"</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>acdc_dat<span class="ot">&lt;-</span>era_compiled[Country <span class="sc">%in%</span> lac_countries]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="summary-statistics" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="summary-statistics"><span class="header-section-number">3.4</span> Summary Statistics</h2>
+<p>The subset data contains 16998 observations from 214 studies.</p>
+<p>Lets explore what crops (<code>Product.Simple</code>), experimental management practices (<code>PrName</code>) and outcomes (<code>Out.SubInd</code>) we have in these data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>dat<span class="ot">&lt;-</span>acdc_dat[,.(<span class="at">n_studies=</span><span class="fu">length</span>(<span class="fu">unique</span>(Code)),<span class="at">n_observations=</span>.N),by<span class="ot">=</span>Product.Simple][<span class="fu">order</span>(n_studies,<span class="at">decreasing=</span>T)]</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(dat, <span class="at">format =</span> <span class="st">"html"</span>, <span class="at">caption =</span> <span class="st">"Studies and Observations by Crop"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scroll_box</span>(<span class="at">width =</span> <span class="st">"100%"</span>, <span class="at">height =</span> <span class="st">"400px"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:400px; overflow-x: scroll; width:100%; ">
+<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
+<caption>Studies and Observations by Crop</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">Product.Simple</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">n_studies</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">n_observations</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Maize</td>
+<td style="text-align: right;">111</td>
+<td style="text-align: right;">3754</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Wheat</td>
+<td style="text-align: right;">29</td>
+<td style="text-align: right;">4296</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Soybean</td>
+<td style="text-align: right;">23</td>
+<td style="text-align: right;">2646</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Common Bean</td>
+<td style="text-align: right;">21</td>
+<td style="text-align: right;">578</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Coffee</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">287</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Coffee-Natural Fallow</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">761</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Arabica</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">195</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Sorghum</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">238</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Oats</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">208</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Black oats</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">346</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Durum Wheat</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">649</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Common Bean-Maize</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">46</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Black oats-Maize</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">27</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Cowpea</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">67</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Maize-Wheat</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">145</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Maize-Natural Fallow</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">20</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Macadamia</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">142</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Arabica-Macadamia</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">614</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Coffee-Macadamia</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">151</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Barley</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">25</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Natural Fallow</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">606</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Cotton</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">37</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Yacon</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">54</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Palisade Grass</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">46</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Hairy Vetch</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Cowpea-Maize</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">25</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Maize-Oats</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">102</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Safflower</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">18</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Capsicum</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Groundnut-Maize</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Coffee-Urochloa decumbens</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Cabbage</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Maize-Velvet Bean</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Cabbage-Maize</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Maize-Sunn Hemp</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">11</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Guinea Grass</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Sugar Cane</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">16</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Sorghum-Soybean</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">66</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Chamomile</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">34</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Congo Grass-Cotton-Pearl Millet</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">180</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Congo Grass</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">12</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Guinea Grass-Soybean</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Congo Grass-Soybean</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Groundnut</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">24</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Congo Grass-Maize-Soybean</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">18</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Pearl Millet</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Pigeon Pea</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Maize-Pearl Millet-Pigeon Pea-Soybean</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">28</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Black oats-Maize-Natural Fallow-Soybean-Wheat</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Soybean-Wheat</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Coffee-Rubber</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Black oats-Guinea Grass-Maize-Soybean</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">54</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Maize-Oats-Soybean-Wheat</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">36</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Barley-Maize-Soybean-Wheat</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Radish</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Blue Lupin</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Common Bean-Maize-Wheat</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">16</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Hairy Vetch-Sorghum-Soybean-Wheat</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Hairy Vetch-Maize-Soybean-Wheat</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Black oats-Common Bean-Maize-Natural Fallow-Pearl Millet-Radish-Sunn Hemp</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">45</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Black oats-Cowpea-Maize</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">12</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Black oats-Maize-Oats-Soybean-Wheat</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">29</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Melon</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">14</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Grape</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">34</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Napier Grass</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">15</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Passionfruit</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">18</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Sweet Potato</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Sunflower</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">24</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Opuntia stricta</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">15</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Cassava</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Horsegram-Maize</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Hibiscus</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">48</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Hibiscus-Maize</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Common Bean-Hibiscus</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Common Bean-Hibiscus-Maize</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Maize-Pumpkin</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Common Bean-Maize-Natural Fallow</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Maize-Triticale</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Fava Bean</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Squash (C.Moschata)</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Maize-Soybean</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Maize-Peas</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Common Bean-Wheat</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Durum Wheat-Maize</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">26</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Note we will be exploring the impact of reducing or substituting inorganic fertilizers, so let's correct the practice name.</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>acdc_dat[,PrName<span class="sc">:</span><span class="er">=</span><span class="fu">gsub</span>(<span class="st">"Inorganic Fertilizer"</span>,<span class="st">"Reduced Inorganic Fertilizer"</span>,PrName)]</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>dat<span class="ot">&lt;-</span>acdc_dat[,.(<span class="at">n_studies=</span><span class="fu">length</span>(<span class="fu">unique</span>(Code)),<span class="at">n_observations=</span>.N),by<span class="ot">=</span>.(PrName)][<span class="fu">order</span>(n_studies,<span class="at">decreasing=</span>T)]</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(dat, <span class="at">format =</span> <span class="st">"html"</span>, <span class="at">caption =</span> <span class="st">"Studies and Observations by Management Practice"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scroll_box</span>(<span class="at">width =</span> <span class="st">"100%"</span>, <span class="at">height =</span> <span class="st">"400px"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:400px; overflow-x: scroll; width:100%; ">
+<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
+<caption>Studies and Observations by Management Practice</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">PrName</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">n_studies</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">n_observations</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Reduced Inorganic Fertilizer</td>
+<td style="text-align: right;">82</td>
+<td style="text-align: right;">2531</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Reduced Tillage</td>
+<td style="text-align: right;">32</td>
+<td style="text-align: right;">5065</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Intercropping</td>
+<td style="text-align: right;">27</td>
+<td style="text-align: right;">302</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Organic Fertilizer</td>
+<td style="text-align: right;">22</td>
+<td style="text-align: right;">389</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Crop Rotation</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">982</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Mulch-Reduced Tillage</td>
+<td style="text-align: right;">18</td>
+<td style="text-align: right;">584</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Mulch</td>
+<td style="text-align: right;">18</td>
+<td style="text-align: right;">968</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pH Control</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">874</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Multistrata Agroforestry</td>
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">904</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Crop Residue Incorporation</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">421</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Reduced Inorganic Fertilizer-Organic Fertilizer</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">76</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Crop Rotation-Reduced Tillage</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">51</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Crop Rotation-Mulch-Reduced Tillage</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">74</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Supplemental Irrigation</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">231</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Reduced Inorganic Fertilizer-Intercropping</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">64</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Crop Rotation-Mulch</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">54</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Crop Rotation-Reduced Inorganic Fertilizer</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">16</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Crop Residue Incorporation-Crop Rotation</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">38</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Improved Fallow</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">182</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Reduced Inorganic Fertilizer-pH Control</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">154</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Other Agroforestry</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">64</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Crop Residue Incorporation-Reduced Tillage</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">15</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Improved Varieties</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">279</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Reduced Inorganic Fertilizer-Mulch-Reduced Tillage</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">78</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Reduced Inorganic Fertilizer-Mulch</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">111</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Crop Residue</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">242</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Crop Residue Incorporation-Mulch-Reduced Tillage</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">28</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Improved Fallow-Intercropping</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">240</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Double Cropping</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">17</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Improved Varieties-Intercropping</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">10</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Deficit Irrigation</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">178</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Biochar</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">76</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Alleycropping</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">396</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Agroforestry Pruning</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">32</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Biochar-Organic Fertilizer</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">31</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Crop Residue-Reduced Tillage</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">42</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Crop Residue-Intercropping-Reduced Tillage</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Agroforestry Pruning-Multistrata Agroforestry</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">19</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Green Manure</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">27</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Harvest Method-Intercropping-Mulch</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">21</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Crop Rotation-Intercropping-Reduced Tillage</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Intercropping-Supplemental Irrigation</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Improved Fallow-Reduced Inorganic Fertilizer</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Improved Fallow-Reduced Inorganic Fertilizer-Intercropping</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Agroforestry Pruning-Mulch</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Agroforestry Pruning-Mulch-pH Control</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Improved Varieties-pH Control</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">30</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Improved Varieties-Reduced Inorganic Fertilizer-pH Control</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">120</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Intercropping-Mulch</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">14</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Multistrata Agroforestry-Supplemental Irrigation</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">26</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Reduced Inorganic Fertilizer-Multistrata Agroforestry-pH Control</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">142</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Reduced Inorganic Fertilizer-Multistrata Agroforestry</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">288</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Biochar-Reduced Inorganic Fertilizer-Organic Fertilizer</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Crop Rotation-Reduced Inorganic Fertilizer-Mulch</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Crop Residue Incorporation-Crop Rotation-Mulch-Reduced Tillage</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">12</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Organic Fertilizer-pH Control</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">16</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Improved Varieties-Multistrata Agroforestry</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Mulch-pH Control</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Crop Rotation-pH Control</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pH Control-Reduced Tillage</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Alleycropping-Crop Rotation</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Crop Rotation-Intercropping</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Crop Rotation-Reduced Inorganic Fertilizer-Intercropping</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Parklands</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Mulch-Organic Fertilizer</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Agroforestry Pruning-Alleycropping</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">48</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Agroforestry Pruning-Alleycropping-Reduced Inorganic Fertilizer</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">24</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Agroforestry Pruning-Organic Fertilizer</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">30</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Crop Residue Incorporation-Mulch</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">26</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Crop Residue-Intercropping</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Other Agroforestry-Parklands</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">95</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Intercropping-Reduced Tillage</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Improved Varieties-Reduced Inorganic Fertilizer-Intercropping</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Agroforestry Pruning-Reduced Inorganic Fertilizer</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">18</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Crop Residue-Crop Rotation-Reduced Tillage</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Biochar-Mulch-Organic Fertilizer</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Biochar-Reduced Inorganic Fertilizer-Mulch-Organic Fertilizer</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Crop Residue-Mulch</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">76</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Crop Residue Incorporation-Reduced Inorganic Fertilizer</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Reduced Inorganic Fertilizer-Reduced Tillage</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Crop Residue-Mulch-Reduced Tillage</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">36</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Agroforestry Pruning-Reduced Tillage</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Green Manure-Reduced Inorganic Fertilizer</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Green Manure-Organic Fertilizer</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Green Manure-Reduced Inorganic Fertilizer-Organic Fertilizer</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Crop Rotation-Organic Fertilizer</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Crop Rotation-Reduced Inorganic Fertilizer-Organic Fertilizer</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>dat<span class="ot">&lt;-</span>acdc_dat[,.(<span class="at">n_studies=</span><span class="fu">length</span>(<span class="fu">unique</span>(Code)),<span class="at">n_observations=</span>.N),by<span class="ot">=</span>.(Out.SubInd)][<span class="fu">order</span>(n_studies,<span class="at">decreasing=</span>T)]</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(dat, <span class="at">format =</span> <span class="st">"html"</span>, <span class="at">caption =</span> <span class="st">"Studies and Observations by Outcome"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scroll_box</span>(<span class="at">width =</span> <span class="st">"100%"</span>, <span class="at">height =</span> <span class="st">"400px"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:400px; overflow-x: scroll; width:100%; ">
+<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
+<caption>Studies and Observations by Outcome</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">Out.SubInd</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">n_studies</th>
+<th data-quarto-table-cell-role="th" style="text-align: right; position: sticky; top: 0; background-color: #FFFFFF;">n_observations</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Crop Yield</td>
+<td style="text-align: right;">170</td>
+<td style="text-align: right;">5254</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Biomass Yield</td>
+<td style="text-align: right;">44</td>
+<td style="text-align: right;">1046</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Soil Organic Carbon</td>
+<td style="text-align: right;">21</td>
+<td style="text-align: right;">422</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Gross Return</td>
+<td style="text-align: right;">19</td>
+<td style="text-align: right;">527</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Soil Moisture</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">2749</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Cation Exchange Capacity</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">199</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Soil Total Nitrogen</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">242</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Soil Organic Matter</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">138</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Variable Cost</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">353</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Total Cost</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">435</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Crop Residue Yield</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">103</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Biodiversity</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">974</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Net Return</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">137</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Water Use Efficiency</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">124</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Nitrous Oxide Emissions</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">250</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Soil Carbon Stocks</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">43</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Gross Margin</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">140</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Nitrogen Agronomic Efficiency</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">59</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Erosion</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">22</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Aboveground Carbon Biomass</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">26</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Soil Nitrogen</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">58</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Labour Person Hours</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">14</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Soil NH4</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">117</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Soil NO3</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">119</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Fixed Cost</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">44</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Belowground Carbon Biomass</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Phosphorus Agronomic Efficiency</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">38</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Carbon Dioxide Emissions</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">3076</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Labour Cost</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Effective Cation Exchange Capacity</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">30</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Potassium Agronomic Efficiency</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Nitrogen Agronomic Efficiency (AGB)</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Nitrogen Use Efficiency (ARE AGB)</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">15</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Phosphorus Use Efficiency (ARE AGB)</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">15</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Potassium Use Efficiency (ARE AGB)</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">15</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Benefit Cost Ratio (NRTC)</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Total Cost (Unconfirmed)</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">13</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Methane Emissions</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">100</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Water Use</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Runoff</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">18</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Soil Organic Carbon (Change)</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">22</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Infiltration Rate</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">8</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Soil Available Nitrogen</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">16</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Nitrogen Use Efficiency (Isotopic Product)</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Nitrogen Use Efficiency (Isotopic AGB)</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Benefit Cost Ratio (Unspecified)</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">6</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+</div>
+</div>
+</section>
+<section id="study-locations-map" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="study-locations-map"><span class="header-section-number">3.5</span> Study Locations Map</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Subset ERA.Compiled to unique study x lat/lon combinations (non-missing)</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>site_locs <span class="ot">&lt;-</span> acdc_dat[<span class="sc">!</span><span class="fu">is.na</span>(Latitude) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(Longitude), .(Latitude, Longitude, Buffer,Code)]</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>site_locs <span class="ot">&lt;-</span> <span class="fu">unique</span>(site_locs)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Load Africa country shapes as sf object</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>lac <span class="ot">&lt;-</span> <span class="fu">ne_countries</span>(<span class="at">country =</span> lac_countries, <span class="at">scale =</span> <span class="st">"medium"</span>, <span class="at">returnclass =</span> <span class="st">"sf"</span>)</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Plot </span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> lac, <span class="at">fill =</span> <span class="st">"grey95"</span>, <span class="at">color =</span> <span class="st">"grey70"</span>, <span class="at">linewidth =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hex</span>(</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> site_locs,</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> Longitude, <span class="at">y =</span> Latitude),</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">bins =</span> <span class="dv">80</span>,                   </span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.8</span></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(</span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">option =</span> <span class="st">"turbo"</span>,</span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">direction =</span> <span class="dv">1</span>,</span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">na.value =</span> <span class="st">"transparent"</span></span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"ERA Experiment Location Density (Hexbin)"</span>,</span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Longitude"</span>,</span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Latitude"</span></span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid =</span> <span class="fu">element_blank</span>()</span>
+<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ERA-Agroecology_files/figure-html/plot%20sites-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="intersections-of-factors" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="intersections-of-factors"><span class="header-section-number">3.6</span> Intersections of Factors</h2>
+<p>Lets look at the intersection of crops with practices, crops with outcomes, and outcomes with practices.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>plot_dat<span class="ot">&lt;-</span><span class="fu">copy</span>(acdc_dat)[,Studies_crop<span class="sc">:</span><span class="er">=</span><span class="fu">length</span>(<span class="fu">unique</span>(Code)),by<span class="ot">=</span>Product.Simple</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>                         ][,Studies_prac<span class="sc">:</span><span class="er">=</span><span class="fu">length</span>(<span class="fu">unique</span>(Code)),by<span class="ot">=</span>PrName</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>                         ][Studies_crop<span class="sc">&lt;</span><span class="dv">5</span>,Product.Simple<span class="sc">:</span><span class="er">=</span><span class="st">"Other Crops"</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>                           ][Studies_prac<span class="sc">&lt;</span><span class="dv">5</span>,PrName<span class="sc">:</span><span class="er">=</span><span class="st">"Other Practices"</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>                           ][,.(<span class="at">Studies=</span><span class="fu">length</span>(<span class="fu">unique</span>(Code))),by<span class="ot">=</span>.(PrName,Product.Simple)]</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(treemap)</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="fu">treemap</span>(</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  plot_dat,</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">index =</span> <span class="fu">c</span>(<span class="st">"PrName"</span>,<span class="st">"Product.Simple"</span>),  <span class="co"># Crop first, then practice</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">vSize =</span> <span class="st">"Studies"</span>,</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">"Study Count by Crop and Management Practice"</span>,</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">palette =</span> <span class="st">"Set3"</span>,</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">border.col =</span> <span class="st">"white"</span>,</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">fontsize.labels =</span> <span class="fu">c</span>(<span class="dv">18</span>, <span class="dv">11</span>),      <span class="co"># Crop = bigger, practice = smaller</span></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">fontcolor.labels =</span> <span class="fu">c</span>(<span class="st">"black"</span>, <span class="st">"grey30"</span>),</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">fontface.labels =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">1</span>),</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">align.labels =</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"center"</span>, <span class="st">"center"</span>), <span class="fu">c</span>(<span class="st">"left"</span>, <span class="st">"top"</span>)),</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">drop.unused.levels =</span> <span class="cn">TRUE</span></span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ERA-Agroecology_files/figure-html/crop%20x%20practice-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>plot_dat<span class="ot">&lt;-</span><span class="fu">copy</span>(acdc_dat)[,Studies_crop<span class="sc">:</span><span class="er">=</span><span class="fu">length</span>(<span class="fu">unique</span>(Code)),by<span class="ot">=</span>Product.Simple</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>                         ][,Studies_out<span class="sc">:</span><span class="er">=</span><span class="fu">length</span>(<span class="fu">unique</span>(Code)),by<span class="ot">=</span>Out.SubInd</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>                         ][Studies_crop<span class="sc">&lt;</span><span class="dv">5</span>,Product.Simple<span class="sc">:</span><span class="er">=</span><span class="st">"Other Crops"</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>                           ][Studies_out<span class="sc">&lt;</span><span class="dv">5</span>,Out.SubInd<span class="sc">:</span><span class="er">=</span><span class="st">"Other Outcomes"</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>                           ][,.(<span class="at">Studies=</span><span class="fu">length</span>(<span class="fu">unique</span>(Code))),by<span class="ot">=</span>.(Out.SubInd,Product.Simple)]</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="fu">treemap</span>(</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  plot_dat,</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">index =</span> <span class="fu">c</span>(<span class="st">"Out.SubInd"</span>,<span class="st">"Product.Simple"</span>),  <span class="co"># Crop first, then practice</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">vSize =</span> <span class="st">"Studies"</span>,</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">"Study Count by Crop and Outcome"</span>,</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">palette =</span> <span class="st">"Set3"</span>,</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">border.col =</span> <span class="st">"white"</span>,</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">fontsize.labels =</span> <span class="fu">c</span>(<span class="dv">18</span>, <span class="dv">11</span>),      <span class="co"># Crop = bigger, practice = smaller</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">fontcolor.labels =</span> <span class="fu">c</span>(<span class="st">"black"</span>, <span class="st">"grey30"</span>),</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">fontface.labels =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">1</span>),</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">align.labels =</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"center"</span>, <span class="st">"center"</span>), <span class="fu">c</span>(<span class="st">"left"</span>, <span class="st">"top"</span>)),</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">drop.unused.levels =</span> <span class="cn">TRUE</span></span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ERA-Agroecology_files/figure-html/crop%20x%20outcome-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>plot_dat<span class="ot">&lt;-</span><span class="fu">copy</span>(acdc_dat)[,Studies_prac<span class="sc">:</span><span class="er">=</span><span class="fu">length</span>(<span class="fu">unique</span>(Code)),by<span class="ot">=</span>PrName</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>                         ][,Studies_out<span class="sc">:</span><span class="er">=</span><span class="fu">length</span>(<span class="fu">unique</span>(Code)),by<span class="ot">=</span>Out.SubInd</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>                         ][Studies_prac<span class="sc">&lt;</span><span class="dv">5</span>,PrName<span class="sc">:</span><span class="er">=</span><span class="st">"Other Practices"</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>                           ][Studies_out<span class="sc">&lt;</span><span class="dv">5</span>,Out.SubInd<span class="sc">:</span><span class="er">=</span><span class="st">"Other Outcomes"</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>                           ][,.(<span class="at">Studies=</span><span class="fu">length</span>(<span class="fu">unique</span>(Code))),by<span class="ot">=</span>.(Out.SubInd,PrName)]</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="fu">treemap</span>(</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  plot_dat,</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">index =</span> <span class="fu">c</span>(<span class="st">"PrName"</span>,<span class="st">"Out.SubInd"</span>),  <span class="co"># Crop first, then practice</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">vSize =</span> <span class="st">"Studies"</span>,</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">"Study Count by Practice and Outcome"</span>,</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">palette =</span> <span class="st">"Set3"</span>,</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">border.col =</span> <span class="st">"white"</span>,</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">fontsize.labels =</span> <span class="fu">c</span>(<span class="dv">18</span>, <span class="dv">11</span>),      <span class="co"># Crop = bigger, practice = smaller</span></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">fontcolor.labels =</span> <span class="fu">c</span>(<span class="st">"black"</span>, <span class="st">"grey30"</span>),</span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">fontface.labels =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">1</span>),</span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">align.labels =</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"center"</span>, <span class="st">"center"</span>), <span class="fu">c</span>(<span class="st">"left"</span>, <span class="st">"top"</span>)),</span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">drop.unused.levels =</span> <span class="cn">TRUE</span></span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ERA-Agroecology_files/figure-html/practice%20x%20outcome-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="data-model" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Data Model</h1>
+<p>The extracted, harmonized data in the compiled dataset comes from a rich data model that contains much more information about management and context.</p>
+<section id="understand-field-definitions" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="understand-field-definitions"><span class="header-section-number">4.1</span> Understand Field Definitions</h2>
+<p>The data model (the <code>era_raw</code> object we created earlier) contains a number of interconnected tables.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(era_raw)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "Pub.Out"      "Site.Out"     "Soil.Out"     "ExpD.Out"     "Times.Out"   
+ [6] "Times.Clim"   "Prod.Out"     "Var.Out"      "Till.Out"     "Plant.Out"   
+[11] "Plant.Method" "PD.Codes"     "PD.Out"       "Fert.Out"     "Fert.Method" 
+[16] "Fert.Comp"    "Chems.Code"   "Chems.AI"     "Chems.Out"    "Weed.Out"    
+[21] "Res.Out"      "Res.Method"   "Res.Comp"     "Har.Out"      "pH.Out"      
+[26] "pH.Method"    "Irrig.Codes"  "Irrig.Method" "WH.Out"       "AF.Out"      
+[31] "AF.Trees"     "Other.Out"    "Base.Out"     "MT.Out"       "Int.Out"     
+[36] "Rot.Out"      "Rot.Seq"      "Rot.Seq.Summ" "Out.Out"      "Data.Out"    </code></pre>
+</div>
+</div>
+<p>To understand what each table contains look at the data catalog in <code>era_master_codes</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>era_raw_tabls <span class="ot">&lt;-</span> era_master_codes<span class="sc">$</span>era_fields_v2 <span class="sc">%&gt;%</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Table, Table_Description) <span class="sc">%&gt;%</span> unique</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(era_raw_tabls, <span class="at">format =</span> <span class="st">"html"</span>, <span class="at">caption =</span> <span class="st">"Data Catalog - Table Descriptions"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scroll_box</span>(<span class="at">width =</span> <span class="st">"100%"</span>, <span class="at">height =</span> <span class="st">"400px"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:400px; overflow-x: scroll; width:100%; ">
+<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
+<caption>Data Catalog - Table Descriptions</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">Table</th>
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">Table_Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">Pub.Out</td>
+<td style="text-align: left;">This table captures bibliographic information. Each publication is assigned a unique code in the B.Code field that acts a key field in all other extraction template tables.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">12</td>
+<td style="text-align: left;">Site.Out</td>
+<td style="text-align: left;">Here we record the geographic co-ordinates of where an experiment has taken place and the uncertainty associated with this. You can record multiple locations. For each site you can also capture general biophysical information about the site and the starting conditions that describe the soils of the site.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">40</td>
+<td style="text-align: left;">Soil.Out</td>
+<td style="text-align: left;">This section is used to record detailed soil properties at the beginning of an experiment, including texture, pH, nutrient content, and other relevant information. You can add several lines to the table where soil properties are reported for multiple depths. Don't record soil properties measured after an experiment has begun here.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">47</td>
+<td style="text-align: left;">ExpD.Out</td>
+<td style="text-align: left;">Experimental design information, such as plot size, layout and notes on historical management.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">48</td>
+<td style="text-align: left;">ExpD.Out</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">52</td>
+<td style="text-align: left;">Times.Out</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">57</td>
+<td style="text-align: left;">Times.Clim</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">63</td>
+<td style="text-align: left;">Var.Out</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">73</td>
+<td style="text-align: left;">Till.Out</td>
+<td style="text-align: left;">Record details of tillage (or no tillage) here. If you have a base practice of conventional tillage you cannot have reduced or no-tillage as an experimental practices and vice-versa. Ridge &amp; Furrow is "Conventional" if there is no comparison to pratice with more intensive tillage (e.g. mouldboard plough), if it is compared to a more intensive tillage practice then it is recorded "Reduced".</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">74</td>
+<td style="text-align: left;">Till.Out</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">87</td>
+<td style="text-align: left;">Plant.Out</td>
+<td style="text-align: left;">Describe the planting methods and arrangements used. The planting and arrangement of intercrops is recorded here (if different from an equivalent monocrop).</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">88</td>
+<td style="text-align: left;">Plant.Out</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">94</td>
+<td style="text-align: left;">Fert.Out</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">112</td>
+<td style="text-align: left;">Fert.Method</td>
+<td style="text-align: left;">Each row of this table represents a fertilizer application https://agrovoc.fao.org/browse/agrovoc/en/page/c_10795</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">131</td>
+<td style="text-align: left;">Fert.Method</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">135</td>
+<td style="text-align: left;">Chems.Out</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">154</td>
+<td style="text-align: left;">Weed.Out</td>
+<td style="text-align: left;">Weeding Practices. This section is for physical weeding practices only, herbicide applications should be noted under the chemicals tab.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">155</td>
+<td style="text-align: left;">Weed.Out</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">161</td>
+<td style="text-align: left;">Res.Out</td>
+<td style="text-align: left;">This tab is primarily for the addition of non-composted organic materials that DO NOT come from experimental crops, use the crop residue column in the Make.Trt, Intercrop or Rotation tabs to record residues from a preceeding season. Record mulching of compost or manure in the Nutrients practice tab.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">162</td>
+<td style="text-align: left;">Res.Out</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">173</td>
+<td style="text-align: left;">Res.Method</td>
+<td style="text-align: left;">This table records details of exactly what organic residue is added, where it is from, how much is added, what happens to it and when it is added.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">174</td>
+<td style="text-align: left;">Res.Method</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">193</td>
+<td style="text-align: left;">Res.Composition</td>
+<td style="text-align: left;">This table records the compostion of the residue materials.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">194</td>
+<td style="text-align: left;">Res.Composition</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">218</td>
+<td style="text-align: left;">Har.Out</td>
+<td style="text-align: left;">Harvest practices</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">219</td>
+<td style="text-align: left;">Har.Out</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">223</td>
+<td style="text-align: left;">pH.Out</td>
+<td style="text-align: left;">pH amendments</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">224</td>
+<td style="text-align: left;">pH.Out</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">225</td>
+<td style="text-align: left;">pH.Out</td>
+<td style="text-align: left;">pH.Codes</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">228</td>
+<td style="text-align: left;">pH.Method</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">237</td>
+<td style="text-align: left;">WH.Out</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">245</td>
+<td style="text-align: left;">Base.Out</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">247</td>
+<td style="text-align: left;">MT.Out2;MT.Out</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">267</td>
+<td style="text-align: left;">Int.Out</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">270</td>
+<td style="text-align: left;">Rot.Seq</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">284</td>
+<td style="text-align: left;">Rot.Levels</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">288</td>
+<td style="text-align: left;">Out.Out</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">298</td>
+<td style="text-align: left;">Out.Econ</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">307</td>
+<td style="text-align: left;">AF.Out</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">315</td>
+<td style="text-align: left;">AF.Trees</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">320</td>
+<td style="text-align: left;">Other.Out</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">323</td>
+<td style="text-align: left;">Data.Out</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">343</td>
+<td style="text-align: left;">PD.Out</td>
+<td style="text-align: left;">NA</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+</div>
+</div>
+<p>To find explanations of the fields in each table also use the data catalog.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>era_raw_fields<span class="ot">&lt;-</span> era_master_codes<span class="sc">$</span>era_fields_v2 <span class="sc">%&gt;%</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Table<span class="sc">==</span><span class="st">"Fert.Out"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Field, Display_Name, Field_Description)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(era_raw_fields, <span class="at">format =</span> <span class="st">"html"</span>, <span class="at">caption =</span> <span class="st">"Data Catalog - Field Descriptions (Fert.Out)"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scroll_box</span>(<span class="at">width =</span> <span class="st">"100%"</span>, <span class="at">height =</span> <span class="st">"400px"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:400px; overflow-x: scroll; width:100%; ">
+<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
+<caption>Data Catalog - Field Descriptions (Fert.Out)</caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">Field</th>
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">Display_Name</th>
+<th data-quarto-table-cell-role="th" style="text-align: left; position: sticky; top: 0; background-color: #FFFFFF;">Field_Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">F.Level.Name</td>
+<td style="text-align: left;">Fertilizer Practice Name</td>
+<td style="text-align: left;">Choose a easy to recognize name for the fertilizer practice, you will use this name to reference it when building treatments later in the extraction process. Avoid using special characters.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">F.Rate.Pracs</td>
+<td style="text-align: left;">Fertilizer Rate Practice</td>
+<td style="text-align: left;">rate or dosage of fertilizer application used in the study</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">F.Timing.Pracs</td>
+<td style="text-align: left;">Fertilizer Timing Practice</td>
+<td style="text-align: left;">timing of fertilizer application</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">F.Info.Pracs</td>
+<td style="text-align: left;">Fertilizer Precision Practice</td>
+<td style="text-align: left;">details about the precision of fertilizer application</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">F.Precision.Pracs</td>
+<td style="text-align: left;">Fertilizer Information Practice</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">F.Int</td>
+<td style="text-align: left;">Intercropping Only : Applied to specific crop or whole plot ?</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">F.NO</td>
+<td style="text-align: left;">Total Organic Elemental N</td>
+<td style="text-align: left;">Total elemental nitrogen applied from organic sources (e.g., compost, manure, biosolid).</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">F.PO</td>
+<td style="text-align: left;">Total Organic Elemental P</td>
+<td style="text-align: left;">Total elemental phosphorus applied from organic sources (e.g., compost, manure, biosolid).</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">F.KO</td>
+<td style="text-align: left;">Total Organic Elemental K</td>
+<td style="text-align: left;">Total elemental potassium applied from organic sources (e.g., compost, manure, biosolid).</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">F.NI</td>
+<td style="text-align: left;">Total Inorganic Elemental N</td>
+<td style="text-align: left;">Total elemental nitrogen applied from inorganic sources (e.g., urea or DAP).</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">F.PI</td>
+<td style="text-align: left;">Total Inorganic Elemental P</td>
+<td style="text-align: left;">Total elemental phosphorus applied from inorganic sources (e.g., rock phosphate or DAP).</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">F.P2O5</td>
+<td style="text-align: left;">Total Organic Elemental P2O5</td>
+<td style="text-align: left;">Total phosphorus applied from inorganic sources presented as phosphorus pentoxide (P2O5) .</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">F.KI</td>
+<td style="text-align: left;">Total Organic Elemental K</td>
+<td style="text-align: left;">Total elemental potassium applied from inorganic sources (e.g., potassium chloride or monopotassium phosphate).</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">F.K2O</td>
+<td style="text-align: left;">Total Organic Elemental K</td>
+<td style="text-align: left;">Total potassium applied from inorganic sources presented as potassium oxide (K2O).</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">F.O.Unit</td>
+<td style="text-align: left;">Organic NPK Unit of Measurement</td>
+<td style="text-align: left;">The unit of measurement for total organic NPK numbers.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">F.I.Unit</td>
+<td style="text-align: left;">Inorganic NPK Unit of Measurement</td>
+<td style="text-align: left;">The unit of measurement for total organic NPK numbers.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">F.Notes</td>
+<td style="text-align: left;">Notes</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">B.Code</td>
+<td style="text-align: left;">NA</td>
+<td style="text-align: left;">A unique code that identifies an extracted publication in the ERA dataset. This code is present in all the tables of era extraction data models.</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+</div>
+</div>
+<p>For more information on the ERA agronomy data model including table linkages and relational structure <a href="https://eragriculture.github.io/ERA_Agronomy/ERA-Create-Agronomy-Data-Model.html">see</a>.</p>
+</section>
+<section id="subset-raw-data-for-acdc" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="subset-raw-data-for-acdc"><span class="header-section-number">4.2</span> Subset Raw Data for ACDC</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>acdc_raw_dat<span class="ot">&lt;-</span>era_raw<span class="sc">$</span>Data.Out <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Country <span class="sc">%in%</span> lac_countries) <span class="sc">%&gt;%</span> data.table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This gives us 11495 observations from 236.</p>
+<p>This raw data is passed through complex comparison logic to select valid control vs experimental treatment comparisons. The R-code for the comparisons can be found <a href="https://github.com/CIAT/ERA_dev/blob/main/R/comparisons/compare_industrious_elephant.R">here</a>.</p>
+<p>The number of extracted papers is less than the comparisons table as some extractions did not contain valid comparisons or have an extremely complicate structure beyond the capcacity of the comparison logic.</p>
+</section>
+</section>
+<section id="literature-search-and-screening" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Literature Search and Screening</h1>
+<p>For transparency, search and screening documentation includes:</p>
+<ol type="1">
+<li><p><a href="https://raw.githubusercontent.com/CIAT/ERA_dev/refs/heads/main/search_history/industrious_elephant_2023/acdc/search_terms.csv">Search terms</a></p></li>
+<li><p><a href="https://github.com/CIAT/ERA_dev/blob/main/search_history/industrious_elephant_2023/acdc/wos_search.zip">Search results</a></p></li>
+<li><p><a href="https://raw.githubusercontent.com/CIAT/ERA_dev/refs/heads/main/search_history/era-search-history.csv">Screening results</a></p></li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>screening<span class="ot">&lt;-</span><span class="fu">fread</span>(<span class="st">"https://raw.githubusercontent.com/CIAT/ERA_dev/refs/heads/main/search_history/era-search-history.csv"</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>ta_pass<span class="ot">&lt;-</span>screening<span class="sc">$</span><span class="st">`</span><span class="at">title-abstract_pass</span><span class="st">`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We screened 7615 references, 2600 references passed title and abstract screening, 628 passed fulltext screening, and 214 papers were suitable for extraction into the final dataset.</p>
+<p>We did not have access to 32 publications.</p>
+</section>
+<section id="next-steps" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Next steps</h1>
+<ol type="1">
+<li><strong>Climate Data Integration</strong>:
+<ul>
+<li>Merge ERA agronomic data with seasonal climate statistics.</li>
+<li>For annual crops (maize, bean), experienced climate is calculated using planting date estimates.</li>
+<li>For perennials (coffee), we are developing a new method to define yield-relevant climate exposure.</li>
+</ul></li>
+<li><strong>Hazard–Management Intersection</strong>:
+<ul>
+<li>Once climate data is merged, we will explore if management practices influence outcomes under climate stress (e.g., drought, heat).</li>
+</ul></li>
+<li><strong>Fertilizer Comparison Logic</strong>:
+<ul>
+<li>Identify experiments with multiple fertilizer levels.</li>
+<li>Define comparisons for low vs moderate, moderate vs high, and low vs high fertilizer use.</li>
+<li>Integrate these comparisons into ERA’s analysis logic.</li>
+</ul></li>
+<li><strong>Meta-analysis of Practices</strong>:
+<ul>
+<li>Run meta-analysis on selected practices to assess their productivity and resilience benefits.</li>
+<li>Focus on agroecological interventions in maize, bean, and coffee systems.</li>
+</ul></li>
+</ol>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
