@@ -52,7 +52,7 @@ if (!requireNamespace("pacman", quietly = TRUE)) {
 pacman::p_load(
   sf, knitr, rnaturalearth, rnaturalearthdata, 
   ggplot2, viridis, shiny, dplyr, treemap, treemapify, plotly, data.table,
-  s3fs, arrow, devtools, gh, htmlwidgets,remotes,gridExtra, DT,tidyr
+  s3fs, arrow, devtools, gh, htmlwidgets,remotes,gridExtra, DT,tidyr,stringr,jsonlite
 )
 
 if(!require(ERAgON)){
@@ -75,7 +75,7 @@ if(!dir.exists(dl_dir)){
 # Should the era vocab be updated?
 update_vocab<-T
 ```
-
+# Exploring ERA
 ## Downloading the data
 
 This section retrieves the most recent version of the ERA.Compiled comparisons table from the ERA S3 bucket, saves it locally, and loads it for use.
@@ -112,6 +112,7 @@ parquet_file <- list.files(extract_dir, pattern = "^era_compiled.*\\.parquet$", 
 
 # Load into variables
 ERA_Compiled <- arrow::read_parquet(parquet_file)
+agronomic_metadata <- fromJSON(json_agronomic)
 
 ```
 
@@ -399,5 +400,89 @@ bar_plot <- ggplot(out_counts, aes(
 
 # Show plot
 bar_plot
+
+```
+
+#Transforming ERA into the desired template
+```{r site columns, echo=T, message=F}
+#Adding metadata
+var<- agronomic_metadata$Var.Out
+exp<- agronomic_metadata$ExpD.Out
+
+# Create formatted strings per row first
+# ---- Step 1: Create ERA_data as before ----
+ERA_data <- ERA_Compiled %>%
+  filter(str_detect(Product.Simple, str_c(products_of_interest, collapse = "|"))) %>%
+  mutate(
+    site_precip = paste0("The mean annual precip at ", Site.ID, " was ", round(Mean.Annual.Precip), " mm")
+  ) %>%
+  group_by(Code) %>%
+  summarise(
+    Source = first(Author),
+    Link = first(DOI),
+    Country = paste(unique(Country), collapse = ";"),
+    'Location within-country' = paste(unique(Site.ID), collapse = ";"),
+    Latitude = paste(unique(Latitude), collapse = ";"),
+    Longitude = paste(unique(Longitude), collapse = ";"),
+    'Date of experiment' = paste(unique(M.Year), collapse = ";"),
+    'Agroecological zone' = paste(unique(AEZ16), collapse = ";"),
+    'Soil: Clay content %' = paste(unique(CLY), collapse = ";"),
+    'Soil: Sand content %' = paste(unique(SND), collapse = ";"),
+    'Soil: Silt content %' = paste(unique(SLT), collapse = ";"),
+    'Mean precipitation at sites' = paste(unique(site_precip), collapse = "; "),
+    'Species' = paste(unique(Product.Simple), collapse = "; "),
+    .groups = "drop"
+  ) %>%
+  # ---- Filter summarised data based on species of interest ----
+  filter(str_detect(`Species`, str_c(products_of_interest, collapse = "|")))
+
+
+# ---- Step 2: Construct variety descriptions from the metadata (ONLY after 2020) ----
+variety_info <- var %>%
+  filter(!is.na(B.Code), !is.na(V.Product), !is.na(V.Var)) %>%
+  mutate(
+    Code = B.Code,
+    variety_description = paste0("The variety for ", V.Product, " is ", V.Var)
+  ) %>%
+  group_by(Code) %>%
+  summarise(
+    `Variety/Varieties` = paste(unique(variety_description), collapse = "; "),
+    .groups = "drop"
+  )
+
+# ---- Step 3: add base practices  ----
+# Helper function: Convert a character vector to a natural language list
+to_sentence <- function(x) {
+  x <- unique(na.omit(x))
+  if (length(x) == 0) return("")
+  if (length(x) == 1) return(x)
+  if (length(x) == 2) return(paste(x, collapse = " and "))
+  paste0(paste(x[-length(x)], collapse = ", "), ", and ", x[length(x)])
+}
+
+# Generate base practices sentence with rainfed detection
+base_practices <- ERA_Compiled %>%
+  filter(Code %in% ERA_data$Code) %>%
+  group_by(Code) %>%
+  summarise(
+    base_sentence = to_sentence(PrName.Base),
+    is_rainfed = all(Irrigation.C == FALSE, na.rm = TRUE) & all(Irrigation.T == FALSE, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  mutate(
+    `Cropping systems` = case_when(
+      base_sentence != "" & is_rainfed ~ paste0("The base practices were ", base_sentence, ". The experiment was rainfed"),
+      base_sentence != "" & !is_rainfed ~ paste0("The base practices were ", base_sentence),
+      base_sentence == "" & is_rainfed ~ "The experiment was rainfed",
+      TRUE ~ ""  # empty if no practices and not rainfed
+    )
+  )
+
+# ---- Step 3: Join variety info into ERA_data ----
+ERA_data_final <- ERA_data %>%
+  left_join(variety_info, by = "Code") %>%
+  left_join(base_practices, by = "Code")
+
+
 
 ```
