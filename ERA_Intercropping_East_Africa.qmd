@@ -73,7 +73,11 @@ Experiments were identified through systematic searches in *Web of Science* and 
 
 A derived product, the `ERA.Compiled` table, simplifies the dataset into treatment-control comparisons, making it easier to analyze the effects of agricultural interventions. While the compiled table is ideal for quick analysis, it remains linked to the full data model, allowing users to retrieve detailed metadata and contextual information where needed.
 
-```{r pre-load era compiled, echo=F, message=F}
+## Downloading the data
+
+This section retrieves the most recent version of the ERA.Compiled comparisons table from the ERA S3 bucket, saves it locally, and loads it for use.
+
+```{r pre-load era compiled, echo=T, message=F}
 # Set S3 path and initialize
 s3 <- s3fs::S3FileSystem$new(anonymous = TRUE)
 era_s3 <- "s3://digital-atlas/era"
