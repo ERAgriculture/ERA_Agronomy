@@ -19,7 +19,7 @@ Explore the rendered HTML files for detailed documentation:
   
     1.2 ERA Agroecology is a subset of the LAC studies (https://eragriculture.github.io/ERA_Agronomy/ERA-Agroecology.html)
     
-    1.3 ERA Intercropping is a subset of maize intercrops in East Africa (https://eragriculture.github.io/ERA_Agronomy/ERA_Intercropping in East Africa.html)
+    1.3 ERA Intercropping is a subset of maize intercrops in East Africa (https://eragriculture.github.io/ERA_Agronomy/ERA_Intercropping_East_Africa.html)
 
 2. **[Guide to Climate and Soil Data in ERA](https://eragriculture.github.io/ERA_Agronomy/ERA%20Climate%20and%20Soils.html)**  
 - Explains how ERA observations are enriched with geospatial climate and soil data.  
