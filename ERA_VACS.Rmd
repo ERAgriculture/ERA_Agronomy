@@ -52,18 +52,10 @@ if (!requireNamespace("pacman", quietly = TRUE)) {
 pacman::p_load(
   sf, knitr, rnaturalearth, rnaturalearthdata, 
   ggplot2, viridis, shiny, dplyr, treemap, treemapify, plotly, data.table,
-  s3fs, arrow, devtools, gh, htmlwidgets,remotes,gridExtra, DT,tidyr,stringr,jsonlite
+  s3fs, arrow, devtools, gh, htmlwidgets,remotes,gridExtra, DT,tidyr,stringr,jsonlite,
+  googlesheets4
 )
 
-if(!require(ERAgON)){
-  remotes::install_github(repo="https://github.com/EiA2030/ERAgON",build_vignettes = T)
-  library(ERAgON)
-}
-
-if(!require(ERAg)){
-  remotes::install_github(repo="https://github.com/EiA2030/ERAg",build_vignettes = T)
-  library(ERAg)
-}
 # Set a directory for downloaded data
 dl_dir <- "downloaded_data"
 
@@ -405,11 +397,25 @@ bar_plot
 
 #Transforming ERA into the desired template
 ```{r site columns, echo=T, message=F}
-#Adding metadata
-var<- agronomic_metadata$Var.Out
-exp<- agronomic_metadata$ExpD.Out
+# Define helper function
+to_sentence <- function(x) {
+  x <- unique(na.omit(x))
+  if (length(x) == 0) return("")
+  if (length(x) == 1) return(x)
+  if (length(x) == 2) return(paste(x, collapse = " and "))
+  paste0(paste(x[-length(x)], collapse = ", "), ", and ", x[length(x)])
+}
 
-# Create formatted strings per row first
+# Load metadata tables
+var <- agronomic_metadata$Var.Out
+exp <- agronomic_metadata$ExpD.Out
+
+# Define products of interest
+products_of_interest <- c(
+  "Cowpea", "Soybean", "Lablab", "Kersting's groundnut",
+  "Sesame", "Bambara Nut", "Groundnut", "Pigeon Pea"
+)
+
 # ---- Step 1: Create ERA_data as before ----
 ERA_data <- ERA_Compiled %>%
   filter(str_detect(Product.Simple, str_c(products_of_interest, collapse = "|"))) %>%
@@ -421,23 +427,21 @@ ERA_data <- ERA_Compiled %>%
     Source = first(Author),
     Link = first(DOI),
     Country = paste(unique(Country), collapse = ";"),
-    'Location within-country' = paste(unique(Site.ID), collapse = ";"),
+    `Location within-country` = paste(unique(Site.ID), collapse = ";"),
     Latitude = paste(unique(Latitude), collapse = ";"),
     Longitude = paste(unique(Longitude), collapse = ";"),
-    'Date of experiment' = paste(unique(M.Year), collapse = ";"),
-    'Agroecological zone' = paste(unique(AEZ16), collapse = ";"),
-    'Soil: Clay content %' = paste(unique(CLY), collapse = ";"),
-    'Soil: Sand content %' = paste(unique(SND), collapse = ";"),
-    'Soil: Silt content %' = paste(unique(SLT), collapse = ";"),
-    'Mean precipitation at sites' = paste(unique(site_precip), collapse = "; "),
-    'Species' = paste(unique(Product.Simple), collapse = "; "),
+    `Date of experiment` = paste(unique(M.Year), collapse = ";"),
+    `Agroecological zone` = paste(unique(AEZ16), collapse = ";"),
+    `Soil: Clay content %` = paste(unique(CLY), collapse = ";"),
+    `Soil: Sand content %` = paste(unique(SND), collapse = ";"),
+    `Soil: Silt content %` = paste(unique(SLT), collapse = ";"),
+    `Mean precipitation at sites` = paste(unique(site_precip), collapse = "; "),
+    Species = paste(unique(Product.Simple), collapse = "; "),
     .groups = "drop"
   ) %>%
-  # ---- Filter summarised data based on species of interest ----
-  filter(str_detect(`Species`, str_c(products_of_interest, collapse = "|")))
+  filter(str_detect(Species, str_c(products_of_interest, collapse = "|")))
 
-
-# ---- Step 2: Construct variety descriptions from the metadata (ONLY after 2020) ----
+# ---- Step 2: Construct variety descriptions from Var metadata ----
 variety_info <- var %>%
   filter(!is.na(B.Code), !is.na(V.Product), !is.na(V.Var)) %>%
   mutate(
@@ -450,17 +454,7 @@ variety_info <- var %>%
     .groups = "drop"
   )
 
-# ---- Step 3: add base practices  ----
-# Helper function: Convert a character vector to a natural language list
-to_sentence <- function(x) {
-  x <- unique(na.omit(x))
-  if (length(x) == 0) return("")
-  if (length(x) == 1) return(x)
-  if (length(x) == 2) return(paste(x, collapse = " and "))
-  paste0(paste(x[-length(x)], collapse = ", "), ", and ", x[length(x)])
-}
-
-# Generate base practices sentence with rainfed detection
+# ---- Step 3: Add base practices ----
 base_practices <- ERA_Compiled %>%
   filter(Code %in% ERA_data$Code) %>%
   group_by(Code) %>%
@@ -474,15 +468,121 @@ base_practices <- ERA_Compiled %>%
       base_sentence != "" & is_rainfed ~ paste0("The base practices were ", base_sentence, ". The experiment was rainfed"),
       base_sentence != "" & !is_rainfed ~ paste0("The base practices were ", base_sentence),
       base_sentence == "" & is_rainfed ~ "The experiment was rainfed",
-      TRUE ~ ""  # empty if no practices and not rainfed
+      TRUE ~ ""
     )
+  ) %>%
+  select(Code, `Cropping systems`)
+
+# ---- Step 4: Treatment descriptions ----
+treatment_sentences <- ERA_Compiled %>%
+  filter(Code %in% ERA_data$Code) %>%
+  group_by(Code) %>%
+  summarise(
+    control = to_sentence(unique(na.omit(C.Descrip))),
+    treatments = to_sentence(setdiff(unique(na.omit(T.Descrip)), unique(na.omit(C.Descrip)))),
+    .groups = "drop"
+  ) %>%
+  mutate(
+    `Treatment descriptions` = case_when(
+      control != "" & treatments != "" ~ paste0("This experiment tested ", control, " against ", treatments, "."),
+      control == "" & treatments != "" ~ paste0("This experiment tested ", treatments, "."),
+      TRUE ~ ""
+    )
+  ) %>%
+  select(Code, `Treatment descriptions`)
+
+# ---- Step 5: Practice names ----
+practice_names <- ERA_Compiled %>%
+  filter(Code %in% ERA_data$Code) %>%
+  group_by(Code) %>%
+  summarise(
+    `Practices applied` = paste(unique(na.omit(PrName)), collapse = "; "),
+    .groups = "drop"
   )
 
-# ---- Step 3: Join variety info into ERA_data ----
+# ---- Step 6: Repeated analysis detection via Duration ----
+season_summary <- ERA_Compiled %>%
+  filter(Code %in% ERA_data$Code) %>%
+  group_by(Code) %>%
+  summarise(
+    n_years = n_distinct(na.omit(M.Year.Start)),
+    .groups = "drop"
+  ) %>%
+  mutate(
+    `Repeated analysis done?` = case_when(
+      n_years == 0 ~ "Unspecified",
+      n_years == 1 ~ "No",
+      n_years > 1 ~ paste0("Yes, the experiment was done in ", n_years, " seasons")
+    )
+  ) %>%
+  select(Code, `Repeated analysis done?`)
+
+# ---- Step 7: Plot size ----
+plot_size_info <- exp %>%
+  filter(!is.na(B.Code), !is.na(EX.Plot.Size)) %>%
+  transmute(Code = B.Code, `Plot size` = EX.Plot.Size)
+
+# ---- Step 8: Exp Design and reps ----
+# Step 1: Extract EX.Design from exp
+exp_design_info <- exp %>%
+  transmute(Code = B.Code, EX.Design = EX.Design)
+
+# Step 2: Extract Rep from ERA_Compiled
+rep_info <- ERA_Compiled %>%
+  distinct(Code, Rep)
+
+# Step 3: Join and construct sentence with fallback logic
+experimental_design <- exp_design_info %>%
+  full_join(rep_info, by = "Code") %>%
+  mutate(
+    `Experimental design` = case_when(
+      !is.na(EX.Design) & !is.na(Rep) ~ paste0(EX.Design, " with ", Rep, " replications"),
+      !is.na(EX.Design) &  is.na(Rep) ~ EX.Design,
+      is.na(EX.Design) & !is.na(Rep) ~ paste0("Unspecified design with ", Rep, " replications"),
+      TRUE ~ "Unspecified"
+    )
+  ) %>%
+  select(Code, `Experimental design`)
+
+# ---- Step 9: Data ownership ----
+# Load access info from the Google Sheet
+sheet_url <- "https://docs.google.com/spreadsheets/d/1i1rYrBUK45TeoADxNlSzaP6NP8yjzV9XHN26KavNc-Y/edit#gid=1934210409"
+gs4_deauth()
+gs4_auth()
+access_info <- read_sheet(sheet_url) %>%
+  select(Code, `Open access`) %>%
+  mutate(Code = toupper(Code)) %>%
+  mutate(`Data ownership` = ifelse(tolower(`Open access`) == "yes", "Open Access", "Closed Access"))
+
+# ---- Step: Create 'Overall' column from C.Descriptions ----
+overall_info <- ERA_Compiled %>%
+  filter(Code %in% ERA_data_final$Code) %>%
+  group_by(Code) %>%
+  summarise(
+    Overall = paste(unique(na.omit(C.Descrip)), collapse = "; "),
+    .groups = "drop"
+  )
+
+# ---- Final Join ----
 ERA_data_final <- ERA_data %>%
   left_join(variety_info, by = "Code") %>%
-  left_join(base_practices, by = "Code")
-
+  left_join(base_practices, by = "Code") %>%
+  left_join(treatment_sentences, by = "Code") %>%
+  left_join(practice_names, by = "Code") %>%
+  left_join(season_summary, by = "Code") %>%
+  mutate(`Data Transformation?` = "NA") %>%
+  left_join(plot_size_info, by = "Code") %>%
+  left_join(experimental_design, by = "Code") %>%
+  mutate(
+    `ANOVA: Number` = "Not collected in ERA",
+    `ANOVA: Source` = "Not collected in ERA",
+    `ANOVA: Degrees of Freedom` = "Not collected in ERA",
+    `ANOVA: Additional information` = "Not collected in ERA",
+    `ANOVA: Analysis of Covariance` = "Not collected in ERA",
+    `Problems or any supp info` = "Not collected in ERA"
+  ) %>%
+  left_join(access_info %>% select(Code, `Data ownership`), by = "Code")%>%
+  left_join(overall_info, by = "Code")
 
 
 ```
