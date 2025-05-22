@@ -554,12 +554,39 @@ access_info <- read_sheet(sheet_url) %>%
   mutate(Code = toupper(Code)) %>%
   mutate(`Data ownership` = ifelse(tolower(`Open access`) == "yes", "Open Access", "Closed Access"))
 
-# ---- Step: Create 'Overall' column from C.Descriptions ----
-overall_info <- ERA_Compiled %>%
+# ---- Step 10: Create yield outcomes for C.Descriptions ----
+# Step 1: Filter to yield-relevant rows
+yield_summary <- ERA_Compiled %>%
   filter(Code %in% ERA_data_final$Code) %>%
+  filter(str_detect(Out.SubInd, regex("yield", ignore_case = TRUE))) %>%
+  
+  # Step 2: Convert units to t/ha
+  mutate(
+    Yield_t_ha = case_when(
+      Units == "kg/ha" ~ MeanC / 1000,
+      Units == "Mg/ha" ~ MeanC,
+      Units == "Mg DM/ha" ~ MeanC,
+      Units == "g/m2" ~ MeanC / 100,
+      Units == "g/m2; kg/ha" ~ MeanC / 100,
+      TRUE ~ NA_real_
+    )
+  ) %>%
+  
+  # Step 3: Group and average by Code + C.Descrip
+  group_by(Code, C.Descrip) %>%
+  summarise(
+    `Crop Yield (t/ha)` = round(mean(Yield_t_ha, na.rm = TRUE), 2),
+    .groups = "drop"
+  )
+
+yield_sentences <- yield_summary %>%
+  filter(!is.na(`Crop Yield (t/ha)`)) %>%
+  mutate(
+    sentence = paste0(C.Descrip, " yield was ", `Crop Yield (t/ha)`, " t/ha")
+  ) %>%
   group_by(Code) %>%
   summarise(
-    Overall = paste(unique(na.omit(C.Descrip)), collapse = "; "),
+    `Control Yield` = paste(sentence, collapse = "; "),
     .groups = "drop"
   )
 
@@ -582,7 +609,8 @@ ERA_data_final <- ERA_data %>%
     `Problems or any supp info` = "Not collected in ERA"
   ) %>%
   left_join(access_info %>% select(Code, `Data ownership`), by = "Code")%>%
-  left_join(overall_info, by = "Code")
+  left_join(overall_info, by = "Code")%>%
+  left_join(yield_sentences, by = "Code")
 
 
 ```
