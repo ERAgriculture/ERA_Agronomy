@@ -397,7 +397,8 @@ bar_plot
 
 #Transforming ERA into the desired template
 
-The transformed ERA data is available at: 
+The transformed ERA data is available at: https://github.com/ERAgriculture/ERA_Agronomy/blob/main/ERA_VACS_files/era_vacs_data.csv
+
 ```{r site columns, echo=T, message=F}
 # Define helper function
 to_sentence <- function(x) {
