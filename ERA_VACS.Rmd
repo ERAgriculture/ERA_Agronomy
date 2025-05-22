@@ -396,6 +396,8 @@ bar_plot
 ```
 
 #Transforming ERA into the desired template
+
+The transformed ERA data is available at: 
 ```{r site columns, echo=T, message=F}
 # Define helper function
 to_sentence <- function(x) {
@@ -409,6 +411,7 @@ to_sentence <- function(x) {
 # Load metadata tables
 var <- agronomic_metadata$Var.Out
 exp <- agronomic_metadata$ExpD.Out
+out <- agronomic_metadata$Data.Out
 
 # Define products of interest
 products_of_interest <- c(
@@ -556,7 +559,7 @@ access_info <- read_sheet(sheet_url) %>%
 
 # ---- Step 10: Create yield outcomes for C.Descriptions ----
 # Step 1: Filter to yield-relevant rows
-yield_summary <- ERA_Compiled %>%
+control_yield_summary <- ERA_Compiled %>%
   filter(Code %in% ERA_data_final$Code) %>%
   filter(str_detect(Out.SubInd, regex("yield", ignore_case = TRUE))) %>%
   
@@ -579,7 +582,7 @@ yield_summary <- ERA_Compiled %>%
     .groups = "drop"
   )
 
-yield_sentences <- yield_summary %>%
+control_yield_sentences <- control_yield_summary %>%
   filter(!is.na(`Crop Yield (t/ha)`)) %>%
   mutate(
     sentence = paste0(C.Descrip, " yield was ", `Crop Yield (t/ha)`, " t/ha")
@@ -589,6 +592,86 @@ yield_sentences <- yield_summary %>%
     `Control Yield` = paste(sentence, collapse = "; "),
     .groups = "drop"
   )
+# ---- Step 11: Create yield outcomes for T.Descriptions ----
+# Step 1: Filter to yield-relevant rows
+trt_yield_summary <- ERA_Compiled %>%
+  filter(Code %in% ERA_data_final$Code) %>%
+  filter(str_detect(Out.SubInd, regex("yield", ignore_case = TRUE))) %>%
+  
+  # Step 2: Convert units to t/ha
+  mutate(
+    Yield_t_ha = case_when(
+      Units == "kg/ha" ~ MeanT / 1000,
+      Units == "Mg/ha" ~ MeanT,
+      Units == "Mg DM/ha" ~ MeanT,
+      Units == "g/m2" ~ MeanT / 100,
+      Units == "g/m2; kg/ha" ~ MeanT / 100,
+      TRUE ~ NA_real_
+    )
+  ) %>%
+  
+  # Step 3: Group and average by Code + C.Descrip
+  group_by(Code, T.Descrip) %>%
+  summarise(
+    `Crop Yield (t/ha)` = round(mean(Yield_t_ha, na.rm = TRUE), 2),
+    .groups = "drop"
+  )
+
+trt_yield_sentences <- trt_yield_summary %>%
+  filter(!is.na(`Crop Yield (t/ha)`)) %>%
+  mutate(
+    sentence = paste0(T.Descrip, " yield was ", `Crop Yield (t/ha)`, " t/ha")
+  ) %>%
+  group_by(Code) %>%
+  summarise(
+    `Treatment Yield` = paste(sentence, collapse = "; "),
+    .groups = "drop"
+  )
+# ---- Step 12: errors ----
+# Step 1: Create error data by selecting and deduplicating
+error_info <- out %>%
+  filter(
+    !is.na(B.Code),
+    !is.na(T.Name),
+    str_detect(Out.Subind, regex("Crop Yield", ignore_case = TRUE))
+  ) %>%
+  group_by(B.Code, T.Name, ED.Error.Type) %>%
+  summarise(
+    ED.Error = mean(ED.Error, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  rename(Code = B.Code, T.Descrip = T.Name)
+
+error_sentences <- out %>%
+  filter(
+    !is.na(B.Code),
+    !is.na(T.Name),
+    str_detect(Out.Subind, regex("yield", ignore_case = TRUE))
+  ) %>%
+  mutate(Code = B.Code, T.Descrip = T.Name) %>%
+  group_by(Code, T.Descrip, ED.Error.Type) %>%
+  summarise(
+    ED.Error = mean(ED.Error, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  mutate(
+    error_text = paste0(T.Descrip, " ", signif(ED.Error, digits = 3))
+  ) %>%
+  group_by(Code, ED.Error.Type) %>%
+  summarise(
+    Treatment_Error_Text = if (is.na(first(ED.Error.Type))) {
+      NA_character_
+    } else {
+      paste0(
+        "Error type reported was ", first(ED.Error.Type), 
+        ": ", paste(error_text, collapse = "; ")
+      )
+    },
+    .groups = "drop"
+  ) %>%
+  select(Code, `LSD or any other statistic used for multiple comparisons` = Treatment_Error_Text)
+
+
 
 # ---- Final Join ----
 ERA_data_final <- ERA_data %>%
@@ -610,7 +693,16 @@ ERA_data_final <- ERA_data %>%
   ) %>%
   left_join(access_info %>% select(Code, `Data ownership`), by = "Code")%>%
   left_join(overall_info, by = "Code")%>%
-  left_join(yield_sentences, by = "Code")
+  left_join(control_yield_sentences, by = "Code")%>%
+  left_join(trt_yield_sentences, by = "Code")%>%
+  mutate(
+    `Variability: RMS` = "Not collected in ERA",
+    `Variability: Cofficient of Variation` = "Not collected in ERA")%>%
+  left_join(error_sentences, by = "Code")
 
+ERA_data_final <- ERA_data_final %>%
+  filter(!(is.na(`Control Yield`) & is.na(`Treatment Yield`)))
+
+write.csv(ERA_data_final,"downloaded_data/era_vacs_data.csv")
 
 ```
