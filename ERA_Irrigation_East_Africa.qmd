@@ -113,9 +113,9 @@ agronomic_metadata <- fromJSON(json_agronomic)
 
 ```
 
-## Subsetting to intercropping in East Africa
+## Subsetting to irrigation in East Africa
 
-ERA has a diverse range of practices, from agronomy to livestock and a few papers on postharvest storage. We will therefore focus on intercropping (with Maize) in East Africa for this User Guide. If you are interest in the entire dataset, please explore our [Agronomy User Guide](https://eragriculture.github.io/ERA_Agronomy/ERA-User-Guide.html).
+ERA has a diverse range of practices, from agronomy to livestock and a few papers on postharvest storage. We will therefore focus on irrigation in East Africa for this User Guide. If you are interest in the entire dataset, please explore our [Agronomy User Guide](https://eragriculture.github.io/ERA_Agronomy/ERA-User-Guide.html).
 
 ```{r subsetting to legumes, echo=T, message=F}
 
@@ -123,7 +123,7 @@ ERA has a diverse range of practices, from agronomy to livestock and a few paper
 east_africa <- c("Kenya", "Tanzania", "Uganda", "Rwanda", "Burundi", "Ethiopia", "South Sudan", "Somalia")
 
 
-# Step 1: Filter by intercropping AND East African countries
+# Step 1: Filter by irrigation AND East African countries
 irrigation_data <- ERA_Compiled %>%
   filter(
     grepl("Irrigation", PrName, ignore.case = TRUE),

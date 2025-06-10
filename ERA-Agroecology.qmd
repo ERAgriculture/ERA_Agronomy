@@ -30,15 +30,15 @@ This vignette introduces the agroecological agronomy dataset for the **Agroecolo
 
 The purpose of this document is to:
 
-- Provide open access to the ACDC dataset.
-- Facilitate exploration and use by researchers, analysts, and decision-makers.
-- Demonstrate current contents and structure.
+-   Provide open access to the ACDC dataset.
+-   Facilitate exploration and use by researchers, analysts, and decision-makers.
+-   Demonstrate current contents and structure.
 
 For full background on ERA and its methods, see the [ERA GitHub repository](https://github.com/ERAgriculture/ERA_Agronomy) and the [ERA User Guide](https://eragriculture.github.io/ERA_Agronomy/ERA-User-Guide.html).
 
 For details on how climate and soils data are integrated into ERA, see the companion vignette: [ERA Climate and Soils](https://eragriculture.github.io/ERA_Agronomy/ERA%20Climate%20and%20Soils.html).
 
-# Set-up 
+# Set-up
 
 ## Load Required Functions and Packages
 
@@ -48,7 +48,7 @@ if (!requireNamespace("pacman", quietly = TRUE)) {
 }
 
 pacman::p_load(
-arrow,s3fs,jsonlite,data.table,ggplot2,rnaturalearth,rnaturalearthdata,sf,viridis,treemapify,tidyr,dplyr,knitr,kableExtra
+arrow,s3fs,jsonlite,data.table,ggplot2,rnaturalearth,rnaturalearthdata,sf,viridis,treemapify,tidyr,dplyr,knitr,kableExtra, gridExtra
 )
 
 # Set a directory for downloaded data
@@ -115,8 +115,8 @@ The downloaded `era_compiled` parquet table contains detailed information on con
 dim(era_compiled)
 ```
 
-
 ## Field Names and Descriptions
+
 How do we understand what these fields are? We can look at the `era_master_codes` to find the data catalog.
 
 ```{r era data catalog fields 1}
@@ -127,6 +127,7 @@ era_dat_fields[1:5,]
 ```
 
 ## Subset to ACDC Region
+
 The era compiled dataset contains information from multiple projects, so next we need to subset to the acdc project. We can do this by selecting data from central and south America.
 
 ```{r subset era data}
@@ -136,6 +137,7 @@ acdc_dat<-era_compiled[Country %in% lac_countries]
 ```
 
 ## Summary Statistics
+
 The subset data contains `r nrow(acdc_dat)` observations from `r acdc_dat[,length(unique(Code))]` studies.
 
 Lets explore what crops (`Product.Simple`), experimental management practices (`PrName`) and outcomes (`Out.SubInd`) we have in these data.
@@ -170,37 +172,77 @@ kable(dat, format = "html", caption = "Studies and Observations by Outcome") %>%
 ```
 
 ## Study Locations Map
+
 ```{r plot sites}
-# 1. Subset ERA.Compiled to unique study x lat/lon combinations (non-missing)
-site_locs <- acdc_dat[!is.na(Latitude) & !is.na(Longitude), .(Latitude, Longitude, Buffer,Code)]
-site_locs <- unique(site_locs)
+# Ensure coordinates are numeric
+acdc_dat <- acdc_dat %>%
+  mutate(
+    Latitude = as.numeric(Latitude),
+    Longitude = as.numeric(Longitude)
+  ) %>%
+  filter(!is.na(Latitude) & !is.na(Longitude))
 
-# 2. Load Africa country shapes as sf object
-lac <- ne_countries(country = lac_countries, scale = "medium", returnclass = "sf")
+# Count and order papers by country (descending)
+paper_counts <- acdc_dat %>%
+  group_by(Country) %>%
+  summarise(N_Papers = n_distinct(Code), .groups = "drop") %>%
+  arrange(desc(N_Papers))  
 
-# 3. Plot 
-ggplot() +
-  geom_sf(data = lac, fill = "grey95", color = "grey70", linewidth = 0.3) +
-  geom_hex(
-    data = site_locs,
-    aes(x = Longitude, y = Latitude),
-    bins = 80,                   
-    alpha = 0.8
-  ) +
+# Load only Latin American countries and fix naming
+world <- ne_countries(scale = "medium", continent = NULL, returnclass = "sf") %>%
+  filter(continent %in% c("South America", "North America")) %>%
+  # Fix country names to match your data if needed
+  mutate(admin = case_when(
+    admin == "United States of America" ~ "USA",
+    admin == "Dominican Republic" ~ "Dominican Rep.",
+    TRUE ~ admin
+  ))
+
+# Transform CRS
+world <- st_transform(world, crs = 4326)
+
+# Convert points to sf object
+sites_sf <- st_as_sf(acdc_dat, coords = c("Longitude", "Latitude"), crs = 4326, remove = FALSE)
+
+# Prepare map data
+map_data <- world %>%
+  dplyr::select(admin, geometry) %>%
+  rename(Country = admin) %>%
+  left_join(paper_counts, by = "Country")
+
+# ---- Create map ----
+map <- ggplot() +
+  geom_sf(data = map_data, aes(fill = N_Papers), color = "white") +
+  geom_point(data = sites_sf, aes(x = Longitude, y = Latitude), 
+             shape = 21, color = "black", fill = "white", size = 2, alpha = 0.5) +
   scale_fill_viridis_c(
-    option = "turbo",
-    direction = 1,
-    na.value = "transparent"
+    option = "mako",
+    direction = -1,
+    na.value = "gray95"
   ) +
+  labs(fill = "Number of experiments in ERA") +  # Changed legend title
   theme_minimal() +
-  labs(
-    title = "ERA Experiment Location Density (Hexbin)",
-    x = "Longitude",
-    y = "Latitude"
-  ) +
   theme(
+    legend.position = "bottom",
+    legend.direction = "horizontal",
+    legend.title = element_text(size = 12, face = "bold"),
+    legend.text = element_text(size = 10),
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    axis.title = element_blank(),
     panel.grid = element_blank()
-  )
+  ) +
+  guides(fill = guide_colorbar(
+    barwidth = 10, barheight = 0.5, title.position = "top", title.hjust = 0.5
+  )) +
+  coord_sf(xlim = c(-120, -30), ylim = c(-60, 35), expand = FALSE)  # Zoom to Latin America
+
+# ---- Create static table grob ----
+table_grob <- tableGrob(head(paper_counts, 20))  
+
+
+# ---- Plot map and table side by side ----
+grid.arrange(map, table_grob, ncol = 2, widths = c(2, 1))
 ```
 
 ## Intersections of Factors
@@ -279,12 +321,15 @@ treemap(
 The extracted, harmonized data in the compiled dataset comes from a rich data model that contains much more information about management and context.
 
 ## Understand Field Definitions
+
 The data model (the `era_raw` object we created earlier) contains a number of interconnected tables.
+
 ```{r}
 names(era_raw)
 ```
 
 To understand what each table contains look at the data catalog in `era_master_codes`.
+
 ```{r era data catalog v2}
 era_raw_tabls <- era_master_codes$era_fields_v2 %>%
   select(Table, Table_Description) %>% unique
@@ -296,6 +341,7 @@ kable(era_raw_tabls, format = "html", caption = "Data Catalog - Table Descriptio
 ```
 
 To find explanations of the fields in each table also use the data catalog.
+
 ```{r era data catalog v2 fields}
 era_raw_fields<- era_master_codes$era_fields_v2 %>%
   filter(Table=="Fert.Out") %>%
@@ -306,52 +352,53 @@ kable(era_raw_fields, format = "html", caption = "Data Catalog - Field Descripti
   kable_styling(full_width = FALSE) %>%
   scroll_box(width = "100%", height = "400px")
 ```
+
 For more information on the ERA agronomy data model including table linkages and relational structure [see](https://eragriculture.github.io/ERA_Agronomy/ERA-Create-Agronomy-Data-Model.html).
 
 ## Subset Raw Data for ACDC
+
 ```{r subsetting data model to acdc}
 acdc_raw_dat<-era_raw$Data.Out %>% filter(Country %in% lac_countries) %>% data.table
 ```
+
 This gives us `r nrow(acdc_raw_dat)` observations from `r acdc_raw_dat[,length(unique(B.Code))]`.
 
 This raw data is passed through complex comparison logic to select valid control vs experimental treatment comparisons. The R-code for the comparisons can be found [here](https://github.com/CIAT/ERA_dev/blob/main/R/comparisons/compare_industrious_elephant.R).
 
-The number of extracted papers is less than the comparisons table as some extractions did not contain valid comparisons or have an extremely complicate structure  beyond the capcacity of the comparison logic.
+The number of extracted papers is less than the comparisons table as some extractions did not contain valid comparisons or have an extremely complicate structure beyond the capcacity of the comparison logic.
 
-#  Literature Search and Screening
+# Literature Search and Screening
 
 For transparency, search and screening documentation includes:
 
-1. [Search terms](https://raw.githubusercontent.com/CIAT/ERA_dev/refs/heads/main/search_history/industrious_elephant_2023/acdc/search_terms.csv)
+1.  [Search terms](https://raw.githubusercontent.com/CIAT/ERA_dev/refs/heads/main/search_history/industrious_elephant_2023/acdc/search_terms.csv)
 
-2. [Search results](https://github.com/CIAT/ERA_dev/blob/main/search_history/industrious_elephant_2023/acdc/wos_search.zip)
+2.  [Search results](https://github.com/CIAT/ERA_dev/blob/main/search_history/industrious_elephant_2023/acdc/wos_search.zip)
 
-3. [Screening results](https://raw.githubusercontent.com/CIAT/ERA_dev/refs/heads/main/search_history/era-search-history.csv)
+3.  [Screening results](https://raw.githubusercontent.com/CIAT/ERA_dev/refs/heads/main/search_history/era-search-history.csv)
 
 ```{r search and screen}
 screening<-fread("https://raw.githubusercontent.com/CIAT/ERA_dev/refs/heads/main/search_history/era-search-history.csv")
 
 ta_pass<-screening$`title-abstract_pass`
 ```
-We screened `r screening$hits_wos` references, `r ta_pass` references passed title and abstract screening, `r screening$fulltext_pass` passed fulltext screening, and `r acdc_dat[,length(unique(Code))]` papers were suitable for extraction into the final dataset. 
+
+We screened `r screening$hits_wos` references, `r ta_pass` references passed title and abstract screening, `r screening$fulltext_pass` passed fulltext screening, and `r acdc_dat[,length(unique(Code))]` papers were suitable for extraction into the final dataset.
 
 We did not have access to `r screening$no_access` publications.
 
 # Next steps
 
-1. **Climate Data Integration**:
-   - Merge ERA agronomic data with seasonal climate statistics.
-   - For annual crops (maize, bean), experienced climate is calculated using planting date estimates.
-   - For perennials (coffee), we are developing a new method to define yield-relevant climate exposure.
-
-2. **Hazard–Management Intersection**:
-   - Once climate data is merged, we will explore if management practices influence outcomes under climate stress (e.g., drought, heat).
-
-3. **Fertilizer Comparison Logic**:
-   - Identify experiments with multiple fertilizer levels.
-   - Define comparisons for low vs moderate, moderate vs high, and low vs high fertilizer use.
-   - Integrate these comparisons into ERA’s analysis logic.
-
-4. **Meta-analysis of Practices**:
-   - Run meta-analysis on selected practices to assess their productivity and resilience benefits.
-   - Focus on agroecological interventions in maize, bean, and coffee systems.
+1.  **Climate Data Integration**:
+    -   Merge ERA agronomic data with seasonal climate statistics.
+    -   For annual crops (maize, bean), experienced climate is calculated using planting date estimates.
+    -   For perennials (coffee), we are developing a new method to define yield-relevant climate exposure.
+2.  **Hazard--Management Intersection**:
+    -   Once climate data is merged, we will explore if management practices influence outcomes under climate stress (e.g., drought, heat).
+3.  **Fertilizer Comparison Logic**:
+    -   Identify experiments with multiple fertilizer levels.
+    -   Define comparisons for low vs moderate, moderate vs high, and low vs high fertilizer use.
+    -   Integrate these comparisons into ERA's analysis logic.
+4.  **Meta-analysis of Practices**:
+    -   Run meta-analysis on selected practices to assess their productivity and resilience benefits.
+    -   Focus on agroecological interventions in maize, bean, and coffee systems.
