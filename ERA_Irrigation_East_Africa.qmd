@@ -117,7 +117,7 @@ agronomic_metadata <- fromJSON(json_agronomic)
 
 ERA has a diverse range of practices, from agronomy to livestock and a few papers on postharvest storage. We will therefore focus on irrigation in East Africa for this User Guide. If you are interest in the entire dataset, please explore our [Agronomy User Guide](https://eragriculture.github.io/ERA_Agronomy/ERA-User-Guide.html).
 
-```{r subsetting to legumes, echo=T, message=F}
+```{r subsetting to irrigation, echo=T, message=F}
 
 # Define East African countries
 east_africa <- c("Kenya", "Tanzania", "Uganda", "Rwanda", "Burundi", "Ethiopia", "South Sudan", "Somalia")
@@ -231,7 +231,7 @@ map <- ggplot() +
     direction = -1,
     na.value = "gray95"
   ) +
-  labs(fill = "Legume Papers") +
+  labs(fill = "Irrigation Papers") +
   theme_minimal() +
   theme(
     legend.position = "bottom",
@@ -305,7 +305,6 @@ The following analysis explores the types of **agronomic practices**-referred to
 
 Each study in ERA may be associated with multiple practices---for example, a study might examine both Soil Management and Nutrient Management.\
 For example, the theme 'Soil Management' include practices like green manure, crop residue, pH control, tillage, improved fallows. 'Nutrient Management' includes organic and inorganic fertilizer. This can be found in the practices within the mastercodes\
-
 
 ```{r r_plotting practices, echo=T, message=F}
 
@@ -401,4 +400,3 @@ bar_plot <- ggplot(out_counts, aes(
 bar_plot
 
 ```
-

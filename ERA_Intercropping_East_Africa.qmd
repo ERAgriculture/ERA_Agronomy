@@ -117,7 +117,7 @@ agronomic_metadata <- fromJSON(json_agronomic)
 
 ERA has a diverse range of practices, from agronomy to livestock and a few papers on postharvest storage. We will therefore focus on intercropping (with Maize) in East Africa for this User Guide. If you are interest in the entire dataset, please explore our [Agronomy User Guide](https://eragriculture.github.io/ERA_Agronomy/ERA-User-Guide.html).
 
-```{r subsetting to legumes, echo=T, message=F}
+```{r subsetting to intercropping, echo=T, message=F}
 
 # Define East African countries
 east_africa <- c("Kenya", "Tanzania", "Uganda", "Rwanda", "Burundi", "Ethiopia", "South Sudan", "Somalia")
@@ -241,7 +241,7 @@ map <- ggplot() +
     direction = -1,
     na.value = "gray95"
   ) +
-  labs(fill = "Legume Papers") +
+  labs(fill = "Intercropping Papers") +
   theme_minimal() +
   theme(
     legend.position = "bottom",
