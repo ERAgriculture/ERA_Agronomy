@@ -245,6 +245,8 @@ table_grob <- tableGrob(head(paper_counts, 20))
 grid.arrange(map, table_grob, ncol = 2, widths = c(2, 1))
 ```
 
+#### The total number of studies in countries within the Dry Corridor of Central America (Costa Rica, Guatemala, Honduras and Nicaragua) are a total of 13 papers.
+
 ## Intersections of Factors
 
 Lets look at the intersection of crops with practices, crops with outcomes, and outcomes with practices.
