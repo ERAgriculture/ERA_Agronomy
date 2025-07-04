@@ -1,9 +1,10 @@
 ---
-title: "ERA-Training syllabus"
+title: "ERA-Training Syllabus"
 author: "Peter Steward & Namita Joshi (Alliance of Bioversity International & CIAT)"
 date: "`r Sys.Date()`"
 format:
   html:
+    theme: cosmo
     toc: true
     toc-depth: 4
     toc-expand: 2   
