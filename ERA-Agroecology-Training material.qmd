@@ -1,0 +1,108 @@
+---
+title: "ERA-Training"
+author: "Peter Steward & Namita Joshi (Alliance of Bioversity International & CIAT)"
+date: "`r Sys.Date()`"
+format:
+  html:
+    toc: true
+    toc-depth: 4
+    toc-expand: 2   
+    number-sections: true
+    code-fold: false
+    code_folding: hide
+    include-in-header: hypothesis.html
+editor: visual
+---
+
+::: {style="display: flex; align-items: center; gap: 20px;"}
+<img src="images/Era_Logo_FINAL_Colour.png" width="100" style="margin-top: 10px;"/>
+:::
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+
+update <- FALSE
+```
+
+# Overview
+
+As part of the **ERA Synthesis for the Agroecology in the Dry Corridor of Central America (ACDC) project**, we conducted a multi-day training for the data extraction team. The sessions introduced participants to the ERA meta-analysis framework, systematic workflows, and the tools used to extract and manage agricultural research data.
+
+The training covered: - The ERA workflow (screening, extraction, and quality control) - Master codes for practices, outcomes, and experimental units - Hands-on use of tools like Slack, Colandr, Zotero, and the ERA data entry platform - Practical exercises to build familiarity with agronomic data extraction and uncertainty handling
+
+Over several sessions, participants were introduced to the full ERA data workflow—from screening studies to extracting site and practice data—while learning how to apply master codes and use modern research tools. The training combined theoretical sessions with practical exercises and team-based learning.
+
+
+# Learning Objectives
+
+Participants were expected to:
+- Understand the purpose and structure of the ERA meta-analysis.
+- Apply the ERA workflow, including screening, data extraction, and quality control.
+- Familiarize themselves with master codes covering experimental units, practices, and outcomes.
+- Gain practical experience using tools such as Slack, Zotero, Colandr, and the ERA submission platform.
+- Improve their ability to extract agronomic and geographic data, including managing uncertainty in site coordinates.
+
+
+# Tools & Platforms Used
+
+- **ERA Submission UI:** for structured data entry
+- **Colandr:** for literature screening
+- **Zotero:** for organizing scientific publications
+- **Slack:** for communication and troubleshooting
+- **Google Sheets:** for practice and outcome master codes
+- **WebPlotDigitizer:** for extracting data from graphs
+- **Google Drive / SharePoint:** for sharing training materials and video tutorials
+
+
+# Training Syllabus
+An important part of the training was the use of **video tutorials** linked to each section of the ERA data entry process. These videos covered core components such as site information, agronomic practices (e.g., fertilizer, irrigation, tillage), and outcomes. They enabled participants to refer back to the on how to use ERA user interface at any time and reinforced the hands-on learning approach with clear, repeatable guidance.
+
+The training covered the full ERA workflow—from screening studies to extracting site and practice data—while introducing the master codes and modern research tools that support consistency and quality control.
+
+
+::: scrollable
+| Topics to be addressed (2h sessions)                                                         | Link to material                                                                                                                                                                                                                    |
+|------------------------------------------------|------------------------|
+| **Day 1**                                                                                    |                                                                                                                                                                                                                                     |
+| Team introductions                                                                           |                                                                                                                                                                                                                                     |
+| Ice breaker                                                                                  |                                                                                                                                                                                                                                     |
+| Introduction and contextualization of ACDC project + AMLE - ERA overview + partners, funders |                                                                                                                                                                                                                                     |
+| Agroecology concept + Geographical scope                                                     |                                                                                                                                                                                                                                     |
+| Agroecological conditions of the study region + Agroecosystems                               |                                                                                                                                                                                                                                     |
+| What is a meta-analysis                                                                      | [Meta-analysis PPT](https://cgiar-my.sharepoint.com/:p:/g/personal/p_steward_cgiar_org/EamsUxcINyVGlplH_1DbaQ8BIn0r5s8dqXxRPQa1Gpz6eQ?e=UtyJeF)                                                                                     |
+| What the workflow will be like: Screening; Data extraction; Quality control                  |                                                                                                                                                                                                                                     |
+| An overview of the master codes: Experimental Units; Practices; Outcomes                     | [Practices](https://docs.google.com/spreadsheets/d/1WCdBpVMe3tQLODXgIS-O-HZ_EGg1moPW46gIYseAXAY/edit?usp=sharing), [Outcomes](https://docs.google.com/spreadsheets/d/1730-wqUR9u-A12SbqhIsxG-EoXwbPq-JD9ZXZuj8pzw/edit?usp=sharing) |
+| An overview of the ERA website                                                               | [ERA UI](https://stg.submission.era.scio.services/#/Home)                                                                                                                                                                           |
+| Introduction to apps: Slack, Zotero, Colandr                                                 |                                                                                                                                                                                                                                     |
+| Exercises: Practice/outcome codes, read 5 papers, explore ERA UI, watch tutorials            | [Video 1](https://drive.google.com/file/d/1YU9Y1tu5PvEdYG-dQqwENW9RFFO1cfKw/view?usp=sharing), [Video 2](https://drive.google.com/file/d/1Wp6zcNC923tnKD9Q_mQqUGI51tj3Fhiy/view?usp=sharing)                                        |
+| **Day 2**                                                                                    |                                                                                                                                                                                                                                     |
+| Assess quality of previous examples                                                          |                                                                                                                                                                                                                                     |
+| Recap and QA of video tutorials                                                              |                                                                                                                                                                                                                                     |
+| Do one example together                                                                      |                                                                                                                                                                                                                                     |
+| Go over uncertainty of a location                                                            |                                                                                                                                                                                                                                     |
+| Exercise: Enter longitude, latitude, uncertainty of 5 papers                                 | [Video 3](https://drive.google.com/file/d/1uIi4Szg89eJQy7f2voitOKckWg2iCXF8/view?usp=sharing)                                                                                                                                       |
+| **Day 3**                                                                                    |                                                                                                                                                                                                                                     |
+| Assess the quality of the examples                                                           |                                                                                                                                                                                                                                     |
+| Do a few examples together                                                                   |                                                                                                                                                                                                                                     |
+| Q&A                                                                                          |                                                                                                                                                                                                                                     |
+| Exercise: Repeat location entry for 5 papers                                                 |                                                                                                                                                                                                                                     |
+| **Day 4**                                                                                    |                                                                                                                                                                                                                                     |
+| Assess the quality of the examples                                                           |                                                                                                                                                                                                                                     |
+| Screening: criteria, using Colandr, Pomodoro sessions                                        |                                                                                                                                                                                                                                     |
+| Exercises: screening, read Practices and Outcomes, tillage examples                          | [Video 6](https://drive.google.com/file/d/1uRDQ0uB2oDc_dZ5q9RJ94z8xYwTcciOE/view?usp=drive_link), [Video 7](https://drive.google.com/file/d/1ixjaJi120tCLeOVweqoQFSktlicUXKAg/view?usp=drive_link)                                  |
+| **Day 5-8:**                                                                                 |                                                                                                                                                                                                                                     |
+| Pop quiz on Practices and Outcomes, Colandr touch base                                       |                                                                                                                                                                                                                                     |
+| Go through tillage, mulch, irrigation, organic and inorganic fertilizer practices            | [Irrigation Video](https://drive.google.com/file/d/1xWLAjsakVD0DRHHzULhman1awFMP0Bri/view?usp=drive_link), [WebPlotDigitizer](https://apps.automeris.io/wpd/), [Colandr](https://www.colandrapp.com/signin#signin)                  |
+| Review and resolve conflicting papers in Colandr, finalize data extraction                   |                                                                                                                                                                                                                                     |
+| Address logistics and wrap-up                                                                | [Currency codes](https://www.iban.com/currency-codes)                                                                                                                                                                               |
+:::
+
+------------------------------------------------------------------------
+
+# Acknowledgements
+
+This training was delivered as part of the **Agroecology in the Dry Corridor of Central America (ACDC) project**, with funding support from the ACDC initiative.  
+
+We thank all trainers, facilitators, and participants for their active engagement and contributions throughout the training.
+
+---
