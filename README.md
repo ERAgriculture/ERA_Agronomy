@@ -17,7 +17,7 @@ Explore the rendered HTML files for detailed documentation:
 
     1.1 ERA_VACS is a subset of the ERA Agronomy data, looking at legumes (https://eragriculture.github.io/ERA_Agronomy/ERA_VACS.html)
   
-    1.2 ERA Agroecology is a subset of the LAC studies (https://eragriculture.github.io/ERA_Agronomy/ERA-Agroecology.html)
+    1.2 ERA Agroecology is a subset of the LAC studies (https://eragriculture.github.io/ERA_Agronomy/ERA-Agroecology.html). The training syllabus for this round of extraction can be found here: https://eragriculture.github.io/ERA_Agronomy/ERA-Agroecology-Training material.html
     
     1.3 ERA- iSPARK : Intercropping of maize in East Africa (https://eragriculture.github.io/ERA_Agronomy/ERA_Intercropping_East_Africa.html)
                       Irrigation practices in East Africa (https://eragriculture.github.io/ERA_Agronomy/ERA_Irrigation_East_Africa.html)
