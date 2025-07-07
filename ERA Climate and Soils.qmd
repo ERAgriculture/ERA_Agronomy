@@ -181,7 +181,7 @@ local_data_dir <- "downloaded_data"
 # List and filter files
 s3<-s3fs::S3FileSystem$new(anonymous = T)
 files_s3 <- s3$dir_ls(s3_data_dir)
-files_s3 <- grep("clim_stats", files_s3, value = TRUE)
+files_s3 <- grep("clim_stats.*RData", files_s3, value = TRUE)
 (files_s3 <- tail(files_s3, 1))
 
 # Create local file path and download
@@ -260,7 +260,7 @@ These thresholds define a crop's temperature response curve and come from EcoCro
 `site_data` contains information about planting dates and their estimation:
 
 ```{r climdat_structure4}
-head(clim_data$site_data[,.(Plant.Start,Plant.End,Plant.Diff.Raw,Data.PS.Date,Data.PE.Date,SOS,P.Date.Merge,P.Date.Merge.Source,PlantingDate)])|>
+head(clim_data$site_data[,.(Plant.Start,Plant.End,Plant.Diff.Raw,Data.PS.Date,Data.PE.Date,SOS,P.Date.Merge,P.Date.Merge.Source)])|>
   kable(format = "html") |>
   kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
   scroll_box(width = "100%", height = "250px")
@@ -721,7 +721,7 @@ files_local <- gsub(s3_data_dir, local_data_dir, file_daily)
 
 if(!file.exists(files_local)){
 
-  chirps_daily<-open_dataset(files_s3, format = "parquet", filesystem = s3)
+  chirps_daily<-open_dataset(file_daily, format = "parquet", filesystem = s3)
 
   # Read the first 5 rows into a data.table
   chirps_daily <- as.data.table(head(chirps_daily, 5))
@@ -731,7 +731,6 @@ if(!file.exists(files_local)){
 }else{
   chirps_daily<-arrow::read_parquet(files_local)
 }
-
 
 ```
 
