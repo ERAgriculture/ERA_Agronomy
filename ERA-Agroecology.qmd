@@ -62,7 +62,7 @@ if(!dir.exists(dl_dir)){
 
 ## Download ERA Data
 
-```{r test downloading,echo=T, message=TRUE}
+```{r downloading the data,echo=T, message=TRUE}
 
 # Set S3 path and initialize
 s3 <- s3fs::S3FileSystem$new(anonymous = TRUE)
@@ -174,75 +174,80 @@ kable(dat, format = "html", caption = "Studies and Observations by Outcome") %>%
 ## Study Locations Map
 
 ```{r plot sites}
-# Ensure coordinates are numeric
+
+# === 1) Load your agronomic site data ===
 acdc_dat <- acdc_dat %>%
   mutate(
-    Latitude = as.numeric(Latitude),
+    Latitude  = as.numeric(Latitude),
     Longitude = as.numeric(Longitude)
   ) %>%
   filter(!is.na(Latitude) & !is.na(Longitude))
 
-# Count and order papers by country (descending)
-paper_counts <- acdc_dat %>%
+sites_sf <- st_as_sf(acdc_dat, coords = c("Longitude", "Latitude"), crs = 4326, remove = FALSE)
+
+# === 2) Load and clean the Dry Corridor shapefile ===
+dry_corridor <- st_read("ERA-Agroecology_files/CorredorSeco.shp", quiet = TRUE) %>%
+  st_make_valid() %>%
+  st_transform(4326)
+
+cat("✅ Loaded dry corridor with", nrow(dry_corridor), "features\n\n")
+
+# Union all polygons into one outline
+dry_corridor_union <- dry_corridor %>%
+  st_union() %>%
+  st_sf(geometry = .) %>%
+  st_make_valid()
+
+# === 3) Identify points in the Dry Corridor ===
+inside_idx <- st_within(sites_sf, dry_corridor_union, sparse = FALSE)[, 1]
+
+# Count distinct papers inside the corridor
+corridor_papers <- sites_sf[inside_idx, ] %>%
+  pull(Code) %>%
+  unique() %>%
+  length()
+
+message("Dry Corridor contains ", corridor_papers, " distinct papers")
+
+# === 4) Country-level counts (for whole dataset) ===
+country_counts <- acdc_dat %>%
   group_by(Country) %>%
   summarise(N_Papers = n_distinct(Code), .groups = "drop") %>%
-  arrange(desc(N_Papers))  
+  arrange(desc(N_Papers))
 
-# Load only Latin American countries and fix naming
-world <- ne_countries(scale = "medium", continent = NULL, returnclass = "sf") %>%
-  filter(continent %in% c("South America", "North America")) %>%
-  # Fix country names to match your data if needed
+# === 5) Load world basemap and join counts ===
+world <- ne_countries(scale = "medium", returnclass = "sf") %>%
+  filter(continent %in% c("North America", "South America")) %>%
   mutate(admin = case_when(
     admin == "United States of America" ~ "USA",
     admin == "Dominican Republic" ~ "Dominican Rep.",
     TRUE ~ admin
-  ))
+  )) %>%
+  rename(Country = admin)
 
-# Transform CRS
-world <- st_transform(world, crs = 4326)
-
-# Convert points to sf object
-sites_sf <- st_as_sf(acdc_dat, coords = c("Longitude", "Latitude"), crs = 4326, remove = FALSE)
-
-# Prepare map data
 map_data <- world %>%
-  dplyr::select(admin, geometry) %>%
-  rename(Country = admin) %>%
-  left_join(paper_counts, by = "Country")
+  select(Country, geometry) %>%
+  left_join(country_counts, by = "Country")
 
-# ---- Create map ----
+# === 6) Build the map ===
 map <- ggplot() +
   geom_sf(data = map_data, aes(fill = N_Papers), color = "white") +
-  geom_point(data = sites_sf, aes(x = Longitude, y = Latitude), 
+  geom_sf(data = dry_corridor_union, fill = NA, color = "red", size = 1) +  # Plot just the union outline
+  geom_point(data = sites_sf,
+             aes(x = Longitude, y = Latitude),
              shape = 21, color = "black", fill = "white", size = 2, alpha = 0.5) +
-  scale_fill_viridis_c(
-    option = "mako",
-    direction = -1,
-    na.value = "gray95"
-  ) +
-  labs(fill = "Number of experiments in ERA") +  # Changed legend title
+  scale_fill_viridis_c(option = "mako", direction = -1, na.value = "gray95") +
+  labs(fill = "Experiments in ERA") +
+  coord_sf(xlim = c(-120, -30), ylim = c(-60, 35), expand = FALSE) +
   theme_minimal() +
-  theme(
-    legend.position = "bottom",
-    legend.direction = "horizontal",
-    legend.title = element_text(size = 12, face = "bold"),
-    legend.text = element_text(size = 10),
-    axis.text = element_blank(),
-    axis.ticks = element_blank(),
-    axis.title = element_blank(),
-    panel.grid = element_blank()
-  ) +
-  guides(fill = guide_colorbar(
-    barwidth = 10, barheight = 0.5, title.position = "top", title.hjust = 0.5
-  )) +
-  coord_sf(xlim = c(-120, -30), ylim = c(-60, 35), expand = FALSE)  # Zoom to Latin America
+  theme(legend.position = "bottom")
 
-# ---- Create static table grob ----
-table_grob <- tableGrob(head(paper_counts, 20))  
+# === 7) Add country table ===
+table_grob <- tableGrob(country_counts)
 
-
-# ---- Plot map and table side by side ----
+# === 8) Arrange map and table side by side ===
 grid.arrange(map, table_grob, ncol = 2, widths = c(2, 1))
+
 ```
 
 #### The total number of studies in countries within the Dry Corridor of Central America (Costa Rica, Guatemala, Honduras and Nicaragua) are a total of 13 papers.
