@@ -250,7 +250,7 @@ grid.arrange(map, table_grob, ncol = 2, widths = c(2, 1))
 
 ```
 
-#### The total number of studies in countries within the Dry Corridor of Central America (Costa Rica, Guatemala, Honduras and Nicaragua) are a total of 13 papers.
+#### The total number of studies in countries within the Dry Corridor of Central America (parts of Costa Rica, Guatemala, Honduras and Nicaragua) are a total of 3 papers.
 
 ## Intersections of Factors
 
