@@ -1,0 +1,864 @@
+PrName,Out.SubInd,Product.Simple,Observations,Studies
+Inorganic Fertilizer-Solo,Crop Yield,Maize,658,54
+Mulch-Combo,Crop Yield,Maize,240,19
+Inorganic Fertilizer-Combo,Crop Yield,Maize,105,18
+Intercropping-Solo,Crop Yield,Maize,126,16
+Inorganic Fertilizer-Solo,Biomass Yield,Maize,70,12
+Inorganic Fertilizer-Solo,Crop Yield,Wheat,299,11
+pH Control-Solo,Crop Yield,Maize,120,10
+Intercropping-Combo,Crop Yield,Maize,82,10
+Crop Residue-Combo,Crop Yield,Maize,143,10
+Reduced Tillage-Combo,Crop Yield,Maize,177,9
+Reduced Tillage-Solo,Crop Yield,Maize,114,8
+Inorganic Fertilizer-Solo,Crop Yield,Common Bean,133,8
+pH Control-Solo,Crop Yield,Soybean,294,8
+Organic Fertilizer-Solo,Crop Yield,Maize,74,7
+Crop Rotation-Combo,Crop Yield,Maize,72,7
+Crop Residue Incorporation-Combo,Crop Yield,Maize,66,7
+Crop Rotation-Solo,Crop Yield,Maize,54,6
+Multistrata Agroforestry-Solo,Crop Yield,Coffee,61,6
+Inorganic Fertilizer-Solo,Crop Yield,Soybean,56,5
+Multistrata Agroforestry-Solo,Soil Moisture,Coffee-Natural Fallow,265,5
+Mulch-Solo,Crop Yield,Maize,221,5
+Crop Rotation-Solo,Crop Yield,Wheat,47,5
+Mulch-Reduced Tillage-Solo,Crop Yield,Maize,76,5
+Intercropping-Solo,Biomass Yield,Maize,17,4
+Inorganic Fertilizer-Intercropping-Solo,Crop Yield,Maize,22,4
+pH Control-Solo,Crop Yield,Wheat,56,4
+Reduced Tillage-Solo,Crop Yield,Wheat,56,4
+Inorganic Fertilizer-Solo,Biomass Yield,Black oats,136,4
+Crop Residue Incorporation-Mulch-Solo,Crop Yield,Maize,23,4
+Inorganic Fertilizer-Combo,Crop Yield,Wheat,52,4
+Agroforestry Pruning-Combo,Crop Yield,Maize,15,4
+Reduced Tillage-Solo,Crop Yield,Soybean,85,3
+Reduced Tillage-Solo,Crop Yield,Common Bean,13,3
+Intercropping-Solo,Crop Yield,Common Bean,19,3
+Improved Fallow-Solo,Biomass Yield,Maize,52,3
+Improved Fallow-Solo,Crop Yield,Maize,58,3
+Multistrata Agroforestry-Solo,Crop Yield,Arabica,80,3
+Multistrata Agroforestry-Solo,Gross Margin,Coffee-Natural Fallow,3,3
+Multistrata Agroforestry-Solo,Labour Cost,Coffee-Natural Fallow,3,3
+Inorganic Fertilizer-Solo,Crop Residue Yield,Maize,70,3
+Inorganic Fertilizer-Solo,Nitrous Oxide Emissions,Maize,26,3
+pH Control-Solo,Biomass Yield,Maize,8,3
+Inorganic Fertilizer-Solo,Biomass Yield,Sorghum,45,3
+Mulch-Reduced Tillage-Solo,Crop Yield,Wheat,20,3
+Crop Residue Incorporation-Inorganic Fertilizer-Solo,Crop Yield,Maize,15,3
+Agroforestry Pruning-Solo,Crop Yield,Maize,6,3
+Agroforestry Pruning-Inorganic Fertilizer-Solo,Crop Yield,Maize,9,3
+Inorganic Fertilizer-Solo,Gross Margin,Maize,62,3
+Agroforestry Pruning-Solo,Gross Margin,Maize,6,3
+Agroforestry Pruning-Inorganic Fertilizer-Solo,Gross Margin,Maize,9,3
+Organic Fertilizer-Combo,Crop Yield,Maize,9,3
+Inorganic Fertilizer-Combo,Biomass Yield,Maize,21,3
+Inorganic Fertilizer-Combo,Gross Margin,Maize,9,3
+Mulch-Combo,Crop Yield,Wheat,33,3
+Reduced Tillage-Combo,Crop Yield,Common Bean,11,3
+Reduced Tillage-Combo,Crop Yield,Wheat,34,3
+Crop Rotation-Combo,Crop Yield,Common Bean,15,3
+Crop Rotation-Combo,Crop Yield,Wheat,31,3
+Agroforestry Pruning-Combo,Gross Margin,Maize,9,3
+pH Control-Combo,Crop Yield,Maize,8,3
+Crop Rotation-Inorganic Fertilizer-Solo,Crop Yield,Maize,10,2
+Improved Fallow-Intercropping-Solo,Biomass Yield,Maize,20,2
+Improved Fallow-Intercropping-Solo,Crop Yield,Maize,18,2
+Improved Fallow-Solo,Soil Nitrogen,Maize,24,2
+Improved Fallow-Intercropping-Solo,Soil Nitrogen,Maize,22,2
+Intercropping-Solo,Biomass Yield,Sorghum,10,2
+Inorganic Fertilizer-Solo,Variable Cost,Maize,38,2
+Inorganic Fertilizer-Solo,Gross Return,Maize,134,2
+Multistrata Agroforestry-Solo,Labour Person Hours,Coffee-Natural Fallow,13,2
+Other Agroforestry-Solo,Crop Yield,Coffee,15,2
+Supplemental Irrigation-Solo,Crop Yield,Arabica,80,2
+Multistrata Agroforestry-Solo,Gross Return,Coffee,52,2
+Multistrata Agroforestry-Solo,Crop Yield,Macadamia,50,2
+pH Control-Solo,Crop Residue Yield,Soybean,4,2
+pH Control-Solo,Crop Residue Yield,Maize,3,2
+Inorganic Fertilizer-Solo,Nitrogen Agronomic Efficiency,Maize,17,2
+pH Control-Solo,Crop Yield,Oats,9,2
+Intercropping-Solo,Crop Yield,Soybean,18,2
+Inorganic Fertilizer-Solo,Crop Yield,Sorghum,21,2
+Crop Rotation-Mulch-Solo,Crop Yield,Maize,8,2
+Organic Fertilizer-Solo,Crop Yield,Wheat,11,2
+Inorganic Fertilizer-Solo,Soil Carbon Stocks,Maize,3,2
+Organic Fertilizer-Solo,Soil Carbon Stocks,Maize,4,2
+Multistrata Agroforestry-Solo,Aboveground Carbon Biomass,Coffee,2,2
+Multistrata Agroforestry-Solo,Belowground Carbon Biomass,Coffee,2,2
+Improved Varieties-Solo,Crop Yield,Maize,260,2
+pH Control-Solo,Crop Yield,Common Bean,52,2
+Crop Rotation-Solo,Crop Yield,Common Bean,5,2
+Reduced Tillage-Solo,Soil Organic Carbon,Wheat,12,2
+Organic Fertilizer-Solo,Crop Yield,Common Bean,5,2
+Reduced Tillage-Solo,Soil Moisture,Wheat,1236,2
+Supplemental Irrigation-Solo,Crop Yield,Maize,44,2
+Crop Residue-Reduced Tillage-Solo,Crop Yield,Maize,42,2
+Agroforestry Pruning-Multistrata Agroforestry-Solo,Biodiversity,Coffee,14,2
+Mulch-Reduced Tillage-Solo,Crop Yield,Common Bean,3,2
+Inorganic Fertilizer-Organic Fertilizer-Solo,Crop Yield,Maize,4,2
+Inorganic Fertilizer-Mulch-Solo,Crop Yield,Maize,31,2
+Crop Residue Incorporation-Crop Rotation-Solo,Crop Yield,Maize,6,2
+Crop Rotation-Mulch-Reduced Tillage-Solo,Crop Yield,Maize,14,2
+Crop Rotation-Inorganic Fertilizer-Solo,Crop Yield,Wheat,6,2
+Mulch-Reduced Tillage-Solo,Soil Moisture,Maize,6,2
+Reduced Tillage-Solo,Soil Moisture,Maize,4,2
+Crop Residue Incorporation-Solo,Crop Yield,Maize,13,2
+Crop Residue Incorporation-Solo,Crop Yield,Wheat,11,2
+Crop Residue-Solo,Crop Yield,Maize,49,2
+Reduced Tillage-Solo,Biomass Yield,Oats,56,2
+Organic Fertilizer-Combo,Crop Yield,Common Bean,5,2
+Inorganic Fertilizer-Combo,Crop Yield,Sorghum,14,2
+Inorganic Fertilizer-Combo,Biomass Yield,Sorghum,22,2
+Intercropping-Combo,Biomass Yield,Maize,22,2
+Intercropping-Combo,Soil Nitrogen,Maize,22,2
+Mulch-Combo,Crop Yield,Soybean,20,2
+Mulch-Combo,Crop Yield,Common Bean,6,2
+Mulch-Combo,Soil Moisture,Maize,23,2
+Reduced Tillage-Combo,Soil Moisture,Maize,9,2
+Improved Fallow-Combo,Biomass Yield,Maize,24,2
+Improved Fallow-Combo,Crop Yield,Maize,18,2
+Improved Fallow-Combo,Soil Nitrogen,Maize,22,2
+Multistrata Agroforestry-Combo,Biodiversity,Coffee,14,2
+Agroforestry Pruning-Combo,Biodiversity,Coffee,14,2
+pH Control-Combo,Crop Yield,Soybean,10,2
+Organic Fertilizer-Solo,Crop Yield,Capsicum,6,1
+Harvest Method-Intercropping-Mulch-Solo,Crop Yield,Maize,9,1
+Harvest Method-Intercropping-Mulch-Solo,Cation Exchange Capacity,Maize-Natural Fallow,12,1
+Inorganic Fertilizer-Solo,Crop Yield,Coffee,4,1
+Crop Rotation-Intercropping-Reduced Tillage-Solo,Crop Yield,Maize,1,1
+Crop Rotation-Reduced Tillage-Solo,Crop Yield,Cotton,1,1
+Double Cropping-Solo,Nitrous Oxide Emissions,Maize-Soybean,99,1
+Double Cropping-Solo,Soil NH4,Maize-Soybean,110,1
+Double Cropping-Solo,Soil NO3,Maize-Soybean,90,1
+Intercropping-Solo,Soil Total Nitrogen,Maize,6,1
+Intercropping-Solo,Crop Yield,Coffee,2,1
+Supplemental Irrigation-Solo,Crop Yield,Coffee,2,1
+Intercropping-Supplemental Irrigation-Solo,Crop Yield,Coffee,1,1
+Intercropping-Solo,Soil Moisture,Coffee-Urochloa decumbens,2,1
+Intercropping-Solo,Soil Total Nitrogen,Coffee-Urochloa decumbens,4,1
+Crop Residue Incorporation-Mulch-Reduced Tillage-Solo,Crop Yield,Cabbage,1,1
+Reduced Tillage-Solo,Crop Yield,Cabbage,2,1
+Reduced Tillage-Solo,Soil Organic Carbon,Maize-Velvet Bean,2,1
+Improved Fallow-Inorganic Fertilizer-Solo,Biomass Yield,Maize,2,1
+Improved Fallow-Inorganic Fertilizer-Intercropping-Solo,Biomass Yield,Maize,2,1
+Double Cropping-Solo,Crop Yield,Maize,1,1
+Agroforestry Pruning-Mulch-Solo,Crop Yield,Maize,4,1
+Agroforestry Pruning-Mulch-pH Control-Solo,Crop Yield,Maize,2,1
+Mulch-Solo,Soil Moisture,Yacon,36,1
+Mulch-Solo,Crop Yield,Yacon,6,1
+Mulch-Solo,Biomass Yield,Yacon,12,1
+Inorganic Fertilizer-Solo,Biomass Yield,Palisade Grass,4,1
+Inorganic Fertilizer-Solo,Biomass Yield,Guinea Grass,4,1
+Inorganic Fertilizer-Solo,Total Cost,Wheat,32,1
+Inorganic Fertilizer-Solo,Gross Return,Wheat,64,1
+Inorganic Fertilizer-pH Control-Solo,Crop Yield,Wheat,32,1
+Inorganic Fertilizer-Solo,Crop Residue Yield,Sugar Cane,4,1
+Inorganic Fertilizer-Solo,Crop Yield,Sugar Cane,4,1
+Multistrata Agroforestry-Solo,Labour Person Hours,Coffee,1,1
+Crop Residue Incorporation-Solo,Crop Yield,Common Bean,4,1
+Crop Residue Incorporation-Reduced Tillage-Solo,Crop Yield,Common Bean,2,1
+Crop Residue Incorporation-Solo,Crop Residue Yield,Common Bean,4,1
+Reduced Tillage-Solo,Crop Residue Yield,Common Bean,4,1
+Crop Residue Incorporation-Reduced Tillage-Solo,Crop Residue Yield,Common Bean,2,1
+Other Agroforestry-Solo,Biodiversity,Coffee,16,1
+Intercropping-Solo,Erosion,Maize,1,1
+Improved Varieties-Intercropping-Solo,Erosion,Maize,1,1
+Intercropping-Mulch-Solo,Crop Yield,Maize,14,1
+Deficit Irrigation-Solo,Biomass Yield,Common Bean,24,1
+Deficit Irrigation-Solo,Crop Yield,Common Bean,24,1
+Deficit Irrigation-Solo,Water Use Efficiency,Common Bean,24,1
+Deficit Irrigation-Solo,Soil Moisture,Common Bean,72,1
+Deficit Irrigation-Solo,Water Use Efficiency,Chamomile,16,1
+Deficit Irrigation-Solo,Biomass Yield,Chamomile,18,1
+Improved Fallow-Solo,Soil Total Nitrogen,Congo Grass-Cotton-Pearl Millet,36,1
+Improved Fallow-Solo,Soil NH4,Congo Grass-Cotton-Pearl Millet,72,1
+Improved Fallow-Solo,Soil NO3,Congo Grass-Cotton-Pearl Millet,72,1
+Supplemental Irrigation-Solo,Crop Yield,Macadamia,10,1
+Multistrata Agroforestry-Supplemental Irrigation-Solo,Crop Yield,Macadamia,5,1
+Supplemental Irrigation-Solo,Total Cost,Macadamia,8,1
+Supplemental Irrigation-Solo,Gross Return,Macadamia,10,1
+Multistrata Agroforestry-Solo,Gross Return,Macadamia,10,1
+Multistrata Agroforestry-Supplemental Irrigation-Solo,Gross Return,Macadamia,5,1
+Supplemental Irrigation-Solo,Gross Return,Arabica,5,1
+Supplemental Irrigation-Solo,Net Return,Macadamia,8,1
+Supplemental Irrigation-Solo,Total Cost,Arabica-Macadamia,8,1
+Supplemental Irrigation-Solo,Net Return,Arabica-Macadamia,8,1
+Multistrata Agroforestry-Solo,Total Cost,Coffee-Macadamia,60,1
+Multistrata Agroforestry-Solo,Variable Cost,Coffee-Macadamia,60,1
+Multistrata Agroforestry-Solo,Gross Return,Coffee-Macadamia,10,1
+Multistrata Agroforestry-Solo,Total Cost,Arabica-Macadamia,60,1
+Multistrata Agroforestry-Solo,Gross Return,Arabica-Macadamia,60,1
+Multistrata Agroforestry-Solo,Fixed Cost,Macadamia,30,1
+Multistrata Agroforestry-Solo,Variable Cost,Macadamia,6,1
+Inorganic Fertilizer-Multistrata Agroforestry-pH Control-Solo,Variable Cost,Arabica-Macadamia,47,1
+Inorganic Fertilizer-Multistrata Agroforestry-Solo,Variable Cost,Arabica-Macadamia,141,1
+Inorganic Fertilizer-Multistrata Agroforestry-pH Control-Solo,Total Cost,Arabica-Macadamia,47,1
+Inorganic Fertilizer-Multistrata Agroforestry-Solo,Total Cost,Arabica-Macadamia,141,1
+Inorganic Fertilizer-Multistrata Agroforestry-pH Control-Solo,Gross Return,Arabica-Macadamia,48,1
+Inorganic Fertilizer-Multistrata Agroforestry-Solo,Fixed Cost,Arabica-Macadamia,6,1
+Other Agroforestry-Solo,Gross Return,Coffee,12,1
+Other Agroforestry-Solo,Variable Cost,Coffee-Macadamia,21,1
+Inorganic Fertilizer-Solo,Biomass Yield,Congo Grass,12,1
+Intercropping-Solo,Soil Organic Carbon,Guinea Grass-Soybean,1,1
+Intercropping-Solo,Soil Organic Carbon,Congo Grass-Soybean,1,1
+Inorganic Fertilizer-Solo,Soil NH4,Maize,45,1
+Inorganic Fertilizer-Solo,Soil NO3,Maize,47,1
+Biochar-Solo,Biomass Yield,Maize,4,1
+Biochar-Inorganic Fertilizer-Organic Fertilizer-Solo,Biomass Yield,Maize,4,1
+Inorganic Fertilizer-Organic Fertilizer-Solo,Biomass Yield,Maize,8,1
+pH Control-Solo,Biomass Yield,Groundnut,3,1
+pH Control-Solo,Crop Yield,Groundnut,3,1
+pH Control-Solo,Biomass Yield,Oats,3,1
+pH Control-Solo,Aboveground Carbon Biomass,Palisade Grass,24,1
+pH Control-Solo,Total Cost,Groundnut,6,1
+pH Control-Solo,Total Cost,Oats,6,1
+pH Control-Solo,Total Cost,Maize,6,1
+pH Control-Solo,Total Cost,Palisade Grass,6,1
+pH Control-Solo,Gross Return,Groundnut,6,1
+pH Control-Solo,Gross Return,Oats,6,1
+pH Control-Solo,Gross Return,Maize,6,1
+pH Control-Solo,Gross Return,Palisade Grass,6,1
+pH Control-Solo,Net Return,Groundnut,6,1
+pH Control-Solo,Net Return,Oats,6,1
+pH Control-Solo,Net Return,Maize,6,1
+pH Control-Solo,Net Return,Palisade Grass,6,1
+Crop Rotation-Solo,Soil Organic Matter,Congo Grass-Maize-Soybean,18,1
+Intercropping-Solo,Gross Return,Soybean,8,1
+Improved Varieties-Solo,Crop Yield,Common Bean,1,1
+pH Control-Solo,Biomass Yield,Soybean,2,1
+pH Control-Solo,Biomass Yield,Pearl Millet,4,1
+pH Control-Solo,Biomass Yield,Pigeon Pea,2,1
+Inorganic Fertilizer-Solo,Nitrogen Agronomic Efficiency,Common Bean,8,1
+Intercropping-Solo,Crop Yield,Sorghum,8,1
+Inorganic Fertilizer-Intercropping-Solo,Crop Yield,Sorghum,6,1
+Inorganic Fertilizer-Solo,Total Cost,Sorghum,9,1
+Intercropping-Solo,Total Cost,Sorghum,8,1
+Inorganic Fertilizer-Intercropping-Solo,Total Cost,Sorghum,6,1
+Inorganic Fertilizer-Solo,Gross Return,Sorghum,9,1
+Intercropping-Solo,Gross Return,Sorghum,8,1
+Inorganic Fertilizer-Intercropping-Solo,Gross Return,Sorghum,6,1
+Inorganic Fertilizer-Solo,Net Return,Sorghum,9,1
+Intercropping-Solo,Net Return,Sorghum,8,1
+Inorganic Fertilizer-Intercropping-Solo,Net Return,Sorghum,6,1
+Inorganic Fertilizer-Intercropping-Solo,Biomass Yield,Sorghum,6,1
+Crop Rotation-Inorganic Fertilizer-Mulch-Solo,Crop Yield,Maize,3,1
+Intercropping-Solo,Land Equivalent Ratio,Palisade Grass-Sorghum,4,1
+Intercropping-Solo,Land Equivalent Ratio,Guinea Grass-Sorghum,4,1
+pH Control-Solo,Crop Yield,Coffee,20,1
+pH Control-Solo,Crop Yield,Arabica,25,1
+pH Control-Solo,Gross Return,Arabica,5,1
+Crop Residue Incorporation-Mulch-Reduced Tillage-Solo,Crop Yield,Maize,11,1
+Crop Residue Incorporation-Crop Rotation-Mulch-Reduced Tillage-Solo,Crop Yield,Maize,10,1
+Crop Residue Incorporation-Mulch-Reduced Tillage-Solo,Crop Yield,Soybean,16,1
+Crop Residue Incorporation-Crop Rotation-Mulch-Reduced Tillage-Solo,Crop Yield,Soybean,2,1
+Crop Rotation-Solo,Crop Yield,Soybean,81,1
+Organic Fertilizer-Solo,Crop Yield,Soybean,12,1
+Organic Fertilizer-pH Control-Solo,Crop Yield,Soybean,8,1
+pH Control-Solo,Cation Exchange Capacity,Soybean,12,1
+Organic Fertilizer-Solo,Cation Exchange Capacity,Soybean,12,1
+Organic Fertilizer-pH Control-Solo,Cation Exchange Capacity,Soybean,8,1
+Inorganic Fertilizer-Mulch-Reduced Tillage-Solo,Crop Yield,Wheat,1,1
+Inorganic Fertilizer-Organic Fertilizer-Solo,Soil Carbon Stocks,Maize,5,1
+Inorganic Fertilizer-Solo,Soil Carbon Stocks,Wheat,2,1
+Organic Fertilizer-Solo,Soil Carbon Stocks,Wheat,1,1
+Inorganic Fertilizer-Organic Fertilizer-Solo,Soil Carbon Stocks,Wheat,5,1
+Multistrata Agroforestry-Solo,Biomass Yield,Coffee,2,1
+Improved Varieties-Multistrata Agroforestry-Solo,Soil Carbon Stocks,Coffee-Rubber,4,1
+Improved Varieties-Multistrata Agroforestry-Solo,Soil Organic Carbon,Coffee-Rubber,4,1
+Inorganic Fertilizer-Solo,Phosphorus Agronomic Efficiency,Maize,36,1
+Organic Fertilizer-Solo,Biomass Yield,Oats,15,1
+pH Control-Solo,Crop Yield,Barley,3,1
+Inorganic Fertilizer-Solo,Crop Yield,Black oats,12,1
+Mulch-pH Control-Solo,Crop Yield,Maize,1,1
+Mulch-Solo,Crop Yield,Soybean,4,1
+Mulch-pH Control-Solo,Crop Yield,Soybean,2,1
+pH Control-Solo,Biomass Yield,Black oats,108,1
+Inorganic Fertilizer-pH Control-Solo,Biomass Yield,Black oats,81,1
+Crop Rotation-Solo,Crop Yield,Barley,4,1
+Crop Rotation-pH Control-Solo,Crop Yield,Common Bean,4,1
+Reduced Tillage-Solo,Soil Organic Carbon,Natural Fallow,6,1
+Reduced Tillage-Solo,Soil Organic Carbon,Hairy Vetch,6,1
+Reduced Tillage-Solo,Soil Organic Carbon,Radish,6,1
+Reduced Tillage-Solo,Soil Organic Carbon,Black oats,6,1
+Reduced Tillage-Solo,Soil Organic Carbon,Blue Lupin,6,1
+Improved Fallow-Solo,Soil Organic Carbon,Maize,48,1
+Alleycropping-Crop Rotation-Solo,Crop Yield,Common Bean,4,1
+Inorganic Fertilizer-Organic Fertilizer-Solo,Biomass Yield,Common Bean,2,1
+Organic Fertilizer-Solo,Biomass Yield,Common Bean,1,1
+Inorganic Fertilizer-Solo,Biomass Yield,Common Bean,2,1
+Inorganic Fertilizer-Organic Fertilizer-Solo,Crop Yield,Common Bean,2,1
+Reduced Tillage-Solo,Biomass Yield,Hairy Vetch,2,1
+Reduced Tillage-Solo,Crop Yield,Sorghum,1,1
+Reduced Tillage-Solo,Biomass Yield,Wheat,1,1
+Inorganic Fertilizer-Solo,Biomass Yield,Wheat,30,1
+Reduced Tillage-Solo,Carbon Dioxide Emissions,Wheat,1782,1
+Reduced Tillage-Solo,Carbon Dioxide Emissions,Soybean,830,1
+Crop Rotation-Solo,Carbon Dioxide Emissions,Soybean,364,1
+Reduced Tillage-Solo,Soil Moisture,Soybean,553,1
+Crop Rotation-Solo,Soil Moisture,Soybean,207,1
+Supplemental Irrigation-Solo,Water Use Efficiency,Maize,40,1
+Organic Fertilizer-Solo,Soil Total Nitrogen,Maize,3,1
+Inorganic Fertilizer-Solo,Soil Total Nitrogen,Maize,1,1
+Organic Fertilizer-Solo,Biomass Yield,Maize,6,1
+Organic Fertilizer-Solo,Biomass Yield,Black oats,3,1
+Organic Fertilizer-Solo,Nitrogen Agronomic Efficiency (AGB),Maize,3,1
+Inorganic Fertilizer-Solo,Nitrogen Agronomic Efficiency (AGB),Maize,1,1
+Crop Rotation-Intercropping-Solo,Crop Yield,Maize,8,1
+Crop Rotation-Inorganic Fertilizer-Intercropping-Solo,Crop Yield,Maize,4,1
+Inorganic Fertilizer-Mulch-Reduced Tillage-Solo,Crop Yield,Maize,1,1
+Reduced Tillage-Solo,Crop Yield,Melon,14,1
+Inorganic Fertilizer-Solo,Crop Yield,Grape,16,1
+Organic Fertilizer-Solo,Crop Yield,Grape,10,1
+Inorganic Fertilizer-Organic Fertilizer-Solo,Crop Yield,Grape,8,1
+Parklands-Solo,Biomass Yield,Maize,1,1
+Parklands-Solo,Crop Yield,Maize,1,1
+Alleycropping-Solo,Crop Yield,Maize,4,1
+Alleycropping-Solo,Variable Cost,Maize,4,1
+Alleycropping-Solo,Gross Return,Maize,4,1
+Alleycropping-Solo,Gross Margin,Maize,4,1
+Inorganic Fertilizer-Solo,Biomass Yield,Napier Grass,15,1
+Improved Varieties-Solo,Crop Yield,Passionfruit,18,1
+Organic Fertilizer-Solo,Gross Return,Coffee,2,1
+Inorganic Fertilizer-Solo,Gross Return,Coffee,2,1
+Organic Fertilizer-Solo,Total Cost,Coffee,2,1
+Inorganic Fertilizer-Solo,Total Cost,Coffee,2,1
+Multistrata Agroforestry-Solo,Total Cost,Coffee,4,1
+Organic Fertilizer-Solo,Fixed Cost,Coffee,2,1
+Inorganic Fertilizer-Solo,Fixed Cost,Coffee,2,1
+Multistrata Agroforestry-Solo,Fixed Cost,Coffee,4,1
+Organic Fertilizer-Solo,Net Return,Coffee,2,1
+Inorganic Fertilizer-Solo,Net Return,Coffee,2,1
+Multistrata Agroforestry-Solo,Net Return,Coffee,4,1
+Organic Fertilizer-Solo,Benefit Cost Ratio (NRTC),Coffee,2,1
+Inorganic Fertilizer-Solo,Benefit Cost Ratio (NRTC),Coffee,2,1
+Multistrata Agroforestry-Solo,Benefit Cost Ratio (NRTC),Coffee,4,1
+Organic Fertilizer-Solo,Biomass Yield,Cowpea,1,1
+Mulch-Solo,Biomass Yield,Cowpea,3,1
+Mulch-Organic Fertilizer-Solo,Biomass Yield,Cowpea,1,1
+Organic Fertilizer-Solo,Crop Yield,Cowpea,1,1
+Mulch-Solo,Crop Yield,Cowpea,3,1
+Mulch-Organic Fertilizer-Solo,Crop Yield,Cowpea,1,1
+Inorganic Fertilizer-Solo,Biomass Yield,Cowpea,5,1
+Inorganic Fertilizer-pH Control-Solo,Biomass Yield,Cowpea,5,1
+pH Control-Solo,Biomass Yield,Cowpea,3,1
+Inorganic Fertilizer-pH Control-Solo,Biomass Yield,Maize,5,1
+Inorganic Fertilizer-Solo,Crop Yield,Cowpea,5,1
+Inorganic Fertilizer-pH Control-Solo,Crop Yield,Cowpea,5,1
+pH Control-Solo,Crop Yield,Cowpea,3,1
+Inorganic Fertilizer-pH Control-Solo,Crop Yield,Maize,5,1
+Inorganic Fertilizer-Solo,Biomass Yield,Cowpea-Maize,5,1
+Inorganic Fertilizer-pH Control-Solo,Biomass Yield,Cowpea-Maize,5,1
+pH Control-Solo,Biomass Yield,Cowpea-Maize,3,1
+Agroforestry Pruning-Alleycropping-Solo,Biomass Yield,Sorghum,32,1
+Agroforestry Pruning-Alleycropping-Inorganic Fertilizer-Solo,Biomass Yield,Sorghum,16,1
+Agroforestry Pruning-Alleycropping-Solo,Crop Yield,Sorghum,16,1
+Agroforestry Pruning-Alleycropping-Inorganic Fertilizer-Solo,Crop Yield,Sorghum,8,1
+Organic Fertilizer-Solo,Crop Yield,Sweet Potato,10,1
+Agroforestry Pruning-Organic Fertilizer-Solo,Biomass Yield,Sunflower,6,1
+Agroforestry Pruning-Solo,Biomass Yield,Sunflower,4,1
+Organic Fertilizer-Solo,Biomass Yield,Sunflower,2,1
+Agroforestry Pruning-Organic Fertilizer-Solo,Crop Yield,Sunflower,6,1
+Agroforestry Pruning-Solo,Crop Yield,Sunflower,4,1
+Organic Fertilizer-Solo,Crop Yield,Sunflower,2,1
+Agroforestry Pruning-Organic Fertilizer-Solo,Biomass Yield,Cotton,6,1
+Agroforestry Pruning-Solo,Biomass Yield,Cotton,4,1
+Organic Fertilizer-Solo,Biomass Yield,Cotton,2,1
+Agroforestry Pruning-Organic Fertilizer-Solo,Crop Yield,Cotton,12,1
+Agroforestry Pruning-Solo,Crop Yield,Cotton,8,1
+Organic Fertilizer-Solo,Crop Yield,Cotton,4,1
+Intercropping-Solo,Biomass Yield,Opuntia stricta,10,1
+Intercropping-Solo,Water Use Efficiency,Opuntia stricta,5,1
+Biochar-Solo,Soil Moisture,Common Bean,18,1
+Organic Fertilizer-Solo,Soil Moisture,Common Bean,12,1
+Biochar-Organic Fertilizer-Solo,Soil Moisture,Common Bean,9,1
+Biochar-Solo,Soil Organic Carbon,Common Bean,6,1
+Organic Fertilizer-Solo,Soil Organic Carbon,Common Bean,4,1
+Biochar-Organic Fertilizer-Solo,Soil Organic Carbon,Common Bean,3,1
+Biochar-Solo,Crop Yield,Common Bean,6,1
+Biochar-Organic Fertilizer-Solo,Crop Yield,Common Bean,3,1
+Biochar-Solo,Water Use Efficiency,Common Bean,6,1
+Organic Fertilizer-Solo,Water Use Efficiency,Common Bean,4,1
+Biochar-Organic Fertilizer-Solo,Water Use Efficiency,Common Bean,3,1
+Biochar-Solo,Gross Return,Common Bean,6,1
+Organic Fertilizer-Solo,Gross Return,Common Bean,4,1
+Biochar-Organic Fertilizer-Solo,Gross Return,Common Bean,3,1
+Biochar-Solo,Cation Exchange Capacity,Common Bean,6,1
+Organic Fertilizer-Solo,Cation Exchange Capacity,Common Bean,4,1
+Biochar-Organic Fertilizer-Solo,Cation Exchange Capacity,Common Bean,3,1
+Biochar-Solo,Total Cost (Unconfirmed),Common Bean,6,1
+Organic Fertilizer-Solo,Total Cost (Unconfirmed),Common Bean,4,1
+Biochar-Organic Fertilizer-Solo,Total Cost (Unconfirmed),Common Bean,3,1
+Biochar-Solo,Net Return,Common Bean,6,1
+Organic Fertilizer-Solo,Net Return,Common Bean,4,1
+Biochar-Organic Fertilizer-Solo,Net Return,Common Bean,3,1
+Mulch-Solo,Biodiversity,Cowpea,18,1
+Mulch-Solo,Soil Moisture,Cowpea,3,1
+Mulch-Solo,Soil Organic Matter,Cowpea,3,1
+Mulch-Solo,Cation Exchange Capacity,Cowpea,3,1
+Inorganic Fertilizer-Solo,Net Return,Maize,6,1
+Crop Residue-Intercropping-Reduced Tillage-Solo,Crop Yield,Maize,4,1
+Crop Residue-Intercropping-Solo,Crop Yield,Maize,2,1
+Intercropping-Solo,Crop Yield,Cassava,8,1
+Intercropping-Solo,Crop Yield,Cowpea,4,1
+Multistrata Agroforestry-Solo,Biodiversity,Coffee-Natural Fallow,2,1
+Agroforestry Pruning-Multistrata Agroforestry-Solo,Crop Yield,Coffee,1,1
+Agroforestry Pruning-Multistrata Agroforestry-Solo,Soil Organic Carbon,Coffee,2,1
+Agroforestry Pruning-Multistrata Agroforestry-Solo,Soil Total Nitrogen,Coffee,2,1
+Multistrata Agroforestry-Solo,Soil Organic Carbon,Coffee,8,1
+Multistrata Agroforestry-Solo,Soil Nitrogen,Coffee,12,1
+Multistrata Agroforestry-Solo,Soil Carbon Stocks,Coffee,4,1
+Double Cropping-Solo,Crop Yield,Coffee,12,1
+Double Cropping-Solo,Biomass Yield,Coffee,4,1
+Alleycropping-Solo,Nitrous Oxide Emissions,Coffee-Natural Fallow,100,1
+Alleycropping-Solo,Carbon Dioxide Emissions,Coffee-Natural Fallow,100,1
+Alleycropping-Solo,Methane Emissions,Coffee-Natural Fallow,100,1
+Alleycropping-Solo,Soil Moisture,Coffee-Natural Fallow,80,1
+Other Agroforestry-Parklands-Solo,Cation Exchange Capacity,Coffee-Natural Fallow,7,1
+Other Agroforestry-Parklands-Solo,Nitrous Oxide Emissions,Coffee-Natural Fallow,81,1
+Other Agroforestry-Parklands-Solo,Soil Carbon Stocks,Coffee-Natural Fallow,7,1
+Mulch-Solo,Crop Yield,Common Bean,5,1
+Crop Rotation-Mulch-Reduced Tillage-Solo,Crop Yield,Common Bean,2,1
+Crop Rotation-Mulch-Solo,Crop Yield,Common Bean,1,1
+Crop Rotation-Reduced Tillage-Solo,Crop Yield,Common Bean,4,1
+Reduced Tillage-Solo,Gross Margin,Common Bean,6,1
+Mulch-Solo,Gross Margin,Common Bean,5,1
+Mulch-Reduced Tillage-Solo,Gross Margin,Common Bean,2,1
+Crop Rotation-Mulch-Reduced Tillage-Solo,Gross Margin,Common Bean,2,1
+Crop Rotation-Mulch-Solo,Gross Margin,Common Bean,1,1
+Crop Rotation-Reduced Tillage-Solo,Gross Margin,Common Bean,4,1
+Crop Rotation-Solo,Gross Margin,Common Bean,1,1
+Reduced Tillage-Solo,Erosion,Maize,2,1
+Inorganic Fertilizer-Solo,Soil Moisture,Maize,3,1
+Organic Fertilizer-Solo,Soil Moisture,Maize,9,1
+Organic Fertilizer-Solo,Nitrogen Agronomic Efficiency,Maize,3,1
+Crop Residue-Intercropping-Reduced Tillage-Solo,Cation Exchange Capacity,Horsegram-Maize,2,1
+Intercropping-Reduced Tillage-Solo,Cation Exchange Capacity,Maize,2,1
+Inorganic Fertilizer-Solo,Crop Yield,Hibiscus,16,1
+Intercropping-Solo,Crop Yield,Hibiscus,18,1
+Inorganic Fertilizer-Intercropping-Solo,Crop Yield,Hibiscus,12,1
+Inorganic Fertilizer-Solo,Net Return,Hibiscus,2,1
+Improved Varieties-Intercropping-Solo,Net Return,Hibiscus-Maize,3,1
+Improved Varieties-Inorganic Fertilizer-Intercropping-Solo,Net Return,Hibiscus-Maize,2,1
+Improved Varieties-Intercropping-Solo,Net Return,Common Bean-Hibiscus,3,1
+Improved Varieties-Inorganic Fertilizer-Intercropping-Solo,Net Return,Common Bean-Hibiscus,2,1
+Improved Varieties-Intercropping-Solo,Net Return,Common Bean-Hibiscus-Maize,3,1
+Improved Varieties-Inorganic Fertilizer-Intercropping-Solo,Net Return,Common Bean-Hibiscus-Maize,2,1
+Intercropping-Solo,Land Equivalent Ratio,Common Bean-Hibiscus,3,1
+Intercropping-Solo,Land Equivalent Ratio,Hibiscus-Maize,3,1
+Intercropping-Solo,Land Equivalent Ratio,Common Bean-Maize,3,1
+Crop Residue-Intercropping-Reduced Tillage-Solo,Cation Exchange Capacity,Maize-Pumpkin,2,1
+Green Manure-Solo,Crop Yield,Maize,10,1
+Green Manure-Solo,Land Equivalent Ratio,Ayocote bean-Maize,2,1
+Green Manure-Solo,Land Equivalent Ratio,Common Bean-Maize,4,1
+Green Manure-Solo,Land Equivalent Ratio,Maize-Sunn Hemp,2,1
+Green Manure-Solo,Land Equivalent Ratio,Lablab-Maize,2,1
+Intercropping-Reduced Tillage-Solo,Cation Exchange Capacity,Common Bean-Maize,2,1
+Intercropping-Solo,Water Use Efficiency,Common Bean-Maize,4,1
+Intercropping-Solo,Water Use Efficiency,Common Bean-Maize-Natural Fallow,4,1
+Organic Fertilizer-Solo,Crop Yield,Fava Bean,5,1
+Organic Fertilizer-Solo,Crop Yield,Squash (C.Moschata),5,1
+Mulch-Reduced Tillage-Solo,Crop Residue Yield,Maize,2,1
+Crop Residue Incorporation-Crop Rotation-Solo,Crop Residue Yield,Maize,2,1
+Crop Rotation-Mulch-Reduced Tillage-Solo,Crop Residue Yield,Maize,2,1
+Supplemental Irrigation-Solo,Water Use,Maize,8,1
+Crop Rotation-Solo,Soil Moisture,Maize,4,1
+Crop Rotation-Mulch-Reduced Tillage-Solo,Soil Moisture,Maize,2,1
+Mulch-Solo,Soil Moisture,Maize,2,1
+Crop Rotation-Mulch-Solo,Soil Moisture,Maize,15,1
+Crop Residue Incorporation-Solo,Soil Moisture,Maize,2,1
+Crop Residue Incorporation-Crop Rotation-Solo,Soil Moisture,Maize,1,1
+Crop Rotation-Reduced Tillage-Solo,Soil Moisture,Maize,1,1
+Crop Rotation-Solo,Soil Moisture,Wheat,4,1
+Mulch-Reduced Tillage-Solo,Soil Moisture,Wheat,4,1
+Crop Rotation-Mulch-Reduced Tillage-Solo,Soil Moisture,Wheat,2,1
+Mulch-Solo,Soil Moisture,Wheat,14,1
+Crop Rotation-Mulch-Solo,Soil Moisture,Wheat,1,1
+Crop Residue Incorporation-Solo,Soil Moisture,Wheat,2,1
+Crop Residue Incorporation-Crop Rotation-Solo,Soil Moisture,Wheat,1,1
+Crop Rotation-Reduced Tillage-Solo,Soil Moisture,Wheat,1,1
+Crop Rotation-Solo,Soil Total Nitrogen,Maize,12,1
+Mulch-Reduced Tillage-Solo,Soil Total Nitrogen,Maize,12,1
+Crop Rotation-Mulch-Reduced Tillage-Solo,Soil Total Nitrogen,Maize,6,1
+Mulch-Solo,Soil Total Nitrogen,Maize,6,1
+Crop Rotation-Mulch-Solo,Soil Total Nitrogen,Maize,3,1
+Crop Residue Incorporation-Solo,Soil Total Nitrogen,Maize,6,1
+Crop Residue Incorporation-Crop Rotation-Solo,Soil Total Nitrogen,Maize,3,1
+Reduced Tillage-Solo,Soil Total Nitrogen,Maize,6,1
+Crop Rotation-Reduced Tillage-Solo,Soil Total Nitrogen,Maize,3,1
+Crop Rotation-Solo,Soil Total Nitrogen,Wheat,12,1
+Mulch-Reduced Tillage-Solo,Soil Total Nitrogen,Wheat,12,1
+Crop Rotation-Mulch-Reduced Tillage-Solo,Soil Total Nitrogen,Wheat,6,1
+Mulch-Solo,Soil Total Nitrogen,Wheat,6,1
+Crop Rotation-Mulch-Solo,Soil Total Nitrogen,Wheat,3,1
+Crop Residue Incorporation-Solo,Soil Total Nitrogen,Wheat,6,1
+Crop Residue Incorporation-Crop Rotation-Solo,Soil Total Nitrogen,Wheat,3,1
+Reduced Tillage-Solo,Soil Total Nitrogen,Wheat,6,1
+Crop Rotation-Reduced Tillage-Solo,Soil Total Nitrogen,Wheat,3,1
+Crop Rotation-Solo,Soil Organic Carbon,Maize,12,1
+Mulch-Reduced Tillage-Solo,Soil Organic Carbon,Maize,12,1
+Crop Rotation-Mulch-Reduced Tillage-Solo,Soil Organic Carbon,Maize,6,1
+Mulch-Solo,Soil Organic Carbon,Maize,9,1
+Crop Rotation-Mulch-Solo,Soil Organic Carbon,Maize,3,1
+Crop Residue Incorporation-Solo,Soil Organic Carbon,Maize,6,1
+Crop Residue Incorporation-Crop Rotation-Solo,Soil Organic Carbon,Maize,3,1
+Reduced Tillage-Solo,Soil Organic Carbon,Maize,6,1
+Crop Rotation-Reduced Tillage-Solo,Soil Organic Carbon,Maize,3,1
+Crop Rotation-Solo,Soil Organic Carbon,Wheat,12,1
+Mulch-Reduced Tillage-Solo,Soil Organic Carbon,Wheat,12,1
+Crop Rotation-Mulch-Reduced Tillage-Solo,Soil Organic Carbon,Wheat,6,1
+Mulch-Solo,Soil Organic Carbon,Wheat,6,1
+Crop Rotation-Mulch-Solo,Soil Organic Carbon,Wheat,3,1
+Crop Residue Incorporation-Solo,Soil Organic Carbon,Wheat,6,1
+Crop Residue Incorporation-Crop Rotation-Solo,Soil Organic Carbon,Wheat,3,1
+Crop Rotation-Reduced Tillage-Solo,Soil Organic Carbon,Wheat,3,1
+Crop Rotation-Reduced Tillage-Solo,Crop Yield,Maize,8,1
+Mulch-Solo,Crop Yield,Wheat,8,1
+Crop Rotation-Mulch-Solo,Crop Yield,Wheat,4,1
+Crop Rotation-Mulch-Reduced Tillage-Solo,Crop Yield,Wheat,8,1
+Crop Rotation-Reduced Tillage-Solo,Crop Yield,Wheat,4,1
+Crop Residue Incorporation-Crop Rotation-Solo,Crop Yield,Wheat,4,1
+Reduced Tillage-Solo,Biodiversity,Wheat,27,1
+Crop Residue Incorporation-Solo,Biodiversity,Wheat,23,1
+Crop Residue Incorporation-Reduced Tillage-Solo,Biodiversity,Wheat,5,1
+Reduced Tillage-Solo,Biodiversity,Maize,19,1
+Crop Residue Incorporation-Solo,Biodiversity,Maize,20,1
+Crop Residue Incorporation-Reduced Tillage-Solo,Biodiversity,Maize,4,1
+Crop Residue Incorporation-Reduced Tillage-Solo,Crop Yield,Wheat,1,1
+Crop Residue Incorporation-Reduced Tillage-Solo,Crop Yield,Maize,1,1
+Mulch-Reduced Tillage-Solo,Biodiversity,Maize,47,1
+Crop Rotation-Solo,Biodiversity,Maize,16,1
+Crop Residue Incorporation-Crop Rotation-Solo,Biodiversity,Maize,4,1
+Crop Rotation-Reduced Tillage-Solo,Biodiversity,Maize,4,1
+Crop Rotation-Mulch-Reduced Tillage-Solo,Biodiversity,Maize,8,1
+Mulch-Solo,Biodiversity,Maize,28,1
+Crop Rotation-Mulch-Solo,Biodiversity,Maize,4,1
+Mulch-Reduced Tillage-Solo,Biodiversity,Wheat,50,1
+Crop Rotation-Solo,Biodiversity,Wheat,26,1
+Crop Residue Incorporation-Crop Rotation-Solo,Biodiversity,Wheat,8,1
+Crop Rotation-Reduced Tillage-Solo,Biodiversity,Wheat,8,1
+Crop Rotation-Mulch-Reduced Tillage-Solo,Biodiversity,Wheat,10,1
+Mulch-Solo,Biodiversity,Wheat,29,1
+Crop Rotation-Mulch-Solo,Biodiversity,Wheat,8,1
+Crop Rotation-Solo,Cation Exchange Capacity,Maize-Wheat,2,1
+Mulch-Solo,Biodiversity,Natural Fallow,216,1
+Crop Residue Incorporation-Solo,Biodiversity,Natural Fallow,288,1
+Crop Residue-Solo,Biodiversity,Natural Fallow,72,1
+Biochar-Organic Fertilizer-Solo,Crop Yield,Maize,1,1
+Biochar-Mulch-Organic Fertilizer-Solo,Crop Yield,Maize,3,1
+Biochar-Inorganic Fertilizer-Mulch-Organic Fertilizer-Solo,Crop Yield,Maize,1,1
+Crop Residue-Mulch-Solo,Crop Yield,Maize,20,1
+Crop Residue-Mulch-Solo,Biomass Yield,Maize,20,1
+Crop Residue-Mulch-Solo,Runoff,Maize,18,1
+Crop Residue-Mulch-Solo,Erosion,Maize,18,1
+Reduced Tillage-Solo,Cation Exchange Capacity,Maize,2,1
+Crop Residue Incorporation-Solo,Crop Residue Yield,Maize,1,1
+Reduced Tillage-Solo,Crop Residue Yield,Maize,1,1
+Crop Residue Incorporation-Solo,Biomass Yield,Maize,2,1
+Crop Residue Incorporation-Solo,Biomass Yield,Wheat,1,1
+Mulch-Reduced Tillage-Solo,Biomass Yield,Wheat,2,1
+Crop Residue-Mulch-Reduced Tillage-Solo,Crop Yield,Barley,9,1
+Crop Residue-Mulch-Reduced Tillage-Solo,Water Use Efficiency,Barley,9,1
+Crop Residue-Mulch-Reduced Tillage-Solo,Crop Yield,Maize,9,1
+Crop Residue-Mulch-Reduced Tillage-Solo,Water Use Efficiency,Maize,9,1
+Mulch-Reduced Tillage-Solo,Biomass Yield,Oats,48,1
+Mulch-Solo,Biomass Yield,Oats,48,1
+Reduced Tillage-Solo,Gross Return,Maize-Oats,9,1
+Mulch-Reduced Tillage-Solo,Gross Return,Maize-Oats,9,1
+Mulch-Solo,Gross Return,Maize-Oats,9,1
+Reduced Tillage-Solo,Gross Margin,Maize-Oats,9,1
+Mulch-Reduced Tillage-Solo,Gross Margin,Maize-Oats,9,1
+Mulch-Solo,Gross Margin,Maize-Oats,9,1
+Reduced Tillage-Solo,Soil Organic Matter,Maize-Oats,6,1
+Mulch-Reduced Tillage-Solo,Soil Organic Matter,Maize-Oats,6,1
+Mulch-Solo,Soil Organic Matter,Maize-Oats,6,1
+Reduced Tillage-Solo,Variable Cost,Maize-Oats,9,1
+Mulch-Reduced Tillage-Solo,Variable Cost,Maize-Oats,9,1
+Mulch-Solo,Variable Cost,Maize-Oats,9,1
+Reduced Tillage-Solo,Infiltration Rate,Oats,8,1
+Mulch-Reduced Tillage-Solo,Biomass Yield,Common Bean,1,1
+Crop Residue-Solo,Crop Yield,Wheat,1,1
+Crop Residue-Solo,Soil Available Nitrogen,Maize,8,1
+Crop Residue-Solo,Soil Available Nitrogen,Wheat,8,1
+Crop Residue-Solo,Nitrogen Use Efficiency (Isotopic Product),Maize,1,1
+Crop Residue-Solo,Nitrogen Use Efficiency (Isotopic AGB),Maize,1,1
+Crop Residue-Solo,Nitrogen Use Efficiency (Isotopic Product),Wheat,1,1
+Crop Residue-Solo,Nitrogen Use Efficiency (Isotopic AGB),Wheat,1,1
+Mulch-Solo,Crop Yield,Durum Wheat,94,1
+Mulch-Reduced Tillage-Solo,Crop Yield,Durum Wheat,95,1
+Mulch-Reduced Tillage-Solo,Soil Total Nitrogen,Durum Wheat,16,1
+Mulch-Solo,Soil Total Nitrogen,Durum Wheat,20,1
+Mulch-Reduced Tillage-Solo,Soil Moisture,Durum Wheat,38,1
+Mulch-Solo,Soil Moisture,Durum Wheat,38,1
+Mulch-Solo,Nitrous Oxide Emissions,Durum Wheat,19,1
+Mulch-Reduced Tillage-Solo,Nitrous Oxide Emissions,Durum Wheat,19,1
+Crop Rotation-Solo,Crop Yield,Safflower,10,1
+Reduced Tillage-Solo,Crop Yield,Durum Wheat,6,1
+Inorganic Fertilizer-Solo,Soil Total Nitrogen,Durum Wheat,7,1
+Inorganic Fertilizer-Mulch-Reduced Tillage-Solo,Soil Total Nitrogen,Durum Wheat,2,1
+Inorganic Fertilizer-Mulch-Solo,Soil Total Nitrogen,Durum Wheat,4,1
+Inorganic Fertilizer-Solo,Soil Organic Carbon,Durum Wheat,7,1
+Mulch-Reduced Tillage-Solo,Soil Organic Carbon,Durum Wheat,4,1
+Inorganic Fertilizer-Mulch-Reduced Tillage-Solo,Soil Organic Carbon,Durum Wheat,2,1
+Mulch-Solo,Soil Organic Carbon,Durum Wheat,8,1
+Inorganic Fertilizer-Mulch-Solo,Soil Organic Carbon,Durum Wheat,4,1
+Inorganic Fertilizer-Solo,Crop Yield,Durum Wheat,120,1
+Inorganic Fertilizer-Mulch-Reduced Tillage-Solo,Crop Yield,Durum Wheat,72,1
+Inorganic Fertilizer-Mulch-Solo,Crop Yield,Durum Wheat,72,1
+Agroforestry Pruning-Reduced Tillage-Solo,Crop Yield,Durum Wheat,2,1
+Crop Rotation-Solo,Gross Return,Maize,2,1
+Crop Rotation-Solo,Gross Return,Wheat,2,1
+Crop Rotation-Solo,Gross Return,Safflower,2,1
+Crop Rotation-Solo,Variable Cost,Maize,2,1
+Crop Rotation-Solo,Variable Cost,Wheat,2,1
+Crop Rotation-Solo,Variable Cost,Safflower,2,1
+Crop Rotation-Solo,Benefit Cost Ratio (Unspecified),Maize,2,1
+Crop Rotation-Solo,Benefit Cost Ratio (Unspecified),Wheat,2,1
+Crop Rotation-Solo,Benefit Cost Ratio (Unspecified),Safflower,2,1
+Crop Rotation-Solo,Net Return,Maize,2,1
+Crop Rotation-Solo,Net Return,Wheat,2,1
+Crop Rotation-Solo,Net Return,Safflower,2,1
+Reduced Tillage-Solo,Soil Total Nitrogen,Natural Fallow,6,1
+Reduced Tillage-Solo,Soil Organic Matter,Natural Fallow,6,1
+Inorganic Fertilizer-Solo,Nitrogen Agronomic Efficiency,Wheat,15,1
+Inorganic Fertilizer-Organic Fertilizer-Solo,Crop Yield,Wheat,6,1
+Green Manure-Solo,Crop Yield,Wheat,9,1
+Green Manure-Inorganic Fertilizer-Solo,Crop Yield,Wheat,3,1
+Green Manure-Organic Fertilizer-Solo,Crop Yield,Wheat,3,1
+Green Manure-Inorganic Fertilizer-Organic Fertilizer-Solo,Crop Yield,Wheat,2,1
+Crop Rotation-Organic Fertilizer-Solo,Crop Yield,Wheat,3,1
+Crop Rotation-Inorganic Fertilizer-Organic Fertilizer-Solo,Crop Yield,Wheat,2,1
+Green Manure-Solo,Nitrogen Agronomic Efficiency,Wheat,8,1
+Crop Rotation-Solo,Nitrogen Agronomic Efficiency,Wheat,8,1
+Organic Fertilizer-Combo,Biomass Yield,Maize,12,1
+Organic Fertilizer-Combo,Crop Yield,Soybean,8,1
+Organic Fertilizer-Combo,Cation Exchange Capacity,Soybean,8,1
+Organic Fertilizer-Combo,Soil Carbon Stocks,Maize,5,1
+Organic Fertilizer-Combo,Soil Carbon Stocks,Wheat,5,1
+Organic Fertilizer-Combo,Biomass Yield,Common Bean,2,1
+Organic Fertilizer-Combo,Crop Yield,Grape,8,1
+Organic Fertilizer-Combo,Biomass Yield,Cowpea,1,1
+Organic Fertilizer-Combo,Crop Yield,Cowpea,1,1
+Organic Fertilizer-Combo,Biomass Yield,Sunflower,6,1
+Organic Fertilizer-Combo,Crop Yield,Sunflower,6,1
+Organic Fertilizer-Combo,Biomass Yield,Cotton,6,1
+Organic Fertilizer-Combo,Crop Yield,Cotton,12,1
+Organic Fertilizer-Combo,Soil Moisture,Common Bean,9,1
+Organic Fertilizer-Combo,Soil Organic Carbon,Common Bean,3,1
+Organic Fertilizer-Combo,Water Use Efficiency,Common Bean,3,1
+Organic Fertilizer-Combo,Gross Return,Common Bean,3,1
+Organic Fertilizer-Combo,Cation Exchange Capacity,Common Bean,3,1
+Organic Fertilizer-Combo,Total Cost (Unconfirmed),Common Bean,3,1
+Organic Fertilizer-Combo,Net Return,Common Bean,3,1
+Organic Fertilizer-Combo,Crop Yield,Wheat,16,1
+Inorganic Fertilizer-Combo,Variable Cost,Arabica-Macadamia,188,1
+Inorganic Fertilizer-Combo,Total Cost,Arabica-Macadamia,188,1
+Inorganic Fertilizer-Combo,Gross Return,Arabica-Macadamia,48,1
+Inorganic Fertilizer-Combo,Fixed Cost,Arabica-Macadamia,6,1
+Inorganic Fertilizer-Combo,Total Cost,Sorghum,6,1
+Inorganic Fertilizer-Combo,Gross Return,Sorghum,6,1
+Inorganic Fertilizer-Combo,Net Return,Sorghum,6,1
+Inorganic Fertilizer-Combo,Soil Carbon Stocks,Maize,5,1
+Inorganic Fertilizer-Combo,Soil Carbon Stocks,Wheat,5,1
+Inorganic Fertilizer-Combo,Biomass Yield,Black oats,81,1
+Inorganic Fertilizer-Combo,Biomass Yield,Common Bean,2,1
+Inorganic Fertilizer-Combo,Crop Yield,Common Bean,2,1
+Inorganic Fertilizer-Combo,Crop Yield,Grape,8,1
+Inorganic Fertilizer-Combo,Biomass Yield,Cowpea,5,1
+Inorganic Fertilizer-Combo,Crop Yield,Cowpea,5,1
+Inorganic Fertilizer-Combo,Biomass Yield,Cowpea-Maize,5,1
+Inorganic Fertilizer-Combo,Crop Yield,Hibiscus,12,1
+Inorganic Fertilizer-Combo,Net Return,Hibiscus-Maize,2,1
+Inorganic Fertilizer-Combo,Net Return,Common Bean-Hibiscus,2,1
+Inorganic Fertilizer-Combo,Net Return,Common Bean-Hibiscus-Maize,2,1
+Inorganic Fertilizer-Combo,Soil Total Nitrogen,Durum Wheat,6,1
+Inorganic Fertilizer-Combo,Soil Organic Carbon,Durum Wheat,6,1
+Inorganic Fertilizer-Combo,Crop Yield,Durum Wheat,144,1
+Harvest Method-Combo,Crop Yield,Maize,9,1
+Harvest Method-Combo,Cation Exchange Capacity,Maize-Natural Fallow,12,1
+Intercropping-Combo,Cation Exchange Capacity,Maize-Natural Fallow,12,1
+Intercropping-Combo,Crop Yield,Coffee,1,1
+Intercropping-Combo,Erosion,Maize,1,1
+Intercropping-Combo,Crop Yield,Sorghum,6,1
+Intercropping-Combo,Total Cost,Sorghum,6,1
+Intercropping-Combo,Gross Return,Sorghum,6,1
+Intercropping-Combo,Net Return,Sorghum,6,1
+Intercropping-Combo,Biomass Yield,Sorghum,6,1
+Intercropping-Combo,Cation Exchange Capacity,Horsegram-Maize,2,1
+Intercropping-Combo,Cation Exchange Capacity,Maize,2,1
+Intercropping-Combo,Crop Yield,Hibiscus,12,1
+Intercropping-Combo,Net Return,Hibiscus-Maize,5,1
+Intercropping-Combo,Net Return,Common Bean-Hibiscus,5,1
+Intercropping-Combo,Net Return,Common Bean-Hibiscus-Maize,5,1
+Intercropping-Combo,Cation Exchange Capacity,Maize-Pumpkin,2,1
+Intercropping-Combo,Cation Exchange Capacity,Common Bean-Maize,2,1
+Mulch-Combo,Cation Exchange Capacity,Maize-Natural Fallow,12,1
+Mulch-Combo,Crop Yield,Cabbage,1,1
+Mulch-Combo,Biomass Yield,Cowpea,1,1
+Mulch-Combo,Crop Yield,Cowpea,1,1
+Mulch-Combo,Gross Margin,Common Bean,5,1
+Mulch-Combo,Crop Residue Yield,Maize,4,1
+Mulch-Combo,Soil Moisture,Wheat,7,1
+Mulch-Combo,Soil Total Nitrogen,Maize,21,1
+Mulch-Combo,Soil Total Nitrogen,Wheat,21,1
+Mulch-Combo,Soil Organic Carbon,Maize,21,1
+Mulch-Combo,Soil Organic Carbon,Wheat,21,1
+Mulch-Combo,Biodiversity,Maize,59,1
+Mulch-Combo,Biodiversity,Wheat,68,1
+Mulch-Combo,Biomass Yield,Maize,20,1
+Mulch-Combo,Runoff,Maize,18,1
+Mulch-Combo,Erosion,Maize,18,1
+Mulch-Combo,Biomass Yield,Wheat,2,1
+Mulch-Combo,Crop Yield,Barley,9,1
+Mulch-Combo,Water Use Efficiency,Barley,9,1
+Mulch-Combo,Water Use Efficiency,Maize,9,1
+Mulch-Combo,Biomass Yield,Oats,48,1
+Mulch-Combo,Gross Return,Maize-Oats,9,1
+Mulch-Combo,Gross Margin,Maize-Oats,9,1
+Mulch-Combo,Soil Organic Matter,Maize-Oats,6,1
+Mulch-Combo,Variable Cost,Maize-Oats,9,1
+Mulch-Combo,Biomass Yield,Common Bean,1,1
+Mulch-Combo,Crop Yield,Durum Wheat,239,1
+Mulch-Combo,Soil Total Nitrogen,Durum Wheat,22,1
+Mulch-Combo,Soil Moisture,Durum Wheat,38,1
+Mulch-Combo,Nitrous Oxide Emissions,Durum Wheat,19,1
+Mulch-Combo,Soil Organic Carbon,Durum Wheat,10,1
+Reduced Tillage-Combo,Crop Yield,Cotton,1,1
+Reduced Tillage-Combo,Crop Yield,Cabbage,1,1
+Reduced Tillage-Combo,Crop Residue Yield,Common Bean,2,1
+Reduced Tillage-Combo,Crop Yield,Soybean,18,1
+Reduced Tillage-Combo,Gross Margin,Common Bean,8,1
+Reduced Tillage-Combo,Cation Exchange Capacity,Horsegram-Maize,2,1
+Reduced Tillage-Combo,Cation Exchange Capacity,Maize,2,1
+Reduced Tillage-Combo,Cation Exchange Capacity,Maize-Pumpkin,2,1
+Reduced Tillage-Combo,Cation Exchange Capacity,Common Bean-Maize,2,1
+Reduced Tillage-Combo,Crop Residue Yield,Maize,4,1
+Reduced Tillage-Combo,Soil Moisture,Wheat,7,1
+Reduced Tillage-Combo,Soil Total Nitrogen,Maize,21,1
+Reduced Tillage-Combo,Soil Total Nitrogen,Wheat,21,1
+Reduced Tillage-Combo,Soil Organic Carbon,Maize,21,1
+Reduced Tillage-Combo,Soil Organic Carbon,Wheat,21,1
+Reduced Tillage-Combo,Biodiversity,Wheat,73,1
+Reduced Tillage-Combo,Biodiversity,Maize,63,1
+Reduced Tillage-Combo,Biomass Yield,Wheat,2,1
+Reduced Tillage-Combo,Crop Yield,Barley,9,1
+Reduced Tillage-Combo,Water Use Efficiency,Barley,9,1
+Reduced Tillage-Combo,Water Use Efficiency,Maize,9,1
+Reduced Tillage-Combo,Biomass Yield,Oats,48,1
+Reduced Tillage-Combo,Gross Return,Maize-Oats,9,1
+Reduced Tillage-Combo,Gross Margin,Maize-Oats,9,1
+Reduced Tillage-Combo,Soil Organic Matter,Maize-Oats,6,1
+Reduced Tillage-Combo,Variable Cost,Maize-Oats,9,1
+Reduced Tillage-Combo,Biomass Yield,Common Bean,1,1
+Reduced Tillage-Combo,Crop Yield,Durum Wheat,169,1
+Reduced Tillage-Combo,Soil Total Nitrogen,Durum Wheat,18,1
+Reduced Tillage-Combo,Soil Moisture,Durum Wheat,38,1
+Reduced Tillage-Combo,Nitrous Oxide Emissions,Durum Wheat,19,1
+Reduced Tillage-Combo,Soil Organic Carbon,Durum Wheat,6,1
+Crop Rotation-Combo,Crop Yield,Cotton,1,1
+Crop Rotation-Combo,Crop Yield,Soybean,2,1
+Crop Rotation-Combo,Gross Margin,Common Bean,7,1
+Crop Rotation-Combo,Crop Residue Yield,Maize,4,1
+Crop Rotation-Combo,Soil Moisture,Maize,19,1
+Crop Rotation-Combo,Soil Moisture,Wheat,5,1
+Crop Rotation-Combo,Soil Total Nitrogen,Maize,15,1
+Crop Rotation-Combo,Soil Total Nitrogen,Wheat,15,1
+Crop Rotation-Combo,Soil Organic Carbon,Maize,15,1
+Crop Rotation-Combo,Soil Organic Carbon,Wheat,15,1
+Crop Rotation-Combo,Biodiversity,Maize,20,1
+Crop Rotation-Combo,Biodiversity,Wheat,34,1
+Supplemental Irrigation-Combo,Crop Yield,Coffee,1,1
+Supplemental Irrigation-Combo,Crop Yield,Macadamia,5,1
+Supplemental Irrigation-Combo,Gross Return,Macadamia,5,1
+Crop Residue Incorporation-Combo,Crop Yield,Cabbage,1,1
+Crop Residue Incorporation-Combo,Crop Yield,Common Bean,2,1
+Crop Residue Incorporation-Combo,Crop Residue Yield,Common Bean,2,1
+Crop Residue Incorporation-Combo,Crop Yield,Soybean,18,1
+Crop Residue Incorporation-Combo,Crop Residue Yield,Maize,2,1
+Crop Residue Incorporation-Combo,Soil Moisture,Maize,1,1
+Crop Residue Incorporation-Combo,Soil Moisture,Wheat,1,1
+Crop Residue Incorporation-Combo,Soil Total Nitrogen,Maize,3,1
+Crop Residue Incorporation-Combo,Soil Total Nitrogen,Wheat,3,1
+Crop Residue Incorporation-Combo,Soil Organic Carbon,Maize,3,1
+Crop Residue Incorporation-Combo,Soil Organic Carbon,Wheat,3,1
+Crop Residue Incorporation-Combo,Crop Yield,Wheat,5,1
+Crop Residue Incorporation-Combo,Biodiversity,Wheat,13,1
+Crop Residue Incorporation-Combo,Biodiversity,Maize,8,1
+Multistrata Agroforestry-Combo,Crop Yield,Macadamia,5,1
+Multistrata Agroforestry-Combo,Gross Return,Macadamia,5,1
+Multistrata Agroforestry-Combo,Variable Cost,Arabica-Macadamia,188,1
+Multistrata Agroforestry-Combo,Total Cost,Arabica-Macadamia,188,1
+Multistrata Agroforestry-Combo,Gross Return,Arabica-Macadamia,48,1
+Multistrata Agroforestry-Combo,Fixed Cost,Arabica-Macadamia,6,1
+Multistrata Agroforestry-Combo,Soil Carbon Stocks,Coffee-Rubber,4,1
+Multistrata Agroforestry-Combo,Soil Organic Carbon,Coffee-Rubber,4,1
+Multistrata Agroforestry-Combo,Crop Yield,Coffee,1,1
+Multistrata Agroforestry-Combo,Soil Organic Carbon,Coffee,2,1
+Multistrata Agroforestry-Combo,Soil Total Nitrogen,Coffee,2,1
+Agroforestry Pruning-Combo,Biomass Yield,Sorghum,48,1
+Agroforestry Pruning-Combo,Crop Yield,Sorghum,24,1
+Agroforestry Pruning-Combo,Biomass Yield,Sunflower,6,1
+Agroforestry Pruning-Combo,Crop Yield,Sunflower,6,1
+Agroforestry Pruning-Combo,Biomass Yield,Cotton,6,1
+Agroforestry Pruning-Combo,Crop Yield,Cotton,12,1
+Agroforestry Pruning-Combo,Crop Yield,Coffee,1,1
+Agroforestry Pruning-Combo,Soil Organic Carbon,Coffee,2,1
+Agroforestry Pruning-Combo,Soil Total Nitrogen,Coffee,2,1
+Agroforestry Pruning-Combo,Crop Yield,Durum Wheat,2,1
+pH Control-Combo,Crop Yield,Wheat,32,1
+pH Control-Combo,Variable Cost,Arabica-Macadamia,47,1
+pH Control-Combo,Total Cost,Arabica-Macadamia,47,1
+pH Control-Combo,Gross Return,Arabica-Macadamia,48,1
+pH Control-Combo,Cation Exchange Capacity,Soybean,8,1
+pH Control-Combo,Biomass Yield,Black oats,81,1
+pH Control-Combo,Crop Yield,Common Bean,4,1
+pH Control-Combo,Biomass Yield,Cowpea,5,1
+pH Control-Combo,Biomass Yield,Maize,5,1
+pH Control-Combo,Crop Yield,Cowpea,5,1
+pH Control-Combo,Biomass Yield,Cowpea-Maize,5,1
+Other Agroforestry-Combo,Cation Exchange Capacity,Coffee-Natural Fallow,7,1
+Other Agroforestry-Combo,Nitrous Oxide Emissions,Coffee-Natural Fallow,81,1
+Other Agroforestry-Combo,Soil Carbon Stocks,Coffee-Natural Fallow,7,1
+Improved Varieties-Combo,Erosion,Maize,1,1
+Improved Varieties-Combo,Soil Carbon Stocks,Coffee-Rubber,4,1
+Improved Varieties-Combo,Soil Organic Carbon,Coffee-Rubber,4,1
+Improved Varieties-Combo,Net Return,Hibiscus-Maize,5,1
+Improved Varieties-Combo,Net Return,Common Bean-Hibiscus,5,1
+Improved Varieties-Combo,Net Return,Common Bean-Hibiscus-Maize,5,1
+Biochar-Combo,Biomass Yield,Maize,4,1
+Biochar-Combo,Soil Moisture,Common Bean,9,1
+Biochar-Combo,Soil Organic Carbon,Common Bean,3,1
+Biochar-Combo,Crop Yield,Common Bean,3,1
+Biochar-Combo,Water Use Efficiency,Common Bean,3,1
+Biochar-Combo,Gross Return,Common Bean,3,1
+Biochar-Combo,Cation Exchange Capacity,Common Bean,3,1
+Biochar-Combo,Total Cost (Unconfirmed),Common Bean,3,1
+Biochar-Combo,Net Return,Common Bean,3,1
+Biochar-Combo,Crop Yield,Maize,5,1
+Alleycropping-Combo,Crop Yield,Common Bean,4,1
+Alleycropping-Combo,Biomass Yield,Sorghum,48,1
+Alleycropping-Combo,Crop Yield,Sorghum,24,1
+Parklands-Combo,Cation Exchange Capacity,Coffee-Natural Fallow,7,1
+Parklands-Combo,Nitrous Oxide Emissions,Coffee-Natural Fallow,81,1
+Parklands-Combo,Soil Carbon Stocks,Coffee-Natural Fallow,7,1
+Crop Residue-Combo,Crop Yield,Cabbage,1,1
+Crop Residue-Combo,Crop Yield,Common Bean,2,1
+Crop Residue-Combo,Crop Residue Yield,Common Bean,2,1
+Crop Residue-Combo,Crop Yield,Soybean,18,1
+Crop Residue-Combo,Cation Exchange Capacity,Horsegram-Maize,2,1
+Crop Residue-Combo,Cation Exchange Capacity,Maize-Pumpkin,2,1
+Crop Residue-Combo,Crop Residue Yield,Maize,2,1
+Crop Residue-Combo,Soil Moisture,Maize,1,1
+Crop Residue-Combo,Soil Moisture,Wheat,1,1
+Crop Residue-Combo,Soil Total Nitrogen,Maize,3,1
+Crop Residue-Combo,Soil Total Nitrogen,Wheat,3,1
+Crop Residue-Combo,Soil Organic Carbon,Maize,3,1
+Crop Residue-Combo,Soil Organic Carbon,Wheat,3,1
+Crop Residue-Combo,Crop Yield,Wheat,5,1
+Crop Residue-Combo,Biodiversity,Wheat,13,1
+Crop Residue-Combo,Biodiversity,Maize,8,1
+Crop Residue-Combo,Biomass Yield,Maize,20,1
+Crop Residue-Combo,Runoff,Maize,18,1
+Crop Residue-Combo,Erosion,Maize,18,1
+Crop Residue-Combo,Crop Yield,Barley,9,1
+Crop Residue-Combo,Water Use Efficiency,Barley,9,1
+Crop Residue-Combo,Water Use Efficiency,Maize,9,1
+Green Manure-Combo,Crop Yield,Wheat,8,1

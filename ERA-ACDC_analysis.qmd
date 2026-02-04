@@ -1,0 +1,1391 @@
+---
+title: "ACDC Analysis"
+author: "Namita Joshi"
+date: "`r Sys.Date()`"
+format:
+  html:
+    toc: true
+    toc-depth: 4
+    toc-expand: 2   
+    number-sections: true
+    code-fold: FALSE
+    code_folding: hide
+    include-in-header: hypothesis.html
+editor: visual
+---
+
+::: {style="display: flex; align-items: center; gap: 20px;"}
+<img src="images/Era_Logo_FINAL_Colour.png" width="100" style="margin-top: 10px;"/>
+:::
+
+```{r setup, include=F}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  echo = TRUE,  
+  message = FALSE,
+  warning = FALSE
+)
+```
+
+```{r packages & functions, include=F, echo=F}
+
+if (!requireNamespace("pacman", quietly = TRUE)) {
+  install.packages("pacman")
+}
+pacman::p_load(
+  sf, knitr, rnaturalearth, rnaturalearthdata, 
+  ggplot2, viridis, shiny, dplyr, treemap, treemapify, plotly, data.table,
+  s3fs, arrow, devtools, gh, htmlwidgets,remotes,gridExtra, DT, tidyverse, waffle,
+  ggridges, jsonlite, patchwork,cowplot,ordinal, stringr, metafor, lme4, lmerTest, miceadds,data.table, RColorBrewer, ggrepel, colorspace, kableExtra, ggnewscale, gridExtra, grid, performance
+)
+
+# Set a directory for downloaded data
+dl_dir <- "downloaded_data"
+
+# Create the directory if it doesn't already exist
+if(!dir.exists(dl_dir)){
+  dir.create(dl_dir, showWarnings = FALSE)
+}
+
+# Should the era vocab be updated?
+update_vocab<-F
+```
+
+```{r pre-load era compiled}
+
+# Define local path
+local_parquet <- "downloaded_data/era_compiled-v1.0-mh_2025-07-24.1-sc_2025_01_30.1-ie_2025_08_11.1-2025-09-09.1.parquet"
+
+# Read it in
+acdc_dat <- read_parquet(local_parquet)
+
+
+```
+
+```{r subset era data}
+lac_countries<-c("Ecuador","Brazil","Peru","Guatemala","Colombia","Venuezela","Costa Rica",
+                 "Honduras","Nicaragua","Haiti","Mexico","El Salvador")
+products<-c("Maize","Common Bean","Coffee", "Arabica")
+
+acdc_dat<-acdc_dat[Country %in% lac_countries]
+acdc_dat<-acdc_dat[Product %in% products]
+```
+
+# Data exploration
+
+```{r plot sites, echo=T, message=F}
+
+# === 1) Load and filter ACDC data to target crops ===
+target_crops <- c("Maize", "Common Bean", "Coffee")
+outcome<- "Crop Yield"
+
+acdc_dat <- acdc_dat %>%
+  filter(Product %in% target_crops) %>%
+  filter(Out.SubInd %in% outcome) %>%
+  mutate(
+    Latitude  = as.numeric(Latitude),
+    Longitude = as.numeric(Longitude)
+  ) %>%
+  filter(!is.na(Latitude) & !is.na(Longitude))
+
+sites_sf <- st_as_sf(acdc_dat, coords = c("Longitude", "Latitude"), crs = 4326, remove = FALSE)
+
+# === 2) Load and clean the Dry Corridor shapefile ===
+dry_corridor <- st_read("ERA-Agroecology_files/CorredorSeco.shp", quiet = TRUE) %>%
+  st_make_valid() %>%
+  st_transform(4326)
+
+cat("✅ Loaded dry corridor with", nrow(dry_corridor), "features\n\n")
+
+# Union all polygons into one outline
+dry_corridor_union <- dry_corridor %>%
+  st_union() %>%
+  st_sf(geometry = .) %>%
+  st_make_valid()
+
+# === 3) Identify points in the Dry Corridor ===
+inside_idx <- st_within(sites_sf, dry_corridor_union, sparse = FALSE)[, 1]
+
+# Count distinct papers inside the corridor
+corridor_papers <- sites_sf[inside_idx, ] %>%
+  pull(Code) %>%
+  unique() %>%
+  length()
+
+message("Dry Corridor contains ", corridor_papers, " distinct papers")
+
+# === 4) Product-level counts (for table) and Country-level counts (for map) ===
+
+# A) Crop counts (for the table - uses Product column)
+country_counts <- acdc_dat %>% # Kept original name for Step 7 compatibility
+  group_by(Product) %>%
+  summarise(N_Papers = n_distinct(Code), .groups = "drop") %>%
+  arrange(desc(N_Papers))
+
+# B) Country counts (FOR THE MAP - requires harmonization and counting by Country)
+# Assuming 'Country' is the column with the country name in acdc_dat
+country_counts_for_map <- acdc_dat %>%
+  mutate(
+    # Harmonize country names in the data to match the map object names
+    Country = case_when(
+      Country == "United States of America" ~ "USA",
+      Country == "Dominican Republic" ~ "Dominican Rep.",
+      TRUE ~ Country
+    )
+  ) %>%
+  group_by(Country) %>%
+  summarise(N_Papers = n_distinct(Code), .groups = "drop")
+
+
+# === 5) Load world basemap and join counts ===
+world <- ne_countries(scale = "medium", returnclass = "sf") %>%
+  filter(continent %in% c("North America", "South America")) %>%
+  mutate(
+    # Apply the same harmonization logic to the map data 'admin' column
+    admin = case_when(
+      admin == "United States of America" ~ "USA",
+      admin == "Dominican Republic" ~ "Dominican Rep.",
+      TRUE ~ admin
+    )
+  ) # Removed the 'rename(Product = admin)' that caused the join error
+
+map_data <- world %>%
+  select(admin, geometry) %>%
+  # Corrected join: Join the map's 'admin' (country name) column to the count data's 'Country' column
+  left_join(country_counts_for_map, by = c("admin" = "Country"))
+
+# === 6) Build the map ===
+map <- ggplot() +
+  geom_sf(data = map_data, aes(fill = N_Papers), color = "white") +
+  geom_sf(data = dry_corridor_union, fill = NA, color = "red", linewidth = 1) + # Use linewidth instead of size
+  geom_point(data = sites_sf,
+             aes(x = Longitude, y = Latitude),
+             shape = 21, color = "black", fill = "white", size = 2, alpha = 0.5) +
+  scale_fill_viridis_c(option = "mako", direction = -1, na.value = "gray95", name = "Papers per Country") +
+  labs(fill = "Experiments in ERA") +
+  coord_sf(xlim = c(-120, -30), ylim = c(-60, 35), expand = FALSE) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+
+# === 7) Add Product table ===
+table_grob <- tableGrob(country_counts)
+
+# === 8) Arrange map and table side by side ===
+final_plot<- grid.arrange(map, table_grob, ncol = 2, widths = c(2, 1))
+ggsave(
+  file.path(output_dir, "map.png"),
+  plot = final_plot,
+  width = 14, height = 10, dpi = 300, bg = "white"
+)
+
+
+# === plot for practices  ===
+
+ag_counts <- acdc_dat%>%
+  separate_rows(PrName, sep = "-") %>% 
+  group_by(PrName) %>%
+  summarise(Count = n_distinct(Code), .groups = "drop") %>%
+  mutate(label = paste0(PrName, " (", Count, ")"))
+
+# Define parts per square (e.g. 1 square = 10 studies)
+parts_per_square <- 2
+
+# Prepare waffle input
+waffle_data <- ag_counts %>%
+  mutate(
+    squares = round(Count / parts_per_square)
+  ) %>%
+  filter(squares > 0)  # Drop any 0-square items
+
+# Named vector for waffle
+waffle_vec <- setNames(waffle_data$squares, waffle_data$label)
+
+# Dynamically expand the "Blues" palette
+blue_palette <- colorRampPalette(RColorBrewer::brewer.pal(9, "Blues"))(nrow(waffle_data))
+
+
+waffle_plot_practices <- waffle::waffle(
+  parts = waffle_vec,
+  rows = 5,
+  size = 0.5,
+  colors = blue_palette,
+  legend_pos = "bottom"
+) +
+  theme(
+    legend.position = "bottom",
+    legend.text = element_text(size = 10),
+    legend.title = element_blank()
+  ) +
+  guides(fill = guide_legend(nrow = 3, byrow = TRUE))
+
+
+waffle_plot_practices
+
+
+```
+
+![Systematic map of ERA in LAC. (a) Geographic locations of studies, (b) Distribution of products included by number of studies, (c) Distribution of technology groups for crop and livestock by number of studies with each square equal to \~5 papers, (d) Number of studies including outcome indicators related to farm productivity, resilience, and climate change mitigation.](ERA-ACDC_analysis_files/figure-html/combined_figure1.png){width="709" height="435"}
+
+# meta-analysis
+
+```{r meta-analysis, echo=T, message=F}
+source("ERA-ACDC_analysis_files/lnrr_naka.R")
+source("ERA-ACDC_analysis_files/v_lnrr_naka.R")
+source("ERA-ACDC_analysis_files/aggregate_names.R")
+source("ERA-ACDC_analysis_files/OutCalc.R")
+
+## -------------------------------
+## 1) Codes & output dir
+## -------------------------------
+load("ERA-ACDC_analysis_files/OutcomeCodes.rda")
+
+start_wd <- file.path("ERA-ACDC_analysis_files", "output")
+
+# Aggregation choice
+# aggregation <- "no_aggregation"
+# aggregation <- "combo"
+aggregation <- "combo_solo"
+
+savename   <- paste0("results_", aggregation)
+output_dir <- file.path(start_wd, savename)
+if (!dir.exists(output_dir)) dir.create(output_dir, recursive = TRUE)
+setwd(output_dir)
+cat("Saving outputs to:", output_dir, "\n")
+
+## -------------------------------
+## 2) Apply aggregation
+## -------------------------------
+# expects 'acdc_dat' already in your environment
+if (aggregation == "no_aggregation") {
+  acdc_dat_p <- as.data.table(acdc_dat)
+} else {
+  aggregated <- aggregate_names(
+    Data           = acdc_dat,
+    CombineAll     = (aggregation == "combo"),
+    DoCombinations = TRUE,
+    Target_Field   = "PrName",
+    Delim          = "-"
+  )
+
+  if (aggregation == "combo") {
+    acdc_dat_p <- as.data.table(aggregated)
+  } else { # "combo_solo"
+    acdc_dat_p <- rbind(aggregated$Data, aggregated$Data.Combos, fill = TRUE)
+    acdc_dat_p <- as.data.table(acdc_dat_p)
+    acdc_dat_p[Is.Combo == TRUE,  PrName := paste0(PrName, "-Combo")]
+    acdc_dat_p[Is.Combo == FALSE, PrName := paste0(PrName, "-Solo")]
+  }
+}
+
+## -------------------------------
+## 3) Describe dataset (unchanged)
+## -------------------------------
+Perc.Neg <- 0.5
+neg_out <- copy(acdc_dat_p)[
+  , Neg.Vals := OutcomeCodes[match(acdc_dat_p[, Outcode], Code), `Negative Values`]
+]
+neg_out[, NStudies      := uniqueN(Code),                        by = .(Out.SubInd, PrName)
+][,  Neg.Vals.One  := sum((MeanC < 0 & MeanT > 0) | (MeanC > 0 & MeanT < 0), na.rm = TRUE), by = .(Out.SubInd, PrName)
+][,  Neg.Vals.T    := sum(MeanC < 0 & MeanT > 0, na.rm = TRUE), by = .(Out.SubInd, PrName)
+][,  Neg.Vals.C    := sum(MeanC > 0 & MeanT < 0, na.rm = TRUE), by = .(Out.SubInd, PrName)
+][,  N.OBs        := .N,                                         by = .(Out.SubInd, PrName)
+][,  Perc.Neg.One := round(100 * Neg.Vals.One / N.OBs, 1)
+][,  Perc.Neg.T   := round(100 * Neg.Vals.T / N.OBs, 1)
+][,  Perc.Neg.C   := round(100 * Neg.Vals.C / N.OBs, 1)
+][Perc.Neg.One <= Perc.Neg, Neg.Vals := "N"]
+
+neg_out <- unique(neg_out[Neg.Vals == "Y",
+  .(Out.SubInd, PrName, NStudies, Neg.Vals.One, N.OBs, Perc.Neg.One, Perc.Neg.T, Perc.Neg.C)
+])
+#fwrite(neg_out, file.path(output_dir, "acdc_analysis_neg_out.csv"))
+
+## -------------------------------
+## 4) Summary tables (unchanged)
+## -------------------------------
+sum_tab <- acdc_dat_p[, .(Observations = .N, Studies = uniqueN(Site.ID)), by = Out.SubInd][order(Studies, decreasing = TRUE)]
+#fwrite(sum_tab, file.path(output_dir, "acdc_summary_Out.csv"))
+
+sum_tab <- acdc_dat_p[, .(Observations = .N, Studies = uniqueN(Site.ID)), by = PrName][order(Studies, decreasing = TRUE)]
+#fwrite(sum_tab, file.path(output_dir, "acdc_summary_Prac.csv"))
+
+sum_tab <- acdc_dat_p[, .(Observations = .N, Studies = uniqueN(Site.ID)), by = Product.Simple][order(Studies, decreasing = TRUE)]
+#fwrite(sum_tab, file.path(output_dir, "acdc_summary_Prod.csv"))
+
+sum_tab <- acdc_dat_p[, .(Observations = .N, Studies = uniqueN(Site.ID)), by = .(PrName, Out.SubInd)][order(Studies, decreasing = TRUE)]
+#fwrite(sum_tab, file.path(output_dir, "acdc_summary_Prac-Out.csv"))
+
+sum_tab <- acdc_dat_p[, .(Observations = .N, Studies = uniqueN(Site.ID)), by = .(PrName, Out.SubInd, Country)][order(Studies, decreasing = TRUE)]
+#fwrite(sum_tab, file.path(output_dir, "acdc_summary_Prac-Out-Country.csv"))
+
+sum_tab <- acdc_dat_p[, .(Observations = .N, Studies = uniqueN(Site.ID)), by = .(PrName, Out.SubInd, Product.Simple)][order(Studies, decreasing = TRUE)]
+#fwrite(sum_tab, file.path(output_dir, "acdc_summary_Prac-Out-Prod.csv"))
+
+sum_tab <- acdc_dat_p[, .(Observations = .N, Studies = uniqueN(Site.ID)), by = .(PrName, Out.SubInd, AEZ16simple)][order(Studies, decreasing = TRUE)]
+#fwrite(sum_tab, file.path(output_dir, "acdc_summary_Prac-Out-AEZ.csv"))
+
+sum_tab <- acdc_dat_p[, .(Observations = .N, Studies = uniqueN(Site.ID)),
+  by = .(PrName, Out.SubInd, Product.Simple, Country, AEZ16simple)][order(Studies, decreasing = TRUE)]
+#fwrite(sum_tab, file.path(output_dir, "acdc_summary_Prac-Out-Prod-Country-AEZ.csv"))
+
+## -------------------------------
+## 5) Harmonize units & tidy fields
+## -------------------------------
+acdc_dat_p[, PrName := gsub("Agroforestry pruning", "Tree Mulch", PrName)]
+acdc_dat_p[Mean.Error.Type == "", Mean.Error.Type := NA]
+
+# SE -> SD
+acdc_dat_p[Mean.Error.Type == "SE (Standard Error)", `:=`(
+  MeanT.Error = MeanT.Error * sqrt(Rep),
+  MeanC.Error = MeanC.Error * sqrt(Rep),
+  Mean.Error.Type = "SD (Standard Deviation)"
+)]
+
+# If not SD, drop errors
+acdc_dat_p[Mean.Error.Type != "SD (Standard Deviation)",
+           c("MeanT.Error","MeanC.Error","Mean.Error.Type") := NA]
+
+# If SD label but any error missing, drop label
+acdc_dat_p[Mean.Error.Type == "SD (Standard Deviation)" &
+             (is.na(MeanC.Error) | is.na(MeanT.Error)),
+           Mean.Error.Type := NA]
+
+# Yield-like unit harmonization
+acdc_dat_p[grep("Mg/ha|t/ha", Units), `:=`(
+  MeanC = MeanC * 1000, MeanT = MeanT * 1000,
+  MeanC.Error = MeanC.Error * 1000, MeanT.Error = MeanT.Error * 1000,
+  Units = "kg/ha")]
+acdc_dat_p[grep("kg/m2", Units), `:=`(
+  MeanC = MeanC * 100^2, MeanT = MeanT * 100^2,
+  MeanC.Error = MeanC.Error * 100^2, MeanT.Error = MeanT.Error * 100^2,
+  Units = "kg/ha")]
+acdc_dat_p[grep("g/m2", Units), `:=`(
+  MeanC = MeanC * 100^2/1000, MeanT = MeanT * 100^2/1000,
+  MeanC.Error = MeanC.Error * 100^2/1000, MeanT.Error = MeanT.Error * 100^2/1000,
+  Units = "kg/ha")]
+acdc_dat_p[grep("kg/acre", Units), `:=`(
+  MeanC = MeanC * 2.47105, MeanT = MeanT * 2.47105,
+  MeanC.Error = MeanC.Error * 2.47105, MeanT.Error = MeanT.Error * 2.47105,
+  Units = "kg/ha")]
+acdc_dat_p[grep("USD/acre", Units), `:=`(
+  MeanC = MeanC * 2.47105, MeanT = MeanT * 2.47105,
+  MeanC.Error = MeanC.Error * 2.47105, MeanT.Error = MeanT.Error * 2.47105,
+  Units = "USD/ha")]
+acdc_dat_p[grep("kg/fed", Units), `:=`(
+  MeanC = MeanC * 2.381, MeanT = MeanT * 2.381,
+  MeanC.Error = MeanC.Error * 2.381, MeanT.Error = MeanT.Error * 2.381,
+  Units = "kg/ha")]
+acdc_dat_p[grep("ton/fed|Mg/fed", Units), `:=`(
+  MeanC = MeanC * 2.381 * 1000, MeanT = MeanT * 2.381 * 1000,
+  MeanC.Error = MeanC.Error * 2.381 * 1000, MeanT.Error = MeanT.Error * 2.381 * 1000,
+  Units = "kg/ha")]
+
+acdc_dat_p[Units %in% c("", "0"), Units := NA]
+# Keep crop yield in kg/ha
+acdc_dat_p <- acdc_dat_p[!(Out.SubInd == "Crop Yield" & Units != "kg/ha")]
+
+## Optional summaries split Solo/Combo (unchanged logic)
+acdc_dat_p_summ <- acdc_dat_p[
+  Out.SubInd == "Crop Yield",
+  .(Code, Country, Site.ID, PrName, PrName.Base, Tree, Diversity, Product.Simple, Out.SubInd, MeanT, MeanC, Units)
+][, .(
+  MeanT = mean(MeanT, na.rm = TRUE),
+  MeanC = mean(MeanC, na.rm = TRUE)
+), by = .(Code, Country, Site.ID, PrName, PrName.Base, Tree, Diversity, Product.Simple, Out.SubInd, Units)]
+
+acdc_dat_p_summ[is.na(Diversity) | Diversity == "", Diversity := Tree]
+acdc_dat_p_summ[, Tree := NULL]
+acdc_dat_p_summ[, Combo := tstrsplit(PrName, "-", keep = 2)]
+acdc_dat_p_summ[, PrName := tstrsplit(PrName, "-", keep = 1)]
+#fwrite(acdc_dat_p_summ[Combo == "Solo"][, Combo := NULL],  file.path(output_dir, "summary_yield_solo.csv"))
+#fwrite(acdc_dat_p_summ[Combo == "Combo"][, Combo := NULL], file.path(output_dir, "summary_yield_combo.csv"))
+
+## -------------------------------
+## 6) Outcomes to model & cleaning
+## -------------------------------
+outcomes_to_model <- c("Crop Yield", "Biomass Yield", "Gross Return")
+dt <- acdc_dat_p[Out.SubInd %in% outcomes_to_model]
+
+# Practice type & base practice
+dt[, practice_type := fifelse(grepl("-Solo$", PrName), "Solo",
+                       fifelse(grepl("-Combo$", PrName), "Combo", NA_character_))]
+dt[, base_practice := sub("-(Solo|Combo)$", "", PrName)]
+
+# Remove obvious crop yield outliers per crop threshold
+yield_thresholds <- list( "Cassava or Yuca" = 60000, "Potato" = 50000, "Yam" = 50000, "Soybean" = 6000, "Teff" = 6000, "Cowpea" = 4000, "Groundnut or Peanut" = 4000, "Common Bean" = 7000, "Sorghum" = 10000, "Pearl Millet" = 10000, "Barley" = 10000, "Rice" = 12000, "Maize" = 15000, "Wheat" = 15000 )
+
+for (crop in names(yield_thresholds)) {
+  thr <- yield_thresholds[[crop]]
+  dt <- dt[!(Out.SubInd %in% c("Crop Yield","Biomass Yield") &
+               Product == crop & (MeanT > thr | MeanC > thr))]
+}
+
+# CVs
+dt[, MeanT.CV := fifelse(!is.na(MeanT.Error) & !is.na(MeanT) & MeanT != 0, MeanT.Error/MeanT, NA_real_)]
+dt[, MeanC.CV := fifelse(!is.na(MeanC.Error) & !is.na(MeanC) & MeanC != 0, MeanC.Error/MeanC, NA_real_)]
+
+# Pooled CVs and imputation per Outcome x Product
+impute_by_product <- function(d) {
+  d <- copy(d)
+  # pooled CVs (weighted by Rep) from rows with SD available
+  cv_t <- d[Mean.Error.Type == "SD (Standard Deviation)" & !is.na(MeanT.CV), sum(Rep * MeanT.CV, na.rm=TRUE)] /
+          d[Mean.Error.Type == "SD (Standard Deviation)" & !is.na(MeanT.CV), sum(Rep, na.rm=TRUE)]
+  cv_c <- d[Mean.Error.Type == "SD (Standard Deviation)" & !is.na(MeanC.CV), sum(Rep * MeanC.CV, na.rm=TRUE)] /
+          d[Mean.Error.Type == "SD (Standard Deviation)" & !is.na(MeanC.CV), sum(Rep, na.rm=TRUE)]
+  d[, cv_t_pooled := cv_t]
+  d[, cv_c_pooled := cv_c]
+  d[, SD_t_imputed := sqrt((cv_t_pooled * MeanT)^2)]
+  d[, SD_c_imputed := sqrt((cv_c_pooled * MeanC)^2)]
+
+  # lnRR & variance (Nakagawa/Lajeunesse)
+  d[, RR_naka_yield := lnrr_naka(
+      m1 = MeanT, m2 = MeanC, n1 = Rep, n2 = Rep,
+      n1_data = d[Mean.Error.Type == "SD (Standard Deviation)", Rep],
+      n2_data = d[Mean.Error.Type == "SD (Standard Deviation)", Rep],
+      CV1_data = d[Mean.Error.Type == "SD (Standard Deviation)", MeanT.CV],
+      CV2_data = d[Mean.Error.Type == "SD (Standard Deviation)", MeanC.CV]
+  )]
+  d[, vRRimputed := v_lnrr_naka(
+      n1 = Rep, n2 = Rep,
+      n1_data = d[Mean.Error.Type == "SD (Standard Deviation)", Rep],
+      n2_data = d[Mean.Error.Type == "SD (Standard Deviation)", Rep],
+      CV1_data = d[Mean.Error.Type == "SD (Standard Deviation)", MeanT.CV],
+      CV2_data = d[Mean.Error.Type == "SD (Standard Deviation)", MeanC.CV]
+  )]
+
+  # Raw lnRR + Lajeunesse variance terms (for reference)
+  d[, RR     := log(MeanT/MeanC)]
+  d[, vRR    := (MeanC.CV^2 / Rep) + (MeanT.CV^2 / Rep)]
+  d[, vRR_laj:= vRR + ((MeanC.CV^4)/(2*Rep^2)) + ((MeanT.CV^4)/(2*Rep^2))]
+
+  # clear invalid RR
+  d[(is.infinite(RR) | is.na(RR)), c("RR","vRR","vRR_laj","vRRimputed","RR_naka_yield") := NA]
+  d
+}
+
+dt <- dt[, impute_by_product(.SD), by = .(Out.SubInd, Product)]
+
+# ES IDs
+dt[, ES_ID := paste0("ES", .I)]
+
+## -------------------------------
+## 7) 3-level model fit (Per Crop)
+## -------------------------------
+# Define the crops you want to model and plot
+target_crops <- c("Maize", "Common Bean", "Coffee")
+min_studies <- 5
+
+# Create a list to store the model results for each crop
+all_model_results <- list()
+
+# Loop through each target crop to run the analysis
+cat("Running meta-analysis for each crop...\n")
+for (crop_name in target_crops) {
+  
+  # Filter the main dataset for the current crop (Solo practices only)
+  crop_dt <- dt[
+    Product.Simple == crop_name &
+    practice_type == "Solo" &
+    is.finite(RR_naka_yield) & is.finite(vRRimputed) & vRRimputed > 0
+  ]
+  
+  if (nrow(crop_dt) == 0) {
+      message("No data available for: ", crop_name)
+      next
+  }
+
+  # Run the meta-analysis model for each practice within the crop
+  fit_dt <- crop_dt[
+    , {
+        # Check if there are enough studies to fit the model
+        if (uniqueN(Code) >= min_studies && .N >= 3) {
+          mod <- rma.mv(
+            yi = RR_naka_yield,
+            V  = vRRimputed,
+            random = list(~1 | ES_ID, ~1 | Code),
+            tdist  = TRUE,
+            method = "REML",
+            data   = .SD,
+            control = list(optimizer = "optim", optmethod = "BFGS")
+          )
+          s <- summary(mod)
+          data.table(
+            practice   = base_practice[1],
+            est        = as.numeric(s$beta),
+            se         = as.numeric(s$se),
+            ci.lb      = as.numeric(s$ci.lb),
+            ci.ub      = as.numeric(s$ci.ub),
+            pval       = as.numeric(s$pval),
+            studies    = uniqueN(Code)
+          )
+        } else {
+          NULL # Return NULL if not enough data
+        }
+      },
+    by = .(base_practice) # Group by practice
+  ]
+
+  # If the model produced results, add the crop name and store it
+  if (nrow(fit_dt) > 0) {
+    fit_dt[, crop := crop_name]
+    all_model_results[[crop_name]] <- fit_dt
+    cat("  - Models for", crop_name, "completed successfully.\n")
+  } else {
+    cat("  - No practices met the criteria for", crop_name, ".\n")
+  }
+}
+
+# Combine all the individual crop results into a single data table
+results_all_crops <- rbindlist(all_model_results, fill = TRUE)
+
+
+
+## -------------------------------
+## 8) Final Plot (fixed ordering by Maize lnRR; xlim [-1, 2])
+## -------------------------------
+cat("Generating final polished plot...\n")
+
+# --- 1) Prep source ---
+ridge_src <- copy(results_all_crops)
+ridge_src[, sig := fcase(
+  is.na(pval),  "P > 0.05",
+  pval <= 0.05, "P ≤ 0.05",
+  default = "P > 0.05"
+)]
+ridge_src[, se_eff := fifelse(is.finite(se) & se > 0, se, (ci.ub - ci.lb)/(2*1.96))]
+ridge_src <- ridge_src[is.finite(est) & is.finite(se_eff) & se_eff > 0]
+
+# --- 2) Order practices by Maize lnRR (descending) ---
+order_maize_desc <- ridge_src[crop == "Maize"][
+  order(est, decreasing = TRUE), unique(practice)
+]
+all_practices <- unique(ridge_src$practice)
+practice_levels <- c(order_maize_desc, setdiff(all_practices, order_maize_desc))
+
+ridge_src[, practice := factor(practice, levels = practice_levels)]
+ridge_src[, crop := factor(crop, levels = target_crops)]
+
+# counts for labels
+practice_counts <- ridge_src[, .(studies = sum(studies, na.rm = TRUE)), by = practice]
+practice_counts[, practice := factor(practice, levels = practice_levels)]
+
+# label vector (pretty text), keyed by practice level
+practice_labels <- setNames(
+  paste0(as.character(practice_counts$practice), " (N=", practice_counts$studies, ")"),
+  as.character(practice_counts$practice)
+)
+
+# --- 3) Density data ---
+make_curve_ln <- function(mu, sd, n = 400L, p_lo = 0.001, p_hi = 0.999){
+  z <- seq(qnorm(p_lo, mu, sd), qnorm(p_hi, mu, sd), length.out = n)
+  den <- dnorm(z, mu, sd); den <- den / max(den)
+  data.table(x_ln = z, dens = den)
+}
+ridge_df <- ridge_src[, make_curve_ln(est, se_eff), by = .(practice, crop, sig, studies, est)]
+ridge_df[, practice := factor(practice, levels = practice_levels)]
+
+# --- 4) Observation ticks aligned to practice factor ---
+es_ticks <- dt[
+  practice_type == "Solo" & Product.Simple %in% target_crops,
+  .(practice = base_practice, crop = Product.Simple, RR = RR_naka_yield)
+]
+es_ticks <- unique(ridge_src[, .(practice, crop)])[es_ticks, on = .(practice, crop), nomatch = 0]
+es_ticks <- es_ticks[is.finite(RR)]
+es_ticks[, practice := factor(practice, levels = practice_levels)]
+
+# --- 5) Fixed x-limits as requested ---
+x_limits <- c(-0.5, 1)
+
+# palettes
+pal_maize  <- RColorBrewer::brewer.pal(9, "Greens")
+pal_bean   <- RColorBrewer::brewer.pal(9, "OrRd")
+pal_coffee <- RColorBrewer::brewer.pal(9, "Blues")
+
+combined_ridge_plot_final <- ggplot() +
+  geom_vline(xintercept = 0, linetype = "solid", colour = "black", size = 0.5) +
+
+  # Maize layer
+  geom_ridgeline_gradient(
+    data = ridge_df[crop == "Maize"],
+    aes(x = x_ln, y = practice, height = dens, fill = x_ln),
+    alpha = 0.8, scale = 1.2, rel_min_height = 0.01
+  ) +
+  scale_fill_gradientn(colours = pal_maize, limits = x_limits, name = "Maize lnRR") +
+
+  ggnewscale::new_scale_fill() +
+
+  # Bean layer
+  geom_ridgeline_gradient(
+    data = ridge_df[crop == "Common Bean"],
+    aes(x = x_ln, y = practice, height = dens, fill = x_ln),
+    alpha = 0.75, scale = 1.2, rel_min_height = 0.01
+  ) +
+  scale_fill_gradientn(colours = pal_bean, limits = x_limits, name = "Bean lnRR") +
+
+  ggnewscale::new_scale_fill() +
+
+  # Coffee layer
+  geom_ridgeline_gradient(
+    data = ridge_df[crop == "Coffee"],
+    aes(x = x_ln, y = practice, height = dens, fill = x_ln),
+    alpha = 0.75, scale = 1.2, rel_min_height = 0.01
+  ) +
+  scale_fill_gradientn(colours = pal_coffee, limits = x_limits, name = "Coffee lnRR") +
+
+  # Observation ticks (no offsets)
+  geom_jitter(
+    data = es_ticks,
+    aes(x = RR, y = practice, group = crop),
+    width = 0, height = 0, shape = 124, size = 1.2, alpha = 0.55, color = "black",
+    show.legend = FALSE
+  ) +
+
+  # Significance outlines
+  geom_ridgeline(
+    data = ridge_df,
+    aes(x = x_ln, y = practice, height = dens,
+        group = interaction(practice, crop), linetype = sig, color = sig),
+    fill = NA, size = 0.6, scale = 1.2, rel_min_height = 0.01
+  ) +
+  scale_linetype_manual(name = "Significance",
+                        values = c("P ≤ 0.05" = "solid", "P > 0.05" = "dotted")) +
+  scale_color_manual(name = "Significance",
+                     values = c("P ≤ 0.05" = "black", "P > 0.05" = "darkgrey"),
+                     guide = "none") +
+
+  # Display highest Maize lnRR at the TOP:
+  scale_y_discrete(
+    limits = rev(levels(ridge_df$practice)),          # reverse for top-to-bottom flip
+    labels = practice_labels                          # pretty "Practice (N=..)" labels
+  ) +
+  coord_cartesian(xlim = x_limits, clip = "on") +
+  labs(
+    title = "Crop Yield Response to Agricultural Practices",
+    x = expression(bold("Effect Size: ln(Experiment / Control)")),
+    y = expression(bold("Agricultural Practice (Total Studies)"))
+  ) +
+  theme_ridges(font_size = 12, grid = TRUE) +
+  theme(
+    plot.title      = element_text(face = "bold", hjust = 0.5, size = 16),
+    plot.subtitle   = element_text(hjust = 0.5, margin = margin(b=15), size = 11),
+    axis.title.x    = element_text(face = "bold", size = 11),
+    axis.title.y    = element_text(face = "bold", size = 11),
+    axis.text.y     = element_text(face = "bold", size = 10, color = "grey20"),
+    legend.position = "right",
+    legend.box      = "vertical",
+    legend.key.width  = unit(0.5, "cm"),
+    legend.key.height = unit(0.5, "cm"),
+    legend.title    = element_text(face = "bold")
+  )
+
+print(combined_ridge_plot_final)
+
+ggsave(
+  file.path(output_dir, "final_polished_ridge_plot_v11.png"),
+  plot = combined_ridge_plot_final,
+  width = 14, height = 10, dpi = 300, bg = "white"
+)
+
+#saving the variance
+dt <- dt[, impute_by_product(.SD), by = .(Out.SubInd, Product)]
+
+
+```
+
+# merging climate data
+
+```{r merging climate data, echo=T, message=F}
+
+# Set the remote S3 path and local save path
+s3_data_dir <- "s3://digital-atlas/era/geodata"
+local_data_dir <- "downloaded_data"
+
+# List and filter files
+s3<-s3fs::S3FileSystem$new(anonymous = T)
+files_s3 <- s3$dir_ls(s3_data_dir)
+files_s3 <- grep("clim_stats.*RData", files_s3, value = TRUE)
+(files_s3 <- tail(files_s3, 1))
+
+# Create local file path and download
+files_local <- gsub(s3_data_dir, local_data_dir, files_s3)
+if(!file.exists(files_local)){
+s3$file_download(files_s3, files_local)
+}
+# Load the harmonized climate data into your environment
+clim_data <- miceadds::load.Rdata2(file = basename(files_local), path = dirname(files_local))
+
+names(clim_data)
+
+head(unique(clim_data$site_data[,.(Site.Key,Code,M.Year,Latitude,Longitude,M.Year,M.Year.Code,M.Season)]))|>
+  kable(format = "html") |>
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
+  scroll_box(width = "100%", height = "250px")
+
+head(unique(clim_data$site_data[,.(Product,EU,Topt.low,Topt.high,Tlow,Thigh)]))|>
+  kable(format = "html") |>
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
+  scroll_box(width = "100%", height = "250px")
+
+head(clim_data$site_data[,.(Plant.Start,Plant.End,Plant.Diff.Raw,Data.PS.Date,Data.PE.Date,SOS,P.Date.Merge,P.Date.Merge.Source)])|>
+  kable(format = "html") |>
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
+  scroll_box(width = "100%", height = "250px")
+
+names(clim_data$PDate.SLen.Data)|>
+  kable(format = "html") |>
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
+  scroll_box(width = "100%", height = "250px")
+
+head(clim_data$PDate.SLen.Data$gdd)|>
+  kable(format = "html") |>
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
+  scroll_box(width = "100%", height = "250px")
+
+head(clim_data$PDate.SLen.Data$rainfall) |>
+  kable(format = "html") |>
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
+  scroll_box(width = "100%", height = "250px")
+
+
+# --- 1. HELPER FUNCTION TO PREPARE CLIMATE DATA ---
+prep_and_consolidate_climate <- function(climate_source_list, join_keys) {
+  prep_single <- function(dt, name) {
+    x <- copy(as.data.table(dt))
+    if ("Product" %in% names(x)) setnames(x, "Product", "Product.Simple")
+    data_cols <- setdiff(names(x), c(join_keys, "row_index", "window", "EU"))
+    setnames(x, data_cols, paste0(name, "_", data_cols))
+    cols_to_keep <- c(join_keys, paste0(name, "_", data_cols))
+    x <- x[, .SD, .SDcols = cols_to_keep]
+    x <- unique(x, by = join_keys)  # prevent duplicates
+    return(x)
+  }
+  gdd    <- prep_single(climate_source_list$gdd, "gdd")
+  rain   <- prep_single(climate_source_list$rainfall, "rain")
+  temp   <- prep_single(climate_source_list$temperature, "temp")
+  eratio <- prep_single(climate_source_list$eratio, "eratio")
+
+  clim_list <- list(gdd, rain, temp, eratio)
+  consolidated_data <- Reduce(function(x, y) merge(x, y, by = join_keys, all = TRUE), clim_list)
+  consolidated_data <- unique(consolidated_data, by = join_keys)
+  return(consolidated_data)
+}
+
+# --- 2. PRIMARY MERGE: Using Precise Planting Dates ---
+cat("STEP 1: Merging with precise planting date climate data...\n")
+keys_primary <- c("Site.Key", "M.Year", "Product.Simple", "Plant.Start", "Plant.End")
+primary_clim_data <- prep_and_consolidate_climate(clim_data$PDate.SLen.Data, keys_primary)
+
+# Start with your base dataset
+final_data <- copy(dt)
+
+final_data[, Product.Simple := tolower(trimws(Product.Simple))]
+primary_clim_data[, Product.Simple := tolower(trimws(Product.Simple))]
+
+for (col in c("Plant.Start", "Plant.End")) {
+  if (col %in% names(final_data)) final_data[, (col) := as.Date(get(col))]
+  if (col %in% names(primary_clim_data)) primary_clim_data[, (col) := as.Date(get(col))]
+}
+
+# Merge using precise planting dates
+final_data <- merge(final_data, primary_clim_data, by = keys_primary, all.x = TRUE)
+
+# Check merge results
+climate_cols <- names(primary_clim_data)[!names(primary_clim_data) %in% keys_primary]
+rows_matched_primary <- final_data[!is.na(get(climate_cols[1])), .N]
+cat("Successfully merged", rows_matched_primary, "rows using precise dates.\n\n")
+
+# --- 3. FALLBACK MERGE: Using EcoCrop Dates ---
+cat("STEP 2: Supplementing missing data with EcoCrop climate data...\n")
+
+rows_to_fill <- final_data[is.na(get(climate_cols[1]))]
+if (nrow(rows_to_fill) > 0) {
+  keys_ecocrop <- c("Site.Key", "M.Year", "Product.Simple")
+  ecocrop_clim_data <- prep_and_consolidate_climate(clim_data$PDate.SLen.EcoCrop, keys_ecocrop)
+  ecocrop_clim_data[, Product.Simple := tolower(trimws(Product.Simple))]
+
+  # Update join only where NA
+  final_data[ecocrop_clim_data, on = keys_ecocrop, (climate_cols) := mget(paste0("i.", climate_cols))]
+
+  rows_matched_total <- final_data[!is.na(get(climate_cols[1])), .N]
+  rows_filled_by_ecocrop <- rows_matched_total - rows_matched_primary
+  cat("Filled an additional", rows_filled_by_ecocrop, "rows using EcoCrop data.\n\n")
+} else {
+  cat("No missing data to fill. Primary merge was 100% successful.\n\n")
+}
+
+# --- 4. FINAL MERGE REPORT ---
+total_merged <- final_data[!is.na(get(climate_cols[1])), .N]
+total_rows <- nrow(final_data)
+cat("--- MERGE COMPLETE ---\n")
+cat("Total rows with climate data:", total_merged, "out of", total_rows, "\n")
+cat("Data coverage:", round(100 * total_merged / total_rows, 2), "%\n")
+
+# --- 5. EXPORT UNMATCHED ROWS FOR DEBUGGING ---
+keys_ecocrop <- c("Site.Key", "M.Year", "Product.Simple")
+cols_to_save <- unique(c(keys_primary, keys_ecocrop))
+climate_check_col <- climate_cols[1]
+
+unmatched_rows <- final_data[is.na(get(climate_check_col))]
+output_file_name <- "unmatched_climate_keys.csv"
+fwrite(unmatched_rows[, ..cols_to_save], file = output_file_name)
+
+cat("--- EXPORT COMPLETE ---\n")
+cat("All", nrow(unmatched_rows), "unmatched rows have been saved to:", output_file_name, "\n")
+cat("Please open this file to analyze the key columns for missing data.\n")
+
+
+```
+
+# predictive power of climate variables
+
+```{r}
+final_data[, vi := as.numeric(vRRimputed)]
+
+
+clim_vars <- names(final_data)[
+  grepl("^gdd_|^rain_|^temp_|^eratio_", names(final_data))
+]
+length(clim_vars)
+
+compute_R2 <- function(model, yi, vi) {
+  # Full model variance (tau2)
+  tau_full <- model$tau2
+  
+  # Null model (intercept-only)
+  null_model <- metafor::rma(yi = yi, vi = vi, method = "REML")
+  tau_null <- null_model$tau2
+  
+  # If tau_null = 0 (rare), pseudo-R2 undefined → return NA
+  if (tau_null == 0) return(NA_real_)
+  
+  R2_value <- 1 - (tau_full / tau_null)
+  return(R2_value)
+}
+
+
+fit_climate_model <- function(var){
+  
+  df <- final_data[
+    is.finite(yi) & is.finite(vi) & is.finite(get(var))
+  ]
+  
+  # Too few datapoints → skip
+  if (nrow(df) < 30) return(NULL)
+  
+  # Fit REML random-effects meta-regression
+  m <- tryCatch({
+    metafor::rma(
+      yi = yi,
+      vi = vi,
+      mods = ~ get(var),
+      method = "REML",
+      data = df
+    )
+  }, error = function(e) NULL)
+  
+  if (is.null(m)) return(NULL)
+  
+  # Compute pseudo-R2
+  R2 <- tryCatch(
+    compute_R2(m, df$yi, df$vi),
+    error = function(e) NA_real_
+  )
+  
+  # Extract results
+  data.table(
+    variable = var,
+    k        = m$k,
+    AIC      = AIC(m),
+    p        = summary(m)$pval[2],
+    R2       = R2
+  )
+}
+
+
+results_list <- vector("list", length(clim_vars))
+
+for (i in seq_along(clim_vars)) {
+  var <- clim_vars[i]
+  
+  # run the model
+  results_list[[i]] <- fit_climate_model(var)
+  
+  # PROGRESS MESSAGE FOR EVERY VARIABLE
+  cat(
+    "Finished:", var,
+    " (", i, "of", length(clim_vars), ")\n", sep = ""
+  )
+  flush.console()
+}
+
+
+results_predictive <- rbindlist(results_list, fill = TRUE)
+
+results_predictive <- results_predictive[!is.na(AIC)]
+
+results_ranked <- copy(results_predictive)
+
+results_ranked[, rank_score :=
+    rank(AIC, ties.method = "average") +
+    rank(-R2, ties.method = "average") +
+    rank(p, ties.method = "average")
+]
+
+results_ranked <- results_ranked[order(rank_score)]
+
+## visualize the ranking
+top20 <- results_ranked %>% slice_min(rank_score, n = 20)
+
+bar_rank<-ggplot(top20, aes(x = reorder(variable, rank_score), y = rank_score, fill = family)) +
+  geom_col() +
+  coord_flip() +
+  theme_minimal(base_size = 14) +
+  labs(
+    title = "Top 20 Climate Hazards by Predictive Rank Score",
+    x = "Climate Hazard Variable",
+    y = "Rank Score (lower = better)"
+  )
+
+res <- results_predictive[
+  !is.na(AIC) & !is.na(p),
+  .(variable, AIC, p, R2)
+]
+res[, rank_AIC := rank(AIC, ties.method = "average")]
+res[, rank_R2  := rank(-R2, ties.method = "average")]   # higher R2 = better
+res[, rank_p   := rank(p, ties.method = "average")]     # lower p = better
+res[, rank_score_new := rank_AIC + rank_R2 + rank_p]
+res_sorted <- res[order(rank_score_new)]
+
+
+head(res_sorted, 15)
+
+compare_ranks <- merge(
+  res_sorted[, .(variable, rank_score_new)],
+  results_ranked[, .(variable, rank_score_old = rank_score)],
+  by = "variable",
+  all.x = TRUE
+)
+
+compare_ranks[, diff := rank_score_new - rank_score_old]
+compare_ranks[order(abs(diff))][1:20]
+res_sorted[1:10]
+
+# Ensure results_ranked contains: variable, family, rank_score
+# Ensure top20 is sorted from BEST (lowest rank_score)
+top20 <- results_ranked[order(rank_score)][1:20]
+
+# To plot in correct order (best at top)
+top20$variable <- factor(top20$variable, levels = rev(top20$variable))
+
+# Assign hazard families by variable name
+top20 <- top20 %>%
+  mutate(
+    family = case_when(
+      grepl("^gdd", variable) ~ "GDD",
+      grepl("^temp", variable) ~ "Temperature",
+      grepl("^rain", variable) ~ "Rainfall",
+      grepl("^eratio|eto|evapo", variable) ~ "ETo / Evaporative",
+      TRUE ~ "Other"
+    )
+  )
+
+# Plot
+ranking<- ggplot(top20, aes(x = rank_score, y = variable, fill = family)) +
+  geom_col(width = 0.7) +
+  scale_fill_manual(
+    values = c(
+      "GDD" = "#4CAF50",
+      "Temperature" = "#9C27B0",
+      "Rainfall" = "#039BE5",
+      "ETo / Evaporative" = "#FF7043",
+      "Other" = "grey70"
+    )
+  ) +
+  labs(
+    title = "Top 20 Climate Hazards by Predictive Power",
+    subtitle = "Ranking based on AIC, marginal R², and p-value",
+    x = "Composite Rank Score (lower = better)",
+    y = "Climate Hazard Variable",
+    fill = "Hazard Category"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(face = "bold", size = 18),
+    plot.subtitle = element_text(size = 13, margin = margin(b = 10)),
+    axis.text.y = element_text(size = 11),
+    legend.position = "right"
+  )
+```
+
+
+
+# management x hazard
+
+```{r management x climate hazard analysis, echo=T, message=F}
+# --- 1. FILTER TO CROP YIELD DATA ---
+dt_yield <- final_data[grepl("Crop Yield", final_data$Out.SubInd),]
+dt_yield <- dt_yield[is.finite(dt_yield$yi) & is.finite(dt_yield$rain_w_balance),]
+
+# --- 2. TRIM OUTLIERS ---
+dt_yield <- dt_yield %>%
+  mutate(yi_outlier = abs(yi) > 2.5) %>%
+  filter(!yi_outlier)
+
+# --- 3. PREPARE CLIMATE VARIABLE (STANDARDIZED) ---
+dt_yield <- dt_yield %>%
+  mutate(
+    Practice = PrName,
+    rain_balance = as.numeric(rain_w_balance),
+    rain_s = as.numeric(scale(rain_balance))
+  ) %>%
+  filter(is.finite(rain_s))
+
+# --- 4. FILTER PRACTICES WITH SUFFICIENT DATA AND EXCLUDE 'pH Control' ---
+min_obs <- 30
+min_studies <- 3
+
+# --- 4. FILTER PRACTICES WITH SUFFICIENT DATA (No exclusion of pH Control) ---
+min_obs <- 30
+min_studies <- 3
+
+by_prac <- dt_yield %>%
+  group_by(Practice) %>%
+  filter(n() >= min_obs, n_distinct(Code) >= min_studies) %>%
+  group_split()
+
+
+# --- 5. FIT RANDOM-EFFECTS MODELS (yi ~ rain_s + (1|Code) + (1|Site.Key)) ---
+fit_one <- function(d) {
+  re <- character(0)
+  if (dplyr::n_distinct(d$Code) > 1) re <- c(re, "(1|Code)")
+  if (dplyr::n_distinct(d$Site.Key) > 1) re <- c(re, "(1|Site.Key)")
+  rhs <- c("rain_s", re)
+  fml <- as.formula(paste("yi ~", paste(rhs, collapse = " + ")))
+  lmerTest::lmer(fml, data = d)
+}
+
+# Fit models
+mods <- map(by_prac, fit_one)
+names(mods) <- map_chr(by_prac, ~ unique(.x$Practice)[1])
+
+# --- 6. SUMMARIZE MODEL COEFFICIENTS ---
+coefs <- map_df(names(mods), function(p) {
+  broom.mixed::tidy(mods[[p]], effects = "fixed", conf.int = TRUE) %>%
+    filter(term == "rain_s") %>%
+    transmute(
+      Practice = p,
+      slope = estimate,
+      lo = conf.low,
+      hi = conf.high,
+      p = p.value,
+      pct = 100 * (exp(estimate) - 1),
+      pct_lo = 100 * (exp(conf.low) - 1),
+      pct_hi = 100 * (exp(conf.high) - 1)
+    )
+}) %>%
+  left_join(
+    dt_yield %>%
+      group_by(Practice) %>%
+      summarise(n = n(), s = n_distinct(Code), .groups = "drop"),
+    by = "Practice"
+  ) %>%
+  mutate(
+    sig = case_when(
+      p <= 0.001 ~ "***",
+      p <= 0.01  ~ "**",
+      p <= 0.05  ~ "*",
+      TRUE       ~ ""
+    ),
+    label = sprintf("%+.1f%% %s (n=%d, s=%d)", pct, sig, n, s)
+  ) %>%
+  arrange(p)
+
+# --- 7. PLOT ---
+plot_mgmt_rain <- ggplot(coefs, aes(x = pct, y = reorder(Practice, pct))) +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "grey40") +
+  geom_errorbarh(aes(xmin = pct_lo, xmax = pct_hi), height = 0.2, color = "grey30") +
+  geom_point(aes(fill = slope), shape = 21, color = "white", size = 4, stroke = 0.4) +
+  scale_fill_distiller(
+  palette = "Spectral", direction = 1
+) +
+  geom_text(
+    aes(label = label, x = pct_hi + 2.5),
+    hjust = 0, size = 3.1, color = "black"
+  ) +
+  scale_x_continuous(name = "Δ Yield per +1 SD Rainfall Balance (%)") +
+  labs(
+    title = "Management × Climate Hazard:\nYield Sensitivity to Rainfall Balance",
+    y = NULL
+  ) +
+  coord_cartesian(
+    xlim = c(min(coefs$pct_lo, na.rm = TRUE),
+             max(coefs$pct_hi, na.rm = TRUE) + 20),
+    clip = "off"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(size = 13, face = "bold", hjust = 0, lineheight = 1.1),
+    axis.text.y = element_text(size = 11),
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    plot.margin = margin(10, 60, 10, 10),
+    legend.position = "none"
+  )
+
+print(plot_mgmt_rain)
+
+ggsave(
+  file.path(output_dir, "mgmt_rain.png"),
+  plot = plot_mgmt_rain,
+  width = 14, height = 10, dpi = 300, bg = "white"
+)
+
+
+#=======gdd_aboveopt=========================================================================
+# --- 1. FILTER TO CROP YIELD DATA (Using robust Base R notation to avoid syntax errors) ---
+dt_yield <- final_data[grepl("Crop Yield", final_data$Out.SubInd),]
+dt_yield <- dt_yield[is.finite(dt_yield$yi) & is.finite(dt_yield$gdd_gdd_aboveopt),]
+
+# --- 2. TRIM OUTLIERS (|yi| > 2.5) ---
+dt_yield <- dt_yield %>%
+  mutate(yi_outlier = abs(yi) > 2.5) %>%
+  filter(!yi_outlier)
+
+# --- 3. PREPARE CLIMATE VARIABLE (STANDARDIZED) ---
+dt_yield <- dt_yield %>%
+  mutate(
+    Practice = PrName,
+    gdd_aboveopt = as.numeric(gdd_gdd_aboveopt),
+    gdd_s = as.numeric(scale(gdd_aboveopt))
+  ) %>%
+  filter(is.finite(gdd_s))
+
+# --- 4. FILTER PRACTICES WITH SUFFICIENT DATA AND EXCLUDE 'pH Control' ---
+min_obs <- 30
+min_studies <- 3
+
+by_prac <- dt_yield %>%
+  filter(Practice != "pH Control") %>% # EXCLUDE 'pH Control'
+  group_by(Practice) %>%
+  filter(n() >= min_obs, n_distinct(Code) >= min_studies) %>%
+  group_split()
+
+
+# --- 5. FIT RANDOM-EFFECTS MODELS (yi ~ gdd_s + (1|Code) + (1|Site.Key)) ---
+fit_one <- function(d) {
+  re <- character(0)
+  if (dplyr::n_distinct(d$Code) > 1) re <- c(re, "(1|Code)")
+  if (dplyr::n_distinct(d$Site.Key) > 1) re <- c(re, "(1|Site.Key)")
+  rhs <- c("gdd_s", re)
+  fml <- as.formula(paste("yi ~", paste(rhs, collapse = " + ")))
+  lmerTest::lmer(fml, data = d)
+}
+
+# Fit models
+mods <- map(by_prac, fit_one)
+
+# Assign names to each model by practice
+names(mods) <- map_chr(by_prac, ~ unique(.x$Practice)[1])
+
+# --- 6. SUMMARIZE MODEL COEFFICIENTS ---
+coefs <- map_df(names(mods), function(p) {
+  broom.mixed::tidy(mods[[p]], effects = "fixed", conf.int = TRUE) %>%
+    filter(term == "gdd_s") %>%
+    transmute(
+      Practice = p,
+      slope = estimate,
+      lo = conf.low,
+      hi = conf.high,
+      p = p.value,
+      pct = 100 * (exp(estimate) - 1),
+      pct_lo = 100 * (exp(conf.low) - 1),
+      pct_hi = 100 * (exp(conf.high) - 1)
+    )
+}) %>%
+  left_join(
+    dt_yield %>%
+      group_by(Practice) %>%
+      summarise(n = n(), s = n_distinct(Code), .groups = "drop"),
+    by = "Practice"
+  ) %>%
+  mutate(
+    sig = case_when(
+      p <= 0.001 ~ "***",
+      p <= 0.01  ~ "**",
+      p <= 0.05  ~ "*",
+      TRUE       ~ ""
+    ),
+    label = sprintf("%+.1f%% %s (n=%d, s=%d)", pct, sig, n, s)
+  ) %>%
+  arrange(p)
+
+# --- 7. PLOT 1: FOREST PLOT OF EFFECTS ---
+plot_mgmt_above <- ggplot(coefs, aes(x = pct, y = reorder(Practice, pct))) +
+  # Reference line at 0
+  geom_vline(xintercept = 0, linetype = "dashed", color = "grey40") +
+  
+  # Error bars
+  geom_errorbarh(aes(xmin = pct_lo, xmax = pct_hi), height = 0.2, color = "grey30") +
+
+  # Points with viridis fill
+  geom_point(aes(fill = slope), shape = 21, color = "white", size = 4, stroke = 0.4) +
+
+  # Color scale (legend hidden later)
+  scale_fill_viridis(
+    option = "C", 
+    name = "Slope", 
+    direction = -1, 
+    begin = 0.2, end = 0.9
+  ) +
+  
+  # Text labels
+  geom_text(
+  aes(label = label, x = pct_hi + 2.5),  # Shift label right of upper CI
+  hjust = 0, size = 5, color = "black"
+) +
+
+  # Axis labels and title
+  scale_x_continuous(name = "Δ Yield per +1 SD GDD Above Optimum (%)") +
+  labs(
+    title = "Management × Climate Hazard:\nYield Sensitivity to GDD Above Optimum",
+    y = NULL
+  ) +
+
+  # Coordinate limits to fit text
+  coord_cartesian(
+  xlim = c(min(coefs$pct_lo, na.rm = TRUE),
+           max(coefs$pct_hi, na.rm = TRUE) + 20),
+  clip = "off"
+) +
+
+  # Theme with no legend
+  theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(size = 16, face = "bold", hjust = 0, lineheight = 1.1),
+    axis.text.y = element_text(size = 15, face = "bold"),
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    plot.margin = margin(10, 60, 10, 10),
+    legend.position = "none"  # ← hide legend
+  )
+
+print(plot_mgmt_above)
+
+#===============subopt==================================================
+# --- 1. FILTER TO CROP YIELD DATA ---
+dt_yield <- final_data[grepl("Crop Yield", final_data$Out.SubInd),]
+dt_yield <- dt_yield[is.finite(dt_yield$yi) & is.finite(dt_yield$gdd_gdd_subopt),]
+
+# --- 2. TRIM OUTLIERS (|yi| > 2.5) ---
+dt_yield <- dt_yield %>%
+  mutate(yi_outlier = abs(yi) > 2.5) %>%
+  filter(!yi_outlier)
+
+# --- 3. PREPARE CLIMATE VARIABLE (STANDARDIZED) ---
+dt_yield <- dt_yield %>%
+  mutate(
+    Practice = PrName,
+    gdd_subopt = as.numeric(gdd_gdd_subopt),
+    gdd_s = as.numeric(scale(gdd_subopt))
+  ) %>%
+  filter(is.finite(gdd_s))
+
+# --- 4. FILTER PRACTICES WITH SUFFICIENT DATA AND EXCLUDE 'pH Control' ---
+min_obs <- 30
+min_studies <- 3
+
+by_prac <- dt_yield %>%
+  filter(Practice != "pH Control") %>%
+  group_by(Practice) %>%
+  filter(n() >= min_obs, n_distinct(Code) >= min_studies) %>%
+  group_split()
+
+# --- 5. FIT RANDOM-EFFECTS MODELS ---
+fit_one <- function(d) {
+  re <- character(0)
+  if (dplyr::n_distinct(d$Code) > 1) re <- c(re, "(1|Code)")
+  if (dplyr::n_distinct(d$Site.Key) > 1) re <- c(re, "(1|Site.Key)")
+  rhs <- c("gdd_s", re)
+  fml <- as.formula(paste("yi ~", paste(rhs, collapse = " + ")))
+  lmerTest::lmer(fml, data = d)
+}
+
+mods <- map(by_prac, fit_one)
+names(mods) <- map_chr(by_prac, ~ unique(.x$Practice)[1])
+
+# --- 6. SUMMARIZE MODEL COEFFICIENTS ---
+coefs <- map_df(names(mods), function(p) {
+  broom.mixed::tidy(mods[[p]], effects = "fixed", conf.int = TRUE) %>%
+    filter(term == "gdd_s") %>%
+    transmute(
+      Practice = p,
+      slope = estimate,
+      lo = conf.low,
+      hi = conf.high,
+      p = p.value,
+      pct = 100 * (exp(estimate) - 1),
+      pct_lo = 100 * (exp(conf.low) - 1),
+      pct_hi = 100 * (exp(conf.high) - 1)
+    )
+}) %>%
+  left_join(
+    dt_yield %>%
+      group_by(Practice) %>%
+      summarise(n = n(), s = n_distinct(Code), .groups = "drop"),
+    by = "Practice"
+  ) %>%
+  mutate(
+    sig = case_when(
+      p <= 0.001 ~ "***",
+      p <= 0.01  ~ "**",
+      p <= 0.05  ~ "*",
+      TRUE       ~ ""
+    ),
+    label = sprintf("%+.1f%% %s (n=%d, s=%d)", pct, sig, n, s)
+  ) %>%
+  arrange(p)
+
+# --- 7. PLOT FOREST PLOT ---
+plot_mgmt_subopt <- ggplot(coefs, aes(x = pct, y = reorder(Practice, pct))) +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "grey40") +
+  geom_errorbarh(aes(xmin = pct_lo, xmax = pct_hi), height = 0.2, color = "grey30") +
+  geom_point(aes(fill = slope), shape = 21, color = "white", size = 4, stroke = 0.4) +
+  scale_fill_viridis(option = "C", name = "Slope", direction = -1, begin = 0.2, end = 0.9) +
+  geom_text(
+    aes(label = label, x = pct_hi + 2.5),
+    hjust = 0, size = 5, color = "black"
+  ) +
+  scale_x_continuous(name = "Δ Yield per +1 SD GDD Below Optimum (%)") +
+  labs(
+    title = "Management × Climate Hazard:\nYield Sensitivity to GDD Below Optimum",
+    y = NULL
+  ) +
+  coord_cartesian(
+    xlim = c(min(coefs$pct_lo, na.rm = TRUE),
+             max(coefs$pct_hi, na.rm = TRUE) + 20),
+    clip = "off"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(size = 16, face = "bold", hjust = 0, lineheight = 1.1),
+    axis.text.y = element_text(size = 15, face = "bold"),
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    plot.margin = margin(10, 60, 10, 10),
+    legend.position = "none"
+  )
+
+print(plot_mgmt_subopt)
+
+panel_plot <- plot_mgmt_subopt + plot_mgmt_above +
+  plot_layout(ncol = 2, widths = c(1, 1)) +
+  plot_annotation(
+    title = "Management × Climate Hazards:\nSensitivity to GDD Below and Above Optimum",
+    theme = theme(
+      plot.title = element_text(size = 16, face = "bold", hjust = 0.5, lineheight = 1.2),
+      plot.margin = margin(10, 20, 10, 20)
+    )
+  )
+
+
+```

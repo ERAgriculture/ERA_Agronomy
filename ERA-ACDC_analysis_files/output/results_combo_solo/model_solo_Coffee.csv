@@ -1,0 +1,2 @@
+base_practice,model_type,est,se,ci.lb,ci.ub,pval,tau2_L2,tau2_L3,k,studies,practice,crop,est_pct,ci.lb_pct,ci.ub_pct
+Multistrata Agroforestry,rma.mv,-0.299472084651979,0.0553215337307083,-0.410131628084003,-0.188812541219955,1.14318780187947e-06,0.169595853564963,1.53736489288256e-05,61,5,Multistrata Agroforestry,Coffee,-25.8790586760298,-33.643709912562,-17.2058302911137

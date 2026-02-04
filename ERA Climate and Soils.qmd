@@ -73,13 +73,11 @@ Below are the datasets used and the script locations.
 
 -   **Coverage**: global, \~1983--present
 
--   **Download Source**: NASA POWER API --- `https://power.larc.nasa.gov/api/temporal/daily/`\
+-   **Download Source**: NASA POWER API --- `https://power.larc.nasa.gov/api/temporal/daily/`
 
--   **Script**: [`R/add_geodata/power.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/power.R)\
+-   **Script**: [`R/add_geodata/power.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/power.R)
 
--   
-
-    ## **Download Function**: [`R/add_geodata/functions/download_power.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/functions/download_power.R)
+-   **Download Function**: [`R/add_geodata/functions/download_power.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/functions/download_power.R)
 
 ### Soil Data Sources
 
@@ -104,7 +102,7 @@ Soil data are used to estimate key properties like water-holding capacity, which
 -   **Functions**: [`download_soilgrids2.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/functions/download_soilgrids2.R)\
 -   **Notes**: Accesses data via `soilDB::fetchSoilGrids()` and reshapes raster. Outputs CSV summaries per site and variable.
 
-## \> *We plan to extend SoilGrids 2.0 to African sites in a future update, allowing for harmonized coverage across all regions.*
+*We plan to extend SoilGrids 2.0 to African sites in a future update, allowing for harmonized coverage across all regions.*
 
 ### AEZ (Agro-Ecological Zones)
 
@@ -162,7 +160,7 @@ Unlike the foundational datasets (e.g., daily rainfall, temperature, radiation),
 
 Each of these indicators is calculated **per site--season--crop** combination using the daily CHIRPS and POWER datasets and simulated water balance (see [`water_balance.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/water_balance.R)).
 
-## These derived indicators provide a **biophysically relevant summary of climate exposure** tailored to the actual growing period of each crop, making them more actionable than raw daily data or long-term averages.
+These derived indicators provide a **biophysically relevant summary of climate exposure** tailored to the actual growing period of each crop, making them more actionable than raw daily data or long-term averages.
 
 ### Downloading the climate data
 
@@ -458,7 +456,7 @@ These metrics provide a comprehensive description of **temperature variability a
 #### rainfall
 
 ```{r climdat_rain}
-head(clim_data$PDate.SLen.Data$temperature) |>
+head(clim_data$PDate.SLen.Data$rainfall) |>
   kable(format = "html") |>
   kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
   scroll_box(width = "100%", height = "250px")

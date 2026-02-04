@@ -1,0 +1,451 @@
+PrName,Out.SubInd,Observations,Studies
+Inorganic Fertilizer-Solo,Crop Yield,1344,77
+Inorganic Fertilizer-Combo,Crop Yield,342,26
+Mulch-Combo,Crop Yield,549,26
+Inorganic Fertilizer-Solo,Biomass Yield,328,22
+Intercropping-Solo,Crop Yield,203,20
+Organic Fertilizer-Solo,Crop Yield,145,17
+Reduced Tillage-Solo,Crop Yield,291,16
+Reduced Tillage-Combo,Crop Yield,420,16
+pH Control-Solo,Crop Yield,585,14
+Intercropping-Combo,Crop Yield,101,12
+Crop Rotation-Combo,Crop Yield,121,12
+Crop Residue-Combo,Crop Yield,178,12
+Crop Rotation-Solo,Crop Yield,201,11
+Mulch-Reduced Tillage-Solo,Crop Yield,194,10
+Organic Fertilizer-Combo,Crop Yield,65,10
+Multistrata Agroforestry-Solo,Crop Yield,191,9
+Mulch-Solo,Crop Yield,341,9
+Crop Residue Incorporation-Combo,Crop Yield,92,9
+Agroforestry Pruning-Combo,Crop Yield,60,8
+Intercropping-Solo,Biomass Yield,37,7
+Inorganic Fertilizer-Combo,Biomass Yield,136,7
+pH Control-Combo,Crop Yield,59,6
+Supplemental Irrigation-Solo,Crop Yield,136,5
+Inorganic Fertilizer-Intercropping-Solo,Crop Yield,40,5
+Inorganic Fertilizer-Solo,Gross Return,209,5
+Multistrata Agroforestry-Solo,Soil Moisture,265,5
+Organic Fertilizer-Solo,Biomass Yield,30,5
+Inorganic Fertilizer-Organic Fertilizer-Solo,Crop Yield,20,5
+Intercropping-Combo,Cation Exchange Capacity,20,5
+Mulch-Combo,Biomass Yield,72,5
+Crop Rotation-Inorganic Fertilizer-Solo,Crop Yield,16,4
+Mulch-Solo,Soil Moisture,93,4
+Inorganic Fertilizer-Solo,Crop Residue Yield,74,4
+Inorganic Fertilizer-Solo,Nitrogen Agronomic Efficiency,40,4
+pH Control-Solo,Biomass Yield,136,4
+Improved Varieties-Solo,Crop Yield,279,4
+Inorganic Fertilizer-Solo,Net Return,19,4
+Agroforestry Pruning-Solo,Crop Yield,18,4
+Crop Residue Incorporation-Mulch-Solo,Crop Yield,23,4
+Organic Fertilizer-Combo,Biomass Yield,27,4
+Reduced Tillage-Combo,Cation Exchange Capacity,8,4
+Crop Rotation-Reduced Tillage-Solo,Crop Yield,17,3
+Reduced Tillage-Solo,Soil Organic Carbon,50,3
+Improved Fallow-Solo,Biomass Yield,52,3
+Improved Fallow-Solo,Crop Yield,58,3
+Mulch-Solo,Biomass Yield,63,3
+Inorganic Fertilizer-Solo,Total Cost,43,3
+Multistrata Agroforestry-Solo,Gross Margin,3,3
+Multistrata Agroforestry-Solo,Labour Cost,3,3
+Crop Residue Incorporation-Solo,Crop Yield,28,3
+Multistrata Agroforestry-Solo,Gross Return,132,3
+Multistrata Agroforestry-Solo,Total Cost,124,3
+Inorganic Fertilizer-Solo,Nitrous Oxide Emissions,26,3
+Crop Rotation-Mulch-Solo,Crop Yield,13,3
+Inorganic Fertilizer-Mulch-Reduced Tillage-Solo,Crop Yield,74,3
+Reduced Tillage-Solo,Biomass Yield,59,3
+Reduced Tillage-Solo,Soil Moisture,1793,3
+Crop Residue Incorporation-Inorganic Fertilizer-Solo,Crop Yield,15,3
+Crop Rotation-Mulch-Reduced Tillage-Solo,Crop Yield,24,3
+Agroforestry Pruning-Inorganic Fertilizer-Solo,Crop Yield,9,3
+Inorganic Fertilizer-Solo,Gross Margin,62,3
+Agroforestry Pruning-Solo,Gross Margin,6,3
+Agroforestry Pruning-Inorganic Fertilizer-Solo,Gross Margin,9,3
+Inorganic Fertilizer-Mulch-Solo,Crop Yield,103,3
+Mulch-Reduced Tillage-Solo,Soil Moisture,48,3
+Mulch-Reduced Tillage-Solo,Biomass Yield,51,3
+Inorganic Fertilizer-Combo,Gross Margin,9,3
+Intercropping-Combo,Biomass Yield,28,3
+Mulch-Combo,Soil Moisture,68,3
+Reduced Tillage-Combo,Soil Moisture,54,3
+Reduced Tillage-Combo,Biomass Yield,51,3
+Agroforestry Pruning-Combo,Gross Margin,9,3
+Intercropping-Solo,Soil Total Nitrogen,10,2
+Crop Residue Incorporation-Mulch-Reduced Tillage-Solo,Crop Yield,28,2
+Improved Fallow-Intercropping-Solo,Biomass Yield,20,2
+Improved Fallow-Intercropping-Solo,Crop Yield,18,2
+Improved Fallow-Solo,Soil Nitrogen,24,2
+Improved Fallow-Intercropping-Solo,Soil Nitrogen,22,2
+Double Cropping-Solo,Crop Yield,13,2
+Inorganic Fertilizer-pH Control-Solo,Crop Yield,42,2
+Inorganic Fertilizer-Solo,Variable Cost,38,2
+Multistrata Agroforestry-Solo,Labour Person Hours,14,2
+Other Agroforestry-Solo,Crop Yield,15,2
+Crop Residue Incorporation-Reduced Tillage-Solo,Crop Yield,4,2
+Crop Residue Incorporation-Solo,Crop Residue Yield,5,2
+Reduced Tillage-Solo,Crop Residue Yield,5,2
+Deficit Irrigation-Solo,Biomass Yield,42,2
+Deficit Irrigation-Solo,Water Use Efficiency,40,2
+Multistrata Agroforestry-Solo,Variable Cost,66,2
+Multistrata Agroforestry-Solo,Fixed Cost,34,2
+pH Control-Solo,Crop Residue Yield,7,2
+Inorganic Fertilizer-Organic Fertilizer-Solo,Biomass Yield,10,2
+pH Control-Solo,Gross Return,29,2
+Intercropping-Solo,Gross Return,16,2
+Intercropping-Solo,Land Equivalent Ratio,17,2
+Organic Fertilizer-Solo,Cation Exchange Capacity,16,2
+Inorganic Fertilizer-Solo,Soil Carbon Stocks,5,2
+Organic Fertilizer-Solo,Soil Carbon Stocks,5,2
+Multistrata Agroforestry-Solo,Aboveground Carbon Biomass,2,2
+Multistrata Agroforestry-Solo,Belowground Carbon Biomass,2,2
+Inorganic Fertilizer-pH Control-Solo,Biomass Yield,96,2
+Crop Rotation-Solo,Soil Moisture,215,2
+Inorganic Fertilizer-Solo,Soil Total Nitrogen,8,2
+Organic Fertilizer-Solo,Gross Return,6,2
+Organic Fertilizer-Solo,Net Return,6,2
+Intercropping-Solo,Water Use Efficiency,13,2
+Organic Fertilizer-Solo,Soil Moisture,21,2
+Biochar-Organic Fertilizer-Solo,Crop Yield,4,2
+Mulch-Solo,Biodiversity,291,2
+Mulch-Solo,Soil Organic Matter,9,2
+Crop Residue-Reduced Tillage-Solo,Crop Yield,42,2
+Agroforestry Pruning-Multistrata Agroforestry-Solo,Biodiversity,14,2
+Reduced Tillage-Solo,Gross Margin,15,2
+Mulch-Solo,Gross Margin,14,2
+Mulch-Reduced Tillage-Solo,Gross Margin,11,2
+Crop Residue-Intercropping-Reduced Tillage-Solo,Cation Exchange Capacity,4,2
+Intercropping-Reduced Tillage-Solo,Cation Exchange Capacity,4,2
+Green Manure-Solo,Crop Yield,19,2
+Crop Residue Incorporation-Crop Rotation-Solo,Crop Yield,10,2
+Mulch-Reduced Tillage-Solo,Soil Total Nitrogen,40,2
+Mulch-Solo,Soil Total Nitrogen,32,2
+Reduced Tillage-Solo,Soil Total Nitrogen,18,2
+Mulch-Reduced Tillage-Solo,Soil Organic Carbon,28,2
+Mulch-Solo,Soil Organic Carbon,23,2
+Crop Residue-Solo,Crop Yield,50,2
+Reduced Tillage-Solo,Soil Organic Matter,12,2
+Organic Fertilizer-Combo,Cation Exchange Capacity,11,2
+Inorganic Fertilizer-Combo,Total Cost,194,2
+Inorganic Fertilizer-Combo,Gross Return,54,2
+Inorganic Fertilizer-Combo,Net Return,12,2
+Intercropping-Combo,Soil Nitrogen,22,2
+Intercropping-Combo,Net Return,21,2
+Mulch-Combo,Gross Margin,14,2
+Mulch-Combo,Soil Total Nitrogen,64,2
+Mulch-Combo,Soil Organic Carbon,52,2
+Reduced Tillage-Combo,Crop Residue Yield,6,2
+Reduced Tillage-Combo,Gross Margin,17,2
+Reduced Tillage-Combo,Soil Total Nitrogen,60,2
+Reduced Tillage-Combo,Soil Organic Carbon,48,2
+Supplemental Irrigation-Combo,Crop Yield,6,2
+Crop Residue Incorporation-Combo,Crop Residue Yield,4,2
+Improved Fallow-Combo,Biomass Yield,24,2
+Improved Fallow-Combo,Crop Yield,18,2
+Improved Fallow-Combo,Soil Nitrogen,22,2
+Multistrata Agroforestry-Combo,Crop Yield,6,2
+Multistrata Agroforestry-Combo,Gross Return,53,2
+Multistrata Agroforestry-Combo,Soil Organic Carbon,6,2
+Multistrata Agroforestry-Combo,Biodiversity,14,2
+Agroforestry Pruning-Combo,Biomass Yield,60,2
+Agroforestry Pruning-Combo,Biodiversity,14,2
+pH Control-Combo,Biomass Yield,96,2
+Biochar-Combo,Crop Yield,8,2
+Alleycropping-Combo,Crop Yield,28,2
+Crop Residue-Combo,Crop Residue Yield,4,2
+Crop Residue-Combo,Cation Exchange Capacity,4,2
+Harvest Method-Intercropping-Mulch-Solo,Crop Yield,9,1
+Harvest Method-Intercropping-Mulch-Solo,Cation Exchange Capacity,12,1
+Crop Rotation-Intercropping-Reduced Tillage-Solo,Crop Yield,1,1
+Double Cropping-Solo,Nitrous Oxide Emissions,99,1
+Double Cropping-Solo,Soil NH4,110,1
+Double Cropping-Solo,Soil NO3,90,1
+Intercropping-Supplemental Irrigation-Solo,Crop Yield,1,1
+Intercropping-Solo,Soil Moisture,2,1
+Improved Fallow-Inorganic Fertilizer-Solo,Biomass Yield,2,1
+Improved Fallow-Inorganic Fertilizer-Intercropping-Solo,Biomass Yield,2,1
+Agroforestry Pruning-Mulch-Solo,Crop Yield,4,1
+Agroforestry Pruning-Mulch-pH Control-Solo,Crop Yield,2,1
+Crop Residue Incorporation-Reduced Tillage-Solo,Crop Residue Yield,2,1
+Other Agroforestry-Solo,Biodiversity,16,1
+Intercropping-Solo,Erosion,1,1
+Improved Varieties-Intercropping-Solo,Erosion,1,1
+Intercropping-Mulch-Solo,Crop Yield,14,1
+Deficit Irrigation-Solo,Crop Yield,24,1
+Deficit Irrigation-Solo,Soil Moisture,72,1
+Improved Fallow-Solo,Soil Total Nitrogen,36,1
+Improved Fallow-Solo,Soil NH4,72,1
+Improved Fallow-Solo,Soil NO3,72,1
+Multistrata Agroforestry-Supplemental Irrigation-Solo,Crop Yield,5,1
+Supplemental Irrigation-Solo,Total Cost,16,1
+Supplemental Irrigation-Solo,Gross Return,15,1
+Multistrata Agroforestry-Supplemental Irrigation-Solo,Gross Return,5,1
+Supplemental Irrigation-Solo,Net Return,16,1
+Inorganic Fertilizer-Multistrata Agroforestry-pH Control-Solo,Variable Cost,47,1
+Inorganic Fertilizer-Multistrata Agroforestry-Solo,Variable Cost,141,1
+Inorganic Fertilizer-Multistrata Agroforestry-pH Control-Solo,Total Cost,47,1
+Inorganic Fertilizer-Multistrata Agroforestry-Solo,Total Cost,141,1
+Inorganic Fertilizer-Multistrata Agroforestry-pH Control-Solo,Gross Return,48,1
+Inorganic Fertilizer-Multistrata Agroforestry-Solo,Fixed Cost,6,1
+Other Agroforestry-Solo,Gross Return,12,1
+Other Agroforestry-Solo,Variable Cost,21,1
+Intercropping-Solo,Soil Organic Carbon,2,1
+Inorganic Fertilizer-Solo,Soil NH4,45,1
+Inorganic Fertilizer-Solo,Soil NO3,47,1
+Biochar-Solo,Biomass Yield,4,1
+Biochar-Inorganic Fertilizer-Organic Fertilizer-Solo,Biomass Yield,4,1
+pH Control-Solo,Aboveground Carbon Biomass,24,1
+pH Control-Solo,Total Cost,24,1
+pH Control-Solo,Net Return,24,1
+Crop Rotation-Solo,Soil Organic Matter,18,1
+Intercropping-Solo,Total Cost,8,1
+Inorganic Fertilizer-Intercropping-Solo,Total Cost,6,1
+Inorganic Fertilizer-Intercropping-Solo,Gross Return,6,1
+Intercropping-Solo,Net Return,8,1
+Inorganic Fertilizer-Intercropping-Solo,Net Return,6,1
+Inorganic Fertilizer-Intercropping-Solo,Biomass Yield,6,1
+Crop Rotation-Inorganic Fertilizer-Mulch-Solo,Crop Yield,3,1
+Crop Residue Incorporation-Crop Rotation-Mulch-Reduced Tillage-Solo,Crop Yield,12,1
+Organic Fertilizer-pH Control-Solo,Crop Yield,8,1
+pH Control-Solo,Cation Exchange Capacity,12,1
+Organic Fertilizer-pH Control-Solo,Cation Exchange Capacity,8,1
+Inorganic Fertilizer-Organic Fertilizer-Solo,Soil Carbon Stocks,10,1
+Multistrata Agroforestry-Solo,Biomass Yield,2,1
+Improved Varieties-Multistrata Agroforestry-Solo,Soil Carbon Stocks,4,1
+Improved Varieties-Multistrata Agroforestry-Solo,Soil Organic Carbon,4,1
+Inorganic Fertilizer-Solo,Phosphorus Agronomic Efficiency,36,1
+Mulch-pH Control-Solo,Crop Yield,3,1
+Crop Rotation-pH Control-Solo,Crop Yield,4,1
+Improved Fallow-Solo,Soil Organic Carbon,48,1
+Alleycropping-Crop Rotation-Solo,Crop Yield,4,1
+Reduced Tillage-Solo,Carbon Dioxide Emissions,2612,1
+Crop Rotation-Solo,Carbon Dioxide Emissions,364,1
+Supplemental Irrigation-Solo,Water Use Efficiency,40,1
+Organic Fertilizer-Solo,Soil Total Nitrogen,3,1
+Organic Fertilizer-Solo,Nitrogen Agronomic Efficiency (AGB),3,1
+Inorganic Fertilizer-Solo,Nitrogen Agronomic Efficiency (AGB),1,1
+Crop Rotation-Intercropping-Solo,Crop Yield,8,1
+Crop Rotation-Inorganic Fertilizer-Intercropping-Solo,Crop Yield,4,1
+Parklands-Solo,Biomass Yield,1,1
+Parklands-Solo,Crop Yield,1,1
+Alleycropping-Solo,Crop Yield,4,1
+Alleycropping-Solo,Variable Cost,4,1
+Alleycropping-Solo,Gross Return,4,1
+Alleycropping-Solo,Gross Margin,4,1
+Organic Fertilizer-Solo,Total Cost,2,1
+Organic Fertilizer-Solo,Fixed Cost,2,1
+Inorganic Fertilizer-Solo,Fixed Cost,2,1
+Multistrata Agroforestry-Solo,Net Return,4,1
+Organic Fertilizer-Solo,Benefit Cost Ratio (NRTC),2,1
+Inorganic Fertilizer-Solo,Benefit Cost Ratio (NRTC),2,1
+Multistrata Agroforestry-Solo,Benefit Cost Ratio (NRTC),4,1
+Mulch-Organic Fertilizer-Solo,Biomass Yield,1,1
+Mulch-Organic Fertilizer-Solo,Crop Yield,1,1
+Agroforestry Pruning-Alleycropping-Solo,Biomass Yield,32,1
+Agroforestry Pruning-Alleycropping-Inorganic Fertilizer-Solo,Biomass Yield,16,1
+Agroforestry Pruning-Alleycropping-Solo,Crop Yield,16,1
+Agroforestry Pruning-Alleycropping-Inorganic Fertilizer-Solo,Crop Yield,8,1
+Agroforestry Pruning-Organic Fertilizer-Solo,Biomass Yield,12,1
+Agroforestry Pruning-Solo,Biomass Yield,8,1
+Agroforestry Pruning-Organic Fertilizer-Solo,Crop Yield,18,1
+Biochar-Solo,Soil Moisture,18,1
+Biochar-Organic Fertilizer-Solo,Soil Moisture,9,1
+Biochar-Solo,Soil Organic Carbon,6,1
+Organic Fertilizer-Solo,Soil Organic Carbon,4,1
+Biochar-Organic Fertilizer-Solo,Soil Organic Carbon,3,1
+Biochar-Solo,Crop Yield,6,1
+Biochar-Solo,Water Use Efficiency,6,1
+Organic Fertilizer-Solo,Water Use Efficiency,4,1
+Biochar-Organic Fertilizer-Solo,Water Use Efficiency,3,1
+Biochar-Solo,Gross Return,6,1
+Biochar-Organic Fertilizer-Solo,Gross Return,3,1
+Biochar-Solo,Cation Exchange Capacity,6,1
+Biochar-Organic Fertilizer-Solo,Cation Exchange Capacity,3,1
+Biochar-Solo,Total Cost (Unconfirmed),6,1
+Organic Fertilizer-Solo,Total Cost (Unconfirmed),4,1
+Biochar-Organic Fertilizer-Solo,Total Cost (Unconfirmed),3,1
+Biochar-Solo,Net Return,6,1
+Biochar-Organic Fertilizer-Solo,Net Return,3,1
+Mulch-Solo,Cation Exchange Capacity,3,1
+Crop Residue-Intercropping-Reduced Tillage-Solo,Crop Yield,4,1
+Crop Residue-Intercropping-Solo,Crop Yield,2,1
+Multistrata Agroforestry-Solo,Biodiversity,2,1
+Agroforestry Pruning-Multistrata Agroforestry-Solo,Crop Yield,1,1
+Agroforestry Pruning-Multistrata Agroforestry-Solo,Soil Organic Carbon,2,1
+Agroforestry Pruning-Multistrata Agroforestry-Solo,Soil Total Nitrogen,2,1
+Multistrata Agroforestry-Solo,Soil Organic Carbon,8,1
+Multistrata Agroforestry-Solo,Soil Nitrogen,12,1
+Multistrata Agroforestry-Solo,Soil Carbon Stocks,4,1
+Double Cropping-Solo,Biomass Yield,4,1
+Alleycropping-Solo,Nitrous Oxide Emissions,100,1
+Alleycropping-Solo,Carbon Dioxide Emissions,100,1
+Alleycropping-Solo,Methane Emissions,100,1
+Alleycropping-Solo,Soil Moisture,80,1
+Other Agroforestry-Parklands-Solo,Cation Exchange Capacity,7,1
+Other Agroforestry-Parklands-Solo,Nitrous Oxide Emissions,81,1
+Other Agroforestry-Parklands-Solo,Soil Carbon Stocks,7,1
+Crop Rotation-Mulch-Reduced Tillage-Solo,Gross Margin,2,1
+Crop Rotation-Mulch-Solo,Gross Margin,1,1
+Crop Rotation-Reduced Tillage-Solo,Gross Margin,4,1
+Crop Rotation-Solo,Gross Margin,1,1
+Reduced Tillage-Solo,Erosion,2,1
+Inorganic Fertilizer-Solo,Soil Moisture,3,1
+Organic Fertilizer-Solo,Nitrogen Agronomic Efficiency,3,1
+Improved Varieties-Intercropping-Solo,Net Return,9,1
+Improved Varieties-Inorganic Fertilizer-Intercropping-Solo,Net Return,6,1
+Green Manure-Solo,Land Equivalent Ratio,10,1
+Mulch-Reduced Tillage-Solo,Crop Residue Yield,2,1
+Crop Residue Incorporation-Crop Rotation-Solo,Crop Residue Yield,2,1
+Crop Rotation-Mulch-Reduced Tillage-Solo,Crop Residue Yield,2,1
+Supplemental Irrigation-Solo,Water Use,8,1
+Crop Rotation-Mulch-Reduced Tillage-Solo,Soil Moisture,4,1
+Crop Rotation-Mulch-Solo,Soil Moisture,16,1
+Crop Residue Incorporation-Solo,Soil Moisture,4,1
+Crop Residue Incorporation-Crop Rotation-Solo,Soil Moisture,2,1
+Crop Rotation-Reduced Tillage-Solo,Soil Moisture,2,1
+Crop Rotation-Solo,Soil Total Nitrogen,24,1
+Crop Rotation-Mulch-Reduced Tillage-Solo,Soil Total Nitrogen,12,1
+Crop Rotation-Mulch-Solo,Soil Total Nitrogen,6,1
+Crop Residue Incorporation-Solo,Soil Total Nitrogen,12,1
+Crop Residue Incorporation-Crop Rotation-Solo,Soil Total Nitrogen,6,1
+Crop Rotation-Reduced Tillage-Solo,Soil Total Nitrogen,6,1
+Crop Rotation-Solo,Soil Organic Carbon,24,1
+Crop Rotation-Mulch-Reduced Tillage-Solo,Soil Organic Carbon,12,1
+Crop Rotation-Mulch-Solo,Soil Organic Carbon,6,1
+Crop Residue Incorporation-Solo,Soil Organic Carbon,12,1
+Crop Residue Incorporation-Crop Rotation-Solo,Soil Organic Carbon,6,1
+Crop Rotation-Reduced Tillage-Solo,Soil Organic Carbon,6,1
+Reduced Tillage-Solo,Biodiversity,46,1
+Crop Residue Incorporation-Solo,Biodiversity,331,1
+Crop Residue Incorporation-Reduced Tillage-Solo,Biodiversity,9,1
+Mulch-Reduced Tillage-Solo,Biodiversity,97,1
+Crop Rotation-Solo,Biodiversity,42,1
+Crop Residue Incorporation-Crop Rotation-Solo,Biodiversity,12,1
+Crop Rotation-Reduced Tillage-Solo,Biodiversity,12,1
+Crop Rotation-Mulch-Reduced Tillage-Solo,Biodiversity,18,1
+Crop Rotation-Mulch-Solo,Biodiversity,12,1
+Crop Rotation-Solo,Cation Exchange Capacity,2,1
+Crop Residue-Solo,Biodiversity,72,1
+Biochar-Mulch-Organic Fertilizer-Solo,Crop Yield,3,1
+Biochar-Inorganic Fertilizer-Mulch-Organic Fertilizer-Solo,Crop Yield,1,1
+Crop Residue-Mulch-Solo,Crop Yield,20,1
+Crop Residue-Mulch-Solo,Biomass Yield,20,1
+Crop Residue-Mulch-Solo,Runoff,18,1
+Crop Residue-Mulch-Solo,Erosion,18,1
+Reduced Tillage-Solo,Cation Exchange Capacity,2,1
+Crop Residue Incorporation-Solo,Biomass Yield,3,1
+Crop Residue-Mulch-Reduced Tillage-Solo,Crop Yield,18,1
+Crop Residue-Mulch-Reduced Tillage-Solo,Water Use Efficiency,18,1
+Reduced Tillage-Solo,Gross Return,9,1
+Mulch-Reduced Tillage-Solo,Gross Return,9,1
+Mulch-Solo,Gross Return,9,1
+Mulch-Reduced Tillage-Solo,Soil Organic Matter,6,1
+Reduced Tillage-Solo,Variable Cost,9,1
+Mulch-Reduced Tillage-Solo,Variable Cost,9,1
+Mulch-Solo,Variable Cost,9,1
+Reduced Tillage-Solo,Infiltration Rate,8,1
+Crop Residue-Solo,Soil Available Nitrogen,16,1
+Crop Residue-Solo,Nitrogen Use Efficiency (Isotopic Product),2,1
+Crop Residue-Solo,Nitrogen Use Efficiency (Isotopic AGB),2,1
+Mulch-Solo,Nitrous Oxide Emissions,19,1
+Mulch-Reduced Tillage-Solo,Nitrous Oxide Emissions,19,1
+Inorganic Fertilizer-Mulch-Reduced Tillage-Solo,Soil Total Nitrogen,2,1
+Inorganic Fertilizer-Mulch-Solo,Soil Total Nitrogen,4,1
+Inorganic Fertilizer-Solo,Soil Organic Carbon,7,1
+Inorganic Fertilizer-Mulch-Reduced Tillage-Solo,Soil Organic Carbon,2,1
+Inorganic Fertilizer-Mulch-Solo,Soil Organic Carbon,4,1
+Agroforestry Pruning-Reduced Tillage-Solo,Crop Yield,2,1
+Crop Rotation-Solo,Gross Return,6,1
+Crop Rotation-Solo,Variable Cost,6,1
+Crop Rotation-Solo,Benefit Cost Ratio (Unspecified),6,1
+Crop Rotation-Solo,Net Return,6,1
+Green Manure-Inorganic Fertilizer-Solo,Crop Yield,3,1
+Green Manure-Organic Fertilizer-Solo,Crop Yield,3,1
+Green Manure-Inorganic Fertilizer-Organic Fertilizer-Solo,Crop Yield,2,1
+Crop Rotation-Organic Fertilizer-Solo,Crop Yield,3,1
+Crop Rotation-Inorganic Fertilizer-Organic Fertilizer-Solo,Crop Yield,2,1
+Green Manure-Solo,Nitrogen Agronomic Efficiency,8,1
+Crop Rotation-Solo,Nitrogen Agronomic Efficiency,8,1
+Organic Fertilizer-Combo,Soil Carbon Stocks,10,1
+Organic Fertilizer-Combo,Soil Moisture,9,1
+Organic Fertilizer-Combo,Soil Organic Carbon,3,1
+Organic Fertilizer-Combo,Water Use Efficiency,3,1
+Organic Fertilizer-Combo,Gross Return,3,1
+Organic Fertilizer-Combo,Total Cost (Unconfirmed),3,1
+Organic Fertilizer-Combo,Net Return,3,1
+Inorganic Fertilizer-Combo,Variable Cost,188,1
+Inorganic Fertilizer-Combo,Fixed Cost,6,1
+Inorganic Fertilizer-Combo,Soil Carbon Stocks,10,1
+Inorganic Fertilizer-Combo,Soil Total Nitrogen,6,1
+Inorganic Fertilizer-Combo,Soil Organic Carbon,6,1
+Harvest Method-Combo,Crop Yield,9,1
+Harvest Method-Combo,Cation Exchange Capacity,12,1
+Intercropping-Combo,Erosion,1,1
+Intercropping-Combo,Total Cost,6,1
+Intercropping-Combo,Gross Return,6,1
+Mulch-Combo,Cation Exchange Capacity,12,1
+Mulch-Combo,Crop Residue Yield,4,1
+Mulch-Combo,Biodiversity,127,1
+Mulch-Combo,Runoff,18,1
+Mulch-Combo,Erosion,18,1
+Mulch-Combo,Water Use Efficiency,18,1
+Mulch-Combo,Gross Return,9,1
+Mulch-Combo,Soil Organic Matter,6,1
+Mulch-Combo,Variable Cost,9,1
+Mulch-Combo,Nitrous Oxide Emissions,19,1
+Reduced Tillage-Combo,Biodiversity,136,1
+Reduced Tillage-Combo,Water Use Efficiency,18,1
+Reduced Tillage-Combo,Gross Return,9,1
+Reduced Tillage-Combo,Soil Organic Matter,6,1
+Reduced Tillage-Combo,Variable Cost,9,1
+Reduced Tillage-Combo,Nitrous Oxide Emissions,19,1
+Crop Rotation-Combo,Gross Margin,7,1
+Crop Rotation-Combo,Crop Residue Yield,4,1
+Crop Rotation-Combo,Soil Moisture,24,1
+Crop Rotation-Combo,Soil Total Nitrogen,30,1
+Crop Rotation-Combo,Soil Organic Carbon,30,1
+Crop Rotation-Combo,Biodiversity,54,1
+Supplemental Irrigation-Combo,Gross Return,5,1
+Crop Residue Incorporation-Combo,Soil Moisture,2,1
+Crop Residue Incorporation-Combo,Soil Total Nitrogen,6,1
+Crop Residue Incorporation-Combo,Soil Organic Carbon,6,1
+Crop Residue Incorporation-Combo,Biodiversity,21,1
+Multistrata Agroforestry-Combo,Variable Cost,188,1
+Multistrata Agroforestry-Combo,Total Cost,188,1
+Multistrata Agroforestry-Combo,Fixed Cost,6,1
+Multistrata Agroforestry-Combo,Soil Carbon Stocks,4,1
+Multistrata Agroforestry-Combo,Soil Total Nitrogen,2,1
+Agroforestry Pruning-Combo,Soil Organic Carbon,2,1
+Agroforestry Pruning-Combo,Soil Total Nitrogen,2,1
+pH Control-Combo,Variable Cost,47,1
+pH Control-Combo,Total Cost,47,1
+pH Control-Combo,Gross Return,48,1
+pH Control-Combo,Cation Exchange Capacity,8,1
+Other Agroforestry-Combo,Cation Exchange Capacity,7,1
+Other Agroforestry-Combo,Nitrous Oxide Emissions,81,1
+Other Agroforestry-Combo,Soil Carbon Stocks,7,1
+Improved Varieties-Combo,Erosion,1,1
+Improved Varieties-Combo,Soil Carbon Stocks,4,1
+Improved Varieties-Combo,Soil Organic Carbon,4,1
+Improved Varieties-Combo,Net Return,15,1
+Biochar-Combo,Biomass Yield,4,1
+Biochar-Combo,Soil Moisture,9,1
+Biochar-Combo,Soil Organic Carbon,3,1
+Biochar-Combo,Water Use Efficiency,3,1
+Biochar-Combo,Gross Return,3,1
+Biochar-Combo,Cation Exchange Capacity,3,1
+Biochar-Combo,Total Cost (Unconfirmed),3,1
+Biochar-Combo,Net Return,3,1
+Alleycropping-Combo,Biomass Yield,48,1
+Parklands-Combo,Cation Exchange Capacity,7,1
+Parklands-Combo,Nitrous Oxide Emissions,81,1
+Parklands-Combo,Soil Carbon Stocks,7,1
+Crop Residue-Combo,Soil Moisture,2,1
+Crop Residue-Combo,Soil Total Nitrogen,6,1
+Crop Residue-Combo,Soil Organic Carbon,6,1
+Crop Residue-Combo,Biodiversity,21,1
+Crop Residue-Combo,Biomass Yield,20,1
+Crop Residue-Combo,Runoff,18,1
+Crop Residue-Combo,Erosion,18,1
+Crop Residue-Combo,Water Use Efficiency,18,1
+Green Manure-Combo,Crop Yield,8,1

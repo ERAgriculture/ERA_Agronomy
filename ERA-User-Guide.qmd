@@ -28,7 +28,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r packages & functions, include=F, echo=F}
+```{r packages & functions, include=T, echo=F}
 
 if (!requireNamespace("pacman", quietly = TRUE)) {
   install.packages("pacman")
@@ -40,15 +40,6 @@ pacman::p_load(
   ggridges, jsonlite
 )
 
-if(!require(ERAgON)){
-  remotes::install_github(repo="https://github.com/EiA2030/ERAgON",build_vignettes = T)
-  library(ERAgON)
-}
-
-if(!require(ERAg)){
-  remotes::install_github(repo="https://github.com/EiA2030/ERAg",build_vignettes = T)
-  library(ERAg)
-}
 # Set a directory for downloaded data
 dl_dir <- "downloaded_data"
 
@@ -587,7 +578,6 @@ era_master_codes <- jsonlite::fromJSON(json_master)
 
 
 ```
-
 
 ```{r R downloading data from S3 bucket,echo=T, message=TRUE}
 # Create an S3 filesystem handle

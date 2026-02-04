@@ -1,0 +1,545 @@
+PrName,Out.SubInd,Country,Observations,Studies
+Inorganic Fertilizer-Solo,Crop Yield,Brazil,984,60
+Inorganic Fertilizer-Solo,Biomass Yield,Brazil,328,22
+Inorganic Fertilizer-Combo,Crop Yield,Brazil,120,15
+Intercropping-Solo,Crop Yield,Brazil,120,14
+pH Control-Solo,Crop Yield,Brazil,585,14
+Mulch-Combo,Crop Yield,Brazil,109,14
+Inorganic Fertilizer-Solo,Crop Yield,Mexico,297,13
+Organic Fertilizer-Solo,Crop Yield,Brazil,108,11
+Intercropping-Combo,Crop Yield,Brazil,87,11
+Mulch-Combo,Crop Yield,Mexico,435,11
+Reduced Tillage-Solo,Crop Yield,Brazil,166,8
+Multistrata Agroforestry-Solo,Crop Yield,Brazil,185,8
+Inorganic Fertilizer-Combo,Crop Yield,Mexico,213,8
+Reduced Tillage-Combo,Crop Yield,Mexico,352,8
+Crop Residue-Combo,Crop Yield,Brazil,92,8
+Reduced Tillage-Solo,Crop Yield,Mexico,119,7
+Mulch-Reduced Tillage-Solo,Crop Yield,Mexico,188,7
+Inorganic Fertilizer-Combo,Biomass Yield,Brazil,136,7
+Reduced Tillage-Combo,Crop Yield,Brazil,60,7
+Crop Rotation-Combo,Crop Yield,Brazil,51,7
+Crop Residue Incorporation-Combo,Crop Yield,Brazil,80,7
+Intercropping-Solo,Biomass Yield,Brazil,35,6
+Crop Rotation-Solo,Crop Yield,Brazil,125,6
+Organic Fertilizer-Combo,Crop Yield,Brazil,40,6
+pH Control-Combo,Crop Yield,Brazil,59,6
+Organic Fertilizer-Solo,Biomass Yield,Brazil,30,5
+Mulch-Solo,Crop Yield,Mexico,321,5
+Supplemental Irrigation-Solo,Crop Yield,Brazil,132,4
+Inorganic Fertilizer-Intercropping-Solo,Crop Yield,Brazil,26,4
+Inorganic Fertilizer-Solo,Gross Return,Brazil,207,4
+Inorganic Fertilizer-Solo,Crop Residue Yield,Brazil,74,4
+pH Control-Solo,Biomass Yield,Brazil,136,4
+Improved Varieties-Solo,Crop Yield,Brazil,279,4
+Crop Residue Incorporation-Mulch-Solo,Crop Yield,Brazil,23,4
+Intercropping-Solo,Crop Yield,Mexico,60,4
+Organic Fertilizer-Solo,Crop Yield,Mexico,28,4
+Crop Rotation-Solo,Crop Yield,Mexico,75,4
+Organic Fertilizer-Combo,Biomass Yield,Brazil,27,4
+Organic Fertilizer-Combo,Crop Yield,Mexico,25,4
+Intercropping-Combo,Cation Exchange Capacity,Mexico,8,4
+Mulch-Combo,Biomass Yield,Mexico,71,4
+Reduced Tillage-Combo,Cation Exchange Capacity,Mexico,8,4
+Crop Rotation-Combo,Crop Yield,Mexico,63,4
+Crop Residue-Combo,Crop Yield,Mexico,86,4
+Improved Fallow-Solo,Biomass Yield,Brazil,52,3
+Improved Fallow-Solo,Crop Yield,Brazil,58,3
+Mulch-Solo,Crop Yield,Brazil,15,3
+Multistrata Agroforestry-Solo,Gross Margin,Brazil,3,3
+Multistrata Agroforestry-Solo,Labour Cost,Brazil,3,3
+Multistrata Agroforestry-Solo,Soil Moisture,Brazil,6,3
+Inorganic Fertilizer-Solo,Nitrous Oxide Emissions,Brazil,26,3
+Crop Residue Incorporation-Inorganic Fertilizer-Solo,Crop Yield,Brazil,15,3
+Inorganic Fertilizer-Organic Fertilizer-Solo,Crop Yield,Mexico,10,3
+Inorganic Fertilizer-Solo,Crop Yield,Haiti,62,3
+Agroforestry Pruning-Solo,Crop Yield,Haiti,6,3
+Agroforestry Pruning-Inorganic Fertilizer-Solo,Crop Yield,Haiti,9,3
+Inorganic Fertilizer-Solo,Gross Margin,Haiti,62,3
+Agroforestry Pruning-Solo,Gross Margin,Haiti,6,3
+Agroforestry Pruning-Inorganic Fertilizer-Solo,Gross Margin,Haiti,9,3
+Inorganic Fertilizer-Mulch-Solo,Crop Yield,Mexico,103,3
+Mulch-Reduced Tillage-Solo,Soil Moisture,Mexico,48,3
+Mulch-Reduced Tillage-Solo,Biomass Yield,Mexico,51,3
+Inorganic Fertilizer-Combo,Crop Yield,Haiti,9,3
+Inorganic Fertilizer-Combo,Gross Margin,Haiti,9,3
+Intercropping-Combo,Biomass Yield,Brazil,28,3
+Mulch-Combo,Soil Moisture,Mexico,68,3
+Reduced Tillage-Combo,Soil Moisture,Mexico,54,3
+Reduced Tillage-Combo,Biomass Yield,Mexico,51,3
+Agroforestry Pruning-Combo,Crop Yield,Brazil,48,3
+Agroforestry Pruning-Combo,Crop Yield,Haiti,9,3
+Agroforestry Pruning-Combo,Gross Margin,Haiti,9,3
+Intercropping-Solo,Soil Total Nitrogen,Brazil,10,2
+Crop Rotation-Inorganic Fertilizer-Solo,Crop Yield,Brazil,10,2
+Crop Residue Incorporation-Mulch-Reduced Tillage-Solo,Crop Yield,Brazil,28,2
+Reduced Tillage-Solo,Soil Organic Carbon,Brazil,38,2
+Improved Fallow-Intercropping-Solo,Biomass Yield,Brazil,20,2
+Improved Fallow-Intercropping-Solo,Crop Yield,Brazil,18,2
+Improved Fallow-Solo,Soil Nitrogen,Brazil,24,2
+Improved Fallow-Intercropping-Solo,Soil Nitrogen,Brazil,22,2
+Mulch-Solo,Soil Moisture,Brazil,39,2
+Mulch-Solo,Biomass Yield,Brazil,15,2
+Inorganic Fertilizer-Solo,Total Cost,Brazil,41,2
+Inorganic Fertilizer-pH Control-Solo,Crop Yield,Brazil,42,2
+Inorganic Fertilizer-Solo,Variable Cost,Brazil,38,2
+Other Agroforestry-Solo,Crop Yield,Brazil,15,2
+Deficit Irrigation-Solo,Biomass Yield,Brazil,42,2
+Deficit Irrigation-Solo,Water Use Efficiency,Brazil,40,2
+Multistrata Agroforestry-Solo,Gross Return,Brazil,128,2
+Multistrata Agroforestry-Solo,Total Cost,Brazil,120,2
+Multistrata Agroforestry-Solo,Variable Cost,Brazil,66,2
+pH Control-Solo,Crop Residue Yield,Brazil,7,2
+Inorganic Fertilizer-Solo,Nitrogen Agronomic Efficiency,Brazil,24,2
+Inorganic Fertilizer-Organic Fertilizer-Solo,Biomass Yield,Brazil,10,2
+pH Control-Solo,Gross Return,Brazil,29,2
+Intercropping-Solo,Gross Return,Brazil,16,2
+Inorganic Fertilizer-Solo,Net Return,Brazil,15,2
+Organic Fertilizer-Solo,Cation Exchange Capacity,Brazil,16,2
+Mulch-Reduced Tillage-Solo,Crop Yield,Brazil,4,2
+Inorganic Fertilizer-Mulch-Reduced Tillage-Solo,Crop Yield,Brazil,2,2
+Inorganic Fertilizer-Solo,Soil Carbon Stocks,Brazil,5,2
+Organic Fertilizer-Solo,Soil Carbon Stocks,Brazil,5,2
+Inorganic Fertilizer-pH Control-Solo,Biomass Yield,Brazil,96,2
+Inorganic Fertilizer-Organic Fertilizer-Solo,Crop Yield,Brazil,10,2
+Multistrata Agroforestry-Solo,Soil Moisture,Costa Rica,259,2
+Agroforestry Pruning-Multistrata Agroforestry-Solo,Biodiversity,Costa Rica,14,2
+Crop Residue-Intercropping-Reduced Tillage-Solo,Cation Exchange Capacity,Mexico,4,2
+Intercropping-Reduced Tillage-Solo,Cation Exchange Capacity,Mexico,4,2
+Green Manure-Solo,Crop Yield,Mexico,19,2
+Crop Residue Incorporation-Crop Rotation-Solo,Crop Yield,Mexico,10,2
+Crop Rotation-Mulch-Reduced Tillage-Solo,Crop Yield,Mexico,22,2
+Crop Rotation-Inorganic Fertilizer-Solo,Crop Yield,Mexico,6,2
+Mulch-Solo,Soil Moisture,Mexico,54,2
+Reduced Tillage-Solo,Soil Moisture,Mexico,6,2
+Mulch-Reduced Tillage-Solo,Soil Total Nitrogen,Mexico,40,2
+Mulch-Solo,Soil Total Nitrogen,Mexico,32,2
+Reduced Tillage-Solo,Soil Total Nitrogen,Mexico,18,2
+Mulch-Reduced Tillage-Solo,Soil Organic Carbon,Mexico,28,2
+Mulch-Solo,Soil Organic Carbon,Mexico,23,2
+Crop Residue Incorporation-Solo,Crop Yield,Mexico,24,2
+Crop Residue-Solo,Crop Yield,Mexico,50,2
+Reduced Tillage-Solo,Biomass Yield,Mexico,56,2
+Reduced Tillage-Solo,Soil Organic Matter,Mexico,12,2
+Organic Fertilizer-Combo,Cation Exchange Capacity,Brazil,11,2
+Inorganic Fertilizer-Combo,Total Cost,Brazil,194,2
+Inorganic Fertilizer-Combo,Gross Return,Brazil,54,2
+Intercropping-Combo,Soil Nitrogen,Brazil,22,2
+Mulch-Combo,Soil Total Nitrogen,Mexico,64,2
+Mulch-Combo,Soil Organic Carbon,Mexico,52,2
+Reduced Tillage-Combo,Soil Total Nitrogen,Mexico,60,2
+Reduced Tillage-Combo,Soil Organic Carbon,Mexico,48,2
+Supplemental Irrigation-Combo,Crop Yield,Brazil,6,2
+Crop Residue Incorporation-Combo,Crop Yield,Mexico,12,2
+Improved Fallow-Combo,Biomass Yield,Brazil,24,2
+Improved Fallow-Combo,Crop Yield,Brazil,18,2
+Improved Fallow-Combo,Soil Nitrogen,Brazil,22,2
+Multistrata Agroforestry-Combo,Gross Return,Brazil,53,2
+Multistrata Agroforestry-Combo,Biodiversity,Costa Rica,14,2
+Agroforestry Pruning-Combo,Biomass Yield,Brazil,60,2
+Agroforestry Pruning-Combo,Biodiversity,Costa Rica,14,2
+pH Control-Combo,Biomass Yield,Brazil,96,2
+Alleycropping-Combo,Crop Yield,Brazil,28,2
+Crop Residue-Combo,Cation Exchange Capacity,Mexico,4,2
+Organic Fertilizer-Solo,Crop Yield,Ecuador,6,1
+Harvest Method-Intercropping-Mulch-Solo,Crop Yield,Brazil,9,1
+Harvest Method-Intercropping-Mulch-Solo,Cation Exchange Capacity,Brazil,12,1
+Crop Rotation-Intercropping-Reduced Tillage-Solo,Crop Yield,Brazil,1,1
+Crop Rotation-Reduced Tillage-Solo,Crop Yield,Brazil,1,1
+Double Cropping-Solo,Nitrous Oxide Emissions,Brazil,99,1
+Double Cropping-Solo,Soil NH4,Brazil,110,1
+Double Cropping-Solo,Soil NO3,Brazil,90,1
+Intercropping-Supplemental Irrigation-Solo,Crop Yield,Brazil,1,1
+Intercropping-Solo,Soil Moisture,Brazil,2,1
+Improved Fallow-Inorganic Fertilizer-Solo,Biomass Yield,Brazil,2,1
+Improved Fallow-Inorganic Fertilizer-Intercropping-Solo,Biomass Yield,Brazil,2,1
+Double Cropping-Solo,Crop Yield,Brazil,1,1
+Agroforestry Pruning-Mulch-Solo,Crop Yield,Brazil,4,1
+Agroforestry Pruning-Mulch-pH Control-Solo,Crop Yield,Brazil,2,1
+Multistrata Agroforestry-Solo,Labour Person Hours,Brazil,2,1
+Crop Residue Incorporation-Solo,Crop Yield,Brazil,4,1
+Crop Residue Incorporation-Reduced Tillage-Solo,Crop Yield,Brazil,2,1
+Crop Residue Incorporation-Solo,Crop Residue Yield,Brazil,4,1
+Reduced Tillage-Solo,Crop Residue Yield,Brazil,4,1
+Crop Residue Incorporation-Reduced Tillage-Solo,Crop Residue Yield,Brazil,2,1
+Other Agroforestry-Solo,Biodiversity,Brazil,16,1
+Intercropping-Solo,Erosion,Brazil,1,1
+Improved Varieties-Intercropping-Solo,Erosion,Brazil,1,1
+Intercropping-Mulch-Solo,Crop Yield,Brazil,14,1
+Deficit Irrigation-Solo,Crop Yield,Brazil,24,1
+Deficit Irrigation-Solo,Soil Moisture,Brazil,72,1
+Improved Fallow-Solo,Soil Total Nitrogen,Brazil,36,1
+Improved Fallow-Solo,Soil NH4,Brazil,72,1
+Improved Fallow-Solo,Soil NO3,Brazil,72,1
+Multistrata Agroforestry-Supplemental Irrigation-Solo,Crop Yield,Brazil,5,1
+Supplemental Irrigation-Solo,Total Cost,Brazil,16,1
+Supplemental Irrigation-Solo,Gross Return,Brazil,15,1
+Multistrata Agroforestry-Supplemental Irrigation-Solo,Gross Return,Brazil,5,1
+Supplemental Irrigation-Solo,Net Return,Brazil,16,1
+Multistrata Agroforestry-Solo,Fixed Cost,Brazil,30,1
+Inorganic Fertilizer-Multistrata Agroforestry-pH Control-Solo,Variable Cost,Brazil,47,1
+Inorganic Fertilizer-Multistrata Agroforestry-Solo,Variable Cost,Brazil,141,1
+Inorganic Fertilizer-Multistrata Agroforestry-pH Control-Solo,Total Cost,Brazil,47,1
+Inorganic Fertilizer-Multistrata Agroforestry-Solo,Total Cost,Brazil,141,1
+Inorganic Fertilizer-Multistrata Agroforestry-pH Control-Solo,Gross Return,Brazil,48,1
+Inorganic Fertilizer-Multistrata Agroforestry-Solo,Fixed Cost,Brazil,6,1
+Other Agroforestry-Solo,Gross Return,Brazil,12,1
+Other Agroforestry-Solo,Variable Cost,Brazil,21,1
+Intercropping-Solo,Soil Organic Carbon,Brazil,2,1
+Inorganic Fertilizer-Solo,Soil NH4,Brazil,45,1
+Inorganic Fertilizer-Solo,Soil NO3,Brazil,47,1
+Biochar-Solo,Biomass Yield,Brazil,4,1
+Biochar-Inorganic Fertilizer-Organic Fertilizer-Solo,Biomass Yield,Brazil,4,1
+pH Control-Solo,Aboveground Carbon Biomass,Brazil,24,1
+pH Control-Solo,Total Cost,Brazil,24,1
+pH Control-Solo,Net Return,Brazil,24,1
+Crop Rotation-Solo,Soil Organic Matter,Brazil,18,1
+Intercropping-Solo,Total Cost,Brazil,8,1
+Inorganic Fertilizer-Intercropping-Solo,Total Cost,Brazil,6,1
+Inorganic Fertilizer-Intercropping-Solo,Gross Return,Brazil,6,1
+Intercropping-Solo,Net Return,Brazil,8,1
+Inorganic Fertilizer-Intercropping-Solo,Net Return,Brazil,6,1
+Inorganic Fertilizer-Intercropping-Solo,Biomass Yield,Brazil,6,1
+Crop Rotation-Mulch-Solo,Crop Yield,Brazil,4,1
+Crop Rotation-Inorganic Fertilizer-Mulch-Solo,Crop Yield,Brazil,3,1
+Intercropping-Solo,Land Equivalent Ratio,Brazil,8,1
+Crop Residue Incorporation-Crop Rotation-Mulch-Reduced Tillage-Solo,Crop Yield,Brazil,12,1
+Organic Fertilizer-pH Control-Solo,Crop Yield,Brazil,8,1
+pH Control-Solo,Cation Exchange Capacity,Brazil,12,1
+Organic Fertilizer-pH Control-Solo,Cation Exchange Capacity,Brazil,8,1
+Inorganic Fertilizer-Organic Fertilizer-Solo,Soil Carbon Stocks,Brazil,10,1
+Multistrata Agroforestry-Solo,Aboveground Carbon Biomass,Brazil,1,1
+Multistrata Agroforestry-Solo,Belowground Carbon Biomass,Brazil,1,1
+Multistrata Agroforestry-Solo,Biomass Yield,Brazil,2,1
+Improved Varieties-Multistrata Agroforestry-Solo,Soil Carbon Stocks,Brazil,4,1
+Improved Varieties-Multistrata Agroforestry-Solo,Soil Organic Carbon,Brazil,4,1
+Inorganic Fertilizer-Solo,Phosphorus Agronomic Efficiency,Brazil,36,1
+Mulch-pH Control-Solo,Crop Yield,Brazil,3,1
+Crop Rotation-pH Control-Solo,Crop Yield,Brazil,4,1
+Improved Fallow-Solo,Soil Organic Carbon,Brazil,48,1
+Alleycropping-Crop Rotation-Solo,Crop Yield,Brazil,4,1
+Reduced Tillage-Solo,Biomass Yield,Brazil,3,1
+Reduced Tillage-Solo,Carbon Dioxide Emissions,Brazil,2612,1
+Crop Rotation-Solo,Carbon Dioxide Emissions,Brazil,364,1
+Reduced Tillage-Solo,Soil Moisture,Brazil,1787,1
+Crop Rotation-Solo,Soil Moisture,Brazil,207,1
+Supplemental Irrigation-Solo,Water Use Efficiency,Brazil,40,1
+Organic Fertilizer-Solo,Soil Total Nitrogen,Brazil,3,1
+Inorganic Fertilizer-Solo,Soil Total Nitrogen,Brazil,1,1
+Organic Fertilizer-Solo,Nitrogen Agronomic Efficiency (AGB),Brazil,3,1
+Inorganic Fertilizer-Solo,Nitrogen Agronomic Efficiency (AGB),Brazil,1,1
+Crop Rotation-Intercropping-Solo,Crop Yield,Brazil,8,1
+Crop Rotation-Inorganic Fertilizer-Intercropping-Solo,Crop Yield,Brazil,4,1
+Parklands-Solo,Biomass Yield,Brazil,1,1
+Parklands-Solo,Crop Yield,Brazil,1,1
+Alleycropping-Solo,Crop Yield,Brazil,4,1
+Alleycropping-Solo,Variable Cost,Brazil,4,1
+Alleycropping-Solo,Gross Return,Brazil,4,1
+Alleycropping-Solo,Gross Margin,Brazil,4,1
+Organic Fertilizer-Solo,Gross Return,Peru,2,1
+Inorganic Fertilizer-Solo,Gross Return,Peru,2,1
+Multistrata Agroforestry-Solo,Gross Return,Peru,4,1
+Organic Fertilizer-Solo,Total Cost,Peru,2,1
+Inorganic Fertilizer-Solo,Total Cost,Peru,2,1
+Multistrata Agroforestry-Solo,Total Cost,Peru,4,1
+Organic Fertilizer-Solo,Fixed Cost,Peru,2,1
+Inorganic Fertilizer-Solo,Fixed Cost,Peru,2,1
+Multistrata Agroforestry-Solo,Fixed Cost,Peru,4,1
+Organic Fertilizer-Solo,Net Return,Peru,2,1
+Inorganic Fertilizer-Solo,Net Return,Peru,2,1
+Multistrata Agroforestry-Solo,Net Return,Peru,4,1
+Organic Fertilizer-Solo,Benefit Cost Ratio (NRTC),Peru,2,1
+Inorganic Fertilizer-Solo,Benefit Cost Ratio (NRTC),Peru,2,1
+Multistrata Agroforestry-Solo,Benefit Cost Ratio (NRTC),Peru,4,1
+Mulch-Organic Fertilizer-Solo,Biomass Yield,Brazil,1,1
+Mulch-Organic Fertilizer-Solo,Crop Yield,Brazil,1,1
+Agroforestry Pruning-Alleycropping-Solo,Biomass Yield,Brazil,32,1
+Agroforestry Pruning-Alleycropping-Inorganic Fertilizer-Solo,Biomass Yield,Brazil,16,1
+Agroforestry Pruning-Alleycropping-Solo,Crop Yield,Brazil,16,1
+Agroforestry Pruning-Alleycropping-Inorganic Fertilizer-Solo,Crop Yield,Brazil,8,1
+Agroforestry Pruning-Organic Fertilizer-Solo,Biomass Yield,Brazil,12,1
+Agroforestry Pruning-Solo,Biomass Yield,Brazil,8,1
+Agroforestry Pruning-Organic Fertilizer-Solo,Crop Yield,Brazil,18,1
+Agroforestry Pruning-Solo,Crop Yield,Brazil,12,1
+Intercropping-Solo,Water Use Efficiency,Brazil,5,1
+Biochar-Solo,Soil Moisture,Brazil,18,1
+Organic Fertilizer-Solo,Soil Moisture,Brazil,12,1
+Biochar-Organic Fertilizer-Solo,Soil Moisture,Brazil,9,1
+Biochar-Solo,Soil Organic Carbon,Brazil,6,1
+Organic Fertilizer-Solo,Soil Organic Carbon,Brazil,4,1
+Biochar-Organic Fertilizer-Solo,Soil Organic Carbon,Brazil,3,1
+Biochar-Solo,Crop Yield,Brazil,6,1
+Biochar-Organic Fertilizer-Solo,Crop Yield,Brazil,3,1
+Biochar-Solo,Water Use Efficiency,Brazil,6,1
+Organic Fertilizer-Solo,Water Use Efficiency,Brazil,4,1
+Biochar-Organic Fertilizer-Solo,Water Use Efficiency,Brazil,3,1
+Biochar-Solo,Gross Return,Brazil,6,1
+Organic Fertilizer-Solo,Gross Return,Brazil,4,1
+Biochar-Organic Fertilizer-Solo,Gross Return,Brazil,3,1
+Biochar-Solo,Cation Exchange Capacity,Brazil,6,1
+Biochar-Organic Fertilizer-Solo,Cation Exchange Capacity,Brazil,3,1
+Biochar-Solo,Total Cost (Unconfirmed),Brazil,6,1
+Organic Fertilizer-Solo,Total Cost (Unconfirmed),Brazil,4,1
+Biochar-Organic Fertilizer-Solo,Total Cost (Unconfirmed),Brazil,3,1
+Biochar-Solo,Net Return,Brazil,6,1
+Organic Fertilizer-Solo,Net Return,Brazil,4,1
+Biochar-Organic Fertilizer-Solo,Net Return,Brazil,3,1
+Mulch-Solo,Biodiversity,Brazil,18,1
+Mulch-Solo,Soil Organic Matter,Brazil,3,1
+Mulch-Solo,Cation Exchange Capacity,Brazil,3,1
+Intercropping-Solo,Crop Yield,Guatemala,7,1
+Crop Residue-Reduced Tillage-Solo,Crop Yield,Brazil,6,1
+Crop Residue-Intercropping-Reduced Tillage-Solo,Crop Yield,Brazil,4,1
+Crop Residue-Intercropping-Solo,Crop Yield,Brazil,2,1
+Intercropping-Solo,Crop Yield,Colombia,16,1
+Multistrata Agroforestry-Solo,Biodiversity,Costa Rica,2,1
+Agroforestry Pruning-Multistrata Agroforestry-Solo,Crop Yield,Costa Rica,1,1
+Multistrata Agroforestry-Solo,Crop Yield,Costa Rica,6,1
+Multistrata Agroforestry-Solo,Labour Person Hours,Costa Rica,12,1
+Agroforestry Pruning-Multistrata Agroforestry-Solo,Soil Organic Carbon,Costa Rica,2,1
+Agroforestry Pruning-Multistrata Agroforestry-Solo,Soil Total Nitrogen,Costa Rica,2,1
+Multistrata Agroforestry-Solo,Soil Organic Carbon,Costa Rica,8,1
+Multistrata Agroforestry-Solo,Soil Nitrogen,Costa Rica,12,1
+Multistrata Agroforestry-Solo,Soil Carbon Stocks,Costa Rica,4,1
+Multistrata Agroforestry-Solo,Aboveground Carbon Biomass,Costa Rica,1,1
+Multistrata Agroforestry-Solo,Belowground Carbon Biomass,Costa Rica,1,1
+Double Cropping-Solo,Crop Yield,Costa Rica,12,1
+Double Cropping-Solo,Biomass Yield,Costa Rica,4,1
+Alleycropping-Solo,Nitrous Oxide Emissions,Costa Rica,100,1
+Alleycropping-Solo,Carbon Dioxide Emissions,Costa Rica,100,1
+Alleycropping-Solo,Methane Emissions,Costa Rica,100,1
+Alleycropping-Solo,Soil Moisture,Costa Rica,80,1
+Other Agroforestry-Parklands-Solo,Cation Exchange Capacity,Costa Rica,7,1
+Other Agroforestry-Parklands-Solo,Nitrous Oxide Emissions,Costa Rica,81,1
+Other Agroforestry-Parklands-Solo,Soil Carbon Stocks,Costa Rica,7,1
+Reduced Tillage-Solo,Crop Yield,Nicaragua,6,1
+Mulch-Solo,Crop Yield,Nicaragua,5,1
+Mulch-Reduced Tillage-Solo,Crop Yield,Nicaragua,2,1
+Crop Rotation-Mulch-Reduced Tillage-Solo,Crop Yield,Nicaragua,2,1
+Crop Rotation-Mulch-Solo,Crop Yield,Nicaragua,1,1
+Crop Rotation-Reduced Tillage-Solo,Crop Yield,Nicaragua,4,1
+Crop Rotation-Solo,Crop Yield,Nicaragua,1,1
+Reduced Tillage-Solo,Gross Margin,Nicaragua,6,1
+Mulch-Solo,Gross Margin,Nicaragua,5,1
+Mulch-Reduced Tillage-Solo,Gross Margin,Nicaragua,2,1
+Crop Rotation-Mulch-Reduced Tillage-Solo,Gross Margin,Nicaragua,2,1
+Crop Rotation-Mulch-Solo,Gross Margin,Nicaragua,1,1
+Crop Rotation-Reduced Tillage-Solo,Gross Margin,Nicaragua,4,1
+Crop Rotation-Solo,Gross Margin,Nicaragua,1,1
+Reduced Tillage-Solo,Erosion,Guatemala,2,1
+Inorganic Fertilizer-Solo,Soil Moisture,Honduras,3,1
+Organic Fertilizer-Solo,Soil Moisture,Honduras,9,1
+Inorganic Fertilizer-Solo,Crop Yield,Honduras,1,1
+Organic Fertilizer-Solo,Crop Yield,Honduras,3,1
+Inorganic Fertilizer-Solo,Nitrogen Agronomic Efficiency,Honduras,1,1
+Organic Fertilizer-Solo,Nitrogen Agronomic Efficiency,Honduras,3,1
+Inorganic Fertilizer-Intercropping-Solo,Crop Yield,Mexico,14,1
+Inorganic Fertilizer-Solo,Net Return,Mexico,2,1
+Improved Varieties-Intercropping-Solo,Net Return,Mexico,9,1
+Improved Varieties-Inorganic Fertilizer-Intercropping-Solo,Net Return,Mexico,6,1
+Intercropping-Solo,Land Equivalent Ratio,Mexico,9,1
+Green Manure-Solo,Land Equivalent Ratio,Mexico,10,1
+Intercropping-Solo,Biomass Yield,Mexico,2,1
+Intercropping-Solo,Water Use Efficiency,Mexico,8,1
+Mulch-Reduced Tillage-Solo,Crop Residue Yield,Mexico,2,1
+Crop Residue Incorporation-Crop Rotation-Solo,Crop Residue Yield,Mexico,2,1
+Crop Rotation-Mulch-Reduced Tillage-Solo,Crop Residue Yield,Mexico,2,1
+Supplemental Irrigation-Solo,Crop Yield,Mexico,4,1
+Supplemental Irrigation-Solo,Water Use,Mexico,8,1
+Crop Rotation-Solo,Soil Moisture,Mexico,8,1
+Crop Rotation-Mulch-Reduced Tillage-Solo,Soil Moisture,Mexico,4,1
+Crop Rotation-Mulch-Solo,Soil Moisture,Mexico,16,1
+Crop Residue Incorporation-Solo,Soil Moisture,Mexico,4,1
+Crop Residue Incorporation-Crop Rotation-Solo,Soil Moisture,Mexico,2,1
+Crop Rotation-Reduced Tillage-Solo,Soil Moisture,Mexico,2,1
+Crop Rotation-Solo,Soil Total Nitrogen,Mexico,24,1
+Crop Rotation-Mulch-Reduced Tillage-Solo,Soil Total Nitrogen,Mexico,12,1
+Crop Rotation-Mulch-Solo,Soil Total Nitrogen,Mexico,6,1
+Crop Residue Incorporation-Solo,Soil Total Nitrogen,Mexico,12,1
+Crop Residue Incorporation-Crop Rotation-Solo,Soil Total Nitrogen,Mexico,6,1
+Crop Rotation-Reduced Tillage-Solo,Soil Total Nitrogen,Mexico,6,1
+Crop Rotation-Solo,Soil Organic Carbon,Mexico,24,1
+Crop Rotation-Mulch-Reduced Tillage-Solo,Soil Organic Carbon,Mexico,12,1
+Crop Rotation-Mulch-Solo,Soil Organic Carbon,Mexico,6,1
+Crop Residue Incorporation-Solo,Soil Organic Carbon,Mexico,12,1
+Crop Residue Incorporation-Crop Rotation-Solo,Soil Organic Carbon,Mexico,6,1
+Reduced Tillage-Solo,Soil Organic Carbon,Mexico,12,1
+Crop Rotation-Reduced Tillage-Solo,Soil Organic Carbon,Mexico,6,1
+Crop Rotation-Mulch-Solo,Crop Yield,Mexico,8,1
+Crop Rotation-Reduced Tillage-Solo,Crop Yield,Mexico,12,1
+Reduced Tillage-Solo,Biodiversity,Mexico,46,1
+Crop Residue Incorporation-Solo,Biodiversity,Mexico,331,1
+Crop Residue Incorporation-Reduced Tillage-Solo,Biodiversity,Mexico,9,1
+Crop Residue Incorporation-Reduced Tillage-Solo,Crop Yield,Mexico,2,1
+Mulch-Reduced Tillage-Solo,Biodiversity,Mexico,97,1
+Crop Rotation-Solo,Biodiversity,Mexico,42,1
+Crop Residue Incorporation-Crop Rotation-Solo,Biodiversity,Mexico,12,1
+Crop Rotation-Reduced Tillage-Solo,Biodiversity,Mexico,12,1
+Crop Rotation-Mulch-Reduced Tillage-Solo,Biodiversity,Mexico,18,1
+Mulch-Solo,Biodiversity,Mexico,273,1
+Crop Rotation-Mulch-Solo,Biodiversity,Mexico,12,1
+Crop Residue-Reduced Tillage-Solo,Crop Yield,Mexico,36,1
+Crop Rotation-Solo,Cation Exchange Capacity,Mexico,2,1
+Crop Residue-Solo,Biodiversity,Mexico,72,1
+Biochar-Organic Fertilizer-Solo,Crop Yield,Mexico,1,1
+Biochar-Mulch-Organic Fertilizer-Solo,Crop Yield,Mexico,3,1
+Biochar-Inorganic Fertilizer-Mulch-Organic Fertilizer-Solo,Crop Yield,Mexico,1,1
+Crop Residue-Mulch-Solo,Crop Yield,Mexico,20,1
+Crop Residue-Mulch-Solo,Biomass Yield,Mexico,20,1
+Crop Residue-Mulch-Solo,Runoff,Mexico,18,1
+Crop Residue-Mulch-Solo,Erosion,Mexico,18,1
+Reduced Tillage-Solo,Cation Exchange Capacity,Mexico,2,1
+Crop Residue Incorporation-Solo,Crop Residue Yield,Mexico,1,1
+Reduced Tillage-Solo,Crop Residue Yield,Mexico,1,1
+Crop Residue Incorporation-Solo,Biomass Yield,Mexico,3,1
+Crop Residue-Mulch-Reduced Tillage-Solo,Crop Yield,Mexico,18,1
+Crop Residue-Mulch-Reduced Tillage-Solo,Water Use Efficiency,Mexico,18,1
+Mulch-Solo,Biomass Yield,Mexico,48,1
+Reduced Tillage-Solo,Gross Return,Mexico,9,1
+Mulch-Reduced Tillage-Solo,Gross Return,Mexico,9,1
+Mulch-Solo,Gross Return,Mexico,9,1
+Reduced Tillage-Solo,Gross Margin,Mexico,9,1
+Mulch-Reduced Tillage-Solo,Gross Margin,Mexico,9,1
+Mulch-Solo,Gross Margin,Mexico,9,1
+Mulch-Reduced Tillage-Solo,Soil Organic Matter,Mexico,6,1
+Mulch-Solo,Soil Organic Matter,Mexico,6,1
+Reduced Tillage-Solo,Variable Cost,Mexico,9,1
+Mulch-Reduced Tillage-Solo,Variable Cost,Mexico,9,1
+Mulch-Solo,Variable Cost,Mexico,9,1
+Reduced Tillage-Solo,Infiltration Rate,Mexico,8,1
+Crop Residue-Solo,Soil Available Nitrogen,Mexico,16,1
+Crop Residue-Solo,Nitrogen Use Efficiency (Isotopic Product),Mexico,2,1
+Crop Residue-Solo,Nitrogen Use Efficiency (Isotopic AGB),Mexico,2,1
+Mulch-Solo,Nitrous Oxide Emissions,Mexico,19,1
+Mulch-Reduced Tillage-Solo,Nitrous Oxide Emissions,Mexico,19,1
+Inorganic Fertilizer-Solo,Soil Total Nitrogen,Mexico,7,1
+Inorganic Fertilizer-Mulch-Reduced Tillage-Solo,Soil Total Nitrogen,Mexico,2,1
+Inorganic Fertilizer-Mulch-Solo,Soil Total Nitrogen,Mexico,4,1
+Inorganic Fertilizer-Solo,Soil Organic Carbon,Mexico,7,1
+Inorganic Fertilizer-Mulch-Reduced Tillage-Solo,Soil Organic Carbon,Mexico,2,1
+Inorganic Fertilizer-Mulch-Solo,Soil Organic Carbon,Mexico,4,1
+Inorganic Fertilizer-Mulch-Reduced Tillage-Solo,Crop Yield,Mexico,72,1
+Agroforestry Pruning-Reduced Tillage-Solo,Crop Yield,Mexico,2,1
+Crop Rotation-Solo,Gross Return,Mexico,6,1
+Crop Rotation-Solo,Variable Cost,Mexico,6,1
+Crop Rotation-Solo,Benefit Cost Ratio (Unspecified),Mexico,6,1
+Crop Rotation-Solo,Net Return,Mexico,6,1
+Inorganic Fertilizer-Solo,Nitrogen Agronomic Efficiency,Mexico,15,1
+Green Manure-Inorganic Fertilizer-Solo,Crop Yield,Mexico,3,1
+Green Manure-Organic Fertilizer-Solo,Crop Yield,Mexico,3,1
+Green Manure-Inorganic Fertilizer-Organic Fertilizer-Solo,Crop Yield,Mexico,2,1
+Crop Rotation-Organic Fertilizer-Solo,Crop Yield,Mexico,3,1
+Crop Rotation-Inorganic Fertilizer-Organic Fertilizer-Solo,Crop Yield,Mexico,2,1
+Green Manure-Solo,Nitrogen Agronomic Efficiency,Mexico,8,1
+Crop Rotation-Solo,Nitrogen Agronomic Efficiency,Mexico,8,1
+Organic Fertilizer-Combo,Soil Carbon Stocks,Brazil,10,1
+Organic Fertilizer-Combo,Soil Moisture,Brazil,9,1
+Organic Fertilizer-Combo,Soil Organic Carbon,Brazil,3,1
+Organic Fertilizer-Combo,Water Use Efficiency,Brazil,3,1
+Organic Fertilizer-Combo,Gross Return,Brazil,3,1
+Organic Fertilizer-Combo,Total Cost (Unconfirmed),Brazil,3,1
+Organic Fertilizer-Combo,Net Return,Brazil,3,1
+Inorganic Fertilizer-Combo,Variable Cost,Brazil,188,1
+Inorganic Fertilizer-Combo,Fixed Cost,Brazil,6,1
+Inorganic Fertilizer-Combo,Net Return,Brazil,6,1
+Inorganic Fertilizer-Combo,Soil Carbon Stocks,Brazil,10,1
+Inorganic Fertilizer-Combo,Net Return,Mexico,6,1
+Inorganic Fertilizer-Combo,Soil Total Nitrogen,Mexico,6,1
+Inorganic Fertilizer-Combo,Soil Organic Carbon,Mexico,6,1
+Harvest Method-Combo,Crop Yield,Brazil,9,1
+Harvest Method-Combo,Cation Exchange Capacity,Brazil,12,1
+Intercropping-Combo,Cation Exchange Capacity,Brazil,12,1
+Intercropping-Combo,Erosion,Brazil,1,1
+Intercropping-Combo,Total Cost,Brazil,6,1
+Intercropping-Combo,Gross Return,Brazil,6,1
+Intercropping-Combo,Net Return,Brazil,6,1
+Intercropping-Combo,Crop Yield,Mexico,14,1
+Intercropping-Combo,Net Return,Mexico,15,1
+Mulch-Combo,Cation Exchange Capacity,Brazil,12,1
+Mulch-Combo,Biomass Yield,Brazil,1,1
+Mulch-Combo,Crop Yield,Nicaragua,5,1
+Mulch-Combo,Gross Margin,Nicaragua,5,1
+Mulch-Combo,Crop Residue Yield,Mexico,4,1
+Mulch-Combo,Biodiversity,Mexico,127,1
+Mulch-Combo,Runoff,Mexico,18,1
+Mulch-Combo,Erosion,Mexico,18,1
+Mulch-Combo,Water Use Efficiency,Mexico,18,1
+Mulch-Combo,Gross Return,Mexico,9,1
+Mulch-Combo,Gross Margin,Mexico,9,1
+Mulch-Combo,Soil Organic Matter,Mexico,6,1
+Mulch-Combo,Variable Cost,Mexico,9,1
+Mulch-Combo,Nitrous Oxide Emissions,Mexico,19,1
+Reduced Tillage-Combo,Crop Residue Yield,Brazil,2,1
+Reduced Tillage-Combo,Crop Yield,Nicaragua,8,1
+Reduced Tillage-Combo,Gross Margin,Nicaragua,8,1
+Reduced Tillage-Combo,Crop Residue Yield,Mexico,4,1
+Reduced Tillage-Combo,Biodiversity,Mexico,136,1
+Reduced Tillage-Combo,Water Use Efficiency,Mexico,18,1
+Reduced Tillage-Combo,Gross Return,Mexico,9,1
+Reduced Tillage-Combo,Gross Margin,Mexico,9,1
+Reduced Tillage-Combo,Soil Organic Matter,Mexico,6,1
+Reduced Tillage-Combo,Variable Cost,Mexico,9,1
+Reduced Tillage-Combo,Nitrous Oxide Emissions,Mexico,19,1
+Crop Rotation-Combo,Crop Yield,Nicaragua,7,1
+Crop Rotation-Combo,Gross Margin,Nicaragua,7,1
+Crop Rotation-Combo,Crop Residue Yield,Mexico,4,1
+Crop Rotation-Combo,Soil Moisture,Mexico,24,1
+Crop Rotation-Combo,Soil Total Nitrogen,Mexico,30,1
+Crop Rotation-Combo,Soil Organic Carbon,Mexico,30,1
+Crop Rotation-Combo,Biodiversity,Mexico,54,1
+Supplemental Irrigation-Combo,Gross Return,Brazil,5,1
+Crop Residue Incorporation-Combo,Crop Residue Yield,Brazil,2,1
+Crop Residue Incorporation-Combo,Crop Residue Yield,Mexico,2,1
+Crop Residue Incorporation-Combo,Soil Moisture,Mexico,2,1
+Crop Residue Incorporation-Combo,Soil Total Nitrogen,Mexico,6,1
+Crop Residue Incorporation-Combo,Soil Organic Carbon,Mexico,6,1
+Crop Residue Incorporation-Combo,Biodiversity,Mexico,21,1
+Multistrata Agroforestry-Combo,Crop Yield,Brazil,5,1
+Multistrata Agroforestry-Combo,Variable Cost,Brazil,188,1
+Multistrata Agroforestry-Combo,Total Cost,Brazil,188,1
+Multistrata Agroforestry-Combo,Fixed Cost,Brazil,6,1
+Multistrata Agroforestry-Combo,Soil Carbon Stocks,Brazil,4,1
+Multistrata Agroforestry-Combo,Soil Organic Carbon,Brazil,4,1
+Multistrata Agroforestry-Combo,Crop Yield,Costa Rica,1,1
+Multistrata Agroforestry-Combo,Soil Organic Carbon,Costa Rica,2,1
+Multistrata Agroforestry-Combo,Soil Total Nitrogen,Costa Rica,2,1
+Agroforestry Pruning-Combo,Crop Yield,Costa Rica,1,1
+Agroforestry Pruning-Combo,Soil Organic Carbon,Costa Rica,2,1
+Agroforestry Pruning-Combo,Soil Total Nitrogen,Costa Rica,2,1
+Agroforestry Pruning-Combo,Crop Yield,Mexico,2,1
+pH Control-Combo,Variable Cost,Brazil,47,1
+pH Control-Combo,Total Cost,Brazil,47,1
+pH Control-Combo,Gross Return,Brazil,48,1
+pH Control-Combo,Cation Exchange Capacity,Brazil,8,1
+Other Agroforestry-Combo,Cation Exchange Capacity,Costa Rica,7,1
+Other Agroforestry-Combo,Nitrous Oxide Emissions,Costa Rica,81,1
+Other Agroforestry-Combo,Soil Carbon Stocks,Costa Rica,7,1
+Improved Varieties-Combo,Erosion,Brazil,1,1
+Improved Varieties-Combo,Soil Carbon Stocks,Brazil,4,1
+Improved Varieties-Combo,Soil Organic Carbon,Brazil,4,1
+Improved Varieties-Combo,Net Return,Mexico,15,1
+Biochar-Combo,Biomass Yield,Brazil,4,1
+Biochar-Combo,Soil Moisture,Brazil,9,1
+Biochar-Combo,Soil Organic Carbon,Brazil,3,1
+Biochar-Combo,Crop Yield,Brazil,3,1
+Biochar-Combo,Water Use Efficiency,Brazil,3,1
+Biochar-Combo,Gross Return,Brazil,3,1
+Biochar-Combo,Cation Exchange Capacity,Brazil,3,1
+Biochar-Combo,Total Cost (Unconfirmed),Brazil,3,1
+Biochar-Combo,Net Return,Brazil,3,1
+Biochar-Combo,Crop Yield,Mexico,5,1
+Alleycropping-Combo,Biomass Yield,Brazil,48,1
+Parklands-Combo,Cation Exchange Capacity,Costa Rica,7,1
+Parklands-Combo,Nitrous Oxide Emissions,Costa Rica,81,1
+Parklands-Combo,Soil Carbon Stocks,Costa Rica,7,1
+Crop Residue-Combo,Crop Residue Yield,Brazil,2,1
+Crop Residue-Combo,Crop Residue Yield,Mexico,2,1
+Crop Residue-Combo,Soil Moisture,Mexico,2,1
+Crop Residue-Combo,Soil Total Nitrogen,Mexico,6,1
+Crop Residue-Combo,Soil Organic Carbon,Mexico,6,1
+Crop Residue-Combo,Biodiversity,Mexico,21,1
+Crop Residue-Combo,Biomass Yield,Mexico,20,1
+Crop Residue-Combo,Runoff,Mexico,18,1
+Crop Residue-Combo,Erosion,Mexico,18,1
+Crop Residue-Combo,Water Use Efficiency,Mexico,18,1
+Green Manure-Combo,Crop Yield,Mexico,8,1

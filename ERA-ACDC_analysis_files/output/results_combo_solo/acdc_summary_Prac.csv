@@ -1,0 +1,100 @@
+PrName,Observations,Studies
+Inorganic Fertilizer-Solo,2335,84
+Inorganic Fertilizer-Combo,948,28
+Intercropping-Solo,304,24
+Mulch-Combo,1036,23
+Reduced Tillage-Solo,4931,20
+Organic Fertilizer-Solo,256,19
+Reduced Tillage-Combo,851,19
+Multistrata Agroforestry-Solo,872,17
+Intercropping-Combo,199,16
+Crop Rotation-Solo,923,14
+pH Control-Solo,841,14
+Organic Fertilizer-Combo,137,12
+Crop Rotation-Combo,270,12
+Mulch-Solo,906,11
+Mulch-Reduced Tillage-Solo,514,10
+Crop Residue-Combo,245,10
+Agroforestry Pruning-Combo,147,9
+pH Control-Combo,305,8
+Inorganic Fertilizer-Organic Fertilizer-Solo,40,7
+Supplemental Irrigation-Solo,231,5
+Inorganic Fertilizer-Intercropping-Solo,64,5
+Crop Residue Incorporation-Combo,93,5
+Multistrata Agroforestry-Combo,467,5
+Crop Rotation-Inorganic Fertilizer-Solo,16,4
+Improved Fallow-Solo,362,4
+Improved Varieties-Solo,279,4
+Agroforestry Pruning-Solo,32,4
+Crop Rotation-Reduced Tillage-Solo,47,3
+Double Cropping-Solo,316,3
+Inorganic Fertilizer-pH Control-Solo,138,3
+Other Agroforestry-Solo,64,3
+Crop Residue Incorporation-Solo,395,3
+Crop Rotation-Mulch-Solo,54,3
+Inorganic Fertilizer-Mulch-Reduced Tillage-Solo,78,3
+Crop Rotation-Mulch-Reduced Tillage-Solo,74,3
+Agroforestry Pruning-Inorganic Fertilizer-Solo,18,3
+Inorganic Fertilizer-Mulch-Solo,111,3
+Improved Varieties-Combo,24,3
+Biochar-Combo,39,3
+Crop Residue Incorporation-Mulch-Reduced Tillage-Solo,28,2
+Improved Fallow-Intercropping-Solo,60,2
+Crop Residue Incorporation-Reduced Tillage-Solo,15,2
+Improved Varieties-Intercropping-Solo,10,2
+Deficit Irrigation-Solo,178,2
+Biochar-Solo,64,2
+Alleycropping-Solo,396,2
+Biochar-Organic Fertilizer-Solo,31,2
+Agroforestry Pruning-Multistrata Agroforestry-Solo,19,2
+Crop Residue-Intercropping-Reduced Tillage-Solo,4,2
+Intercropping-Reduced Tillage-Solo,4,2
+Green Manure-Solo,37,2
+Crop Residue Incorporation-Crop Rotation-Solo,38,2
+Crop Residue-Solo,142,2
+Crop Residue-Mulch-Solo,76,2
+Supplemental Irrigation-Combo,11,2
+Improved Fallow-Combo,64,2
+Alleycropping-Combo,76,2
+Harvest Method-Intercropping-Mulch-Solo,21,1
+Crop Rotation-Intercropping-Reduced Tillage-Solo,1,1
+Intercropping-Supplemental Irrigation-Solo,1,1
+Improved Fallow-Inorganic Fertilizer-Solo,2,1
+Improved Fallow-Inorganic Fertilizer-Intercropping-Solo,2,1
+Agroforestry Pruning-Mulch-Solo,4,1
+Agroforestry Pruning-Mulch-pH Control-Solo,2,1
+Intercropping-Mulch-Solo,14,1
+Multistrata Agroforestry-Supplemental Irrigation-Solo,10,1
+Inorganic Fertilizer-Multistrata Agroforestry-pH Control-Solo,142,1
+Inorganic Fertilizer-Multistrata Agroforestry-Solo,288,1
+Biochar-Inorganic Fertilizer-Organic Fertilizer-Solo,4,1
+Crop Rotation-Inorganic Fertilizer-Mulch-Solo,3,1
+Crop Residue Incorporation-Crop Rotation-Mulch-Reduced Tillage-Solo,12,1
+Organic Fertilizer-pH Control-Solo,16,1
+Improved Varieties-Multistrata Agroforestry-Solo,8,1
+Mulch-pH Control-Solo,3,1
+Crop Rotation-pH Control-Solo,4,1
+Alleycropping-Crop Rotation-Solo,4,1
+Crop Rotation-Intercropping-Solo,8,1
+Crop Rotation-Inorganic Fertilizer-Intercropping-Solo,4,1
+Parklands-Solo,2,1
+Mulch-Organic Fertilizer-Solo,2,1
+Agroforestry Pruning-Alleycropping-Solo,48,1
+Agroforestry Pruning-Alleycropping-Inorganic Fertilizer-Solo,24,1
+Agroforestry Pruning-Organic Fertilizer-Solo,30,1
+Other Agroforestry-Parklands-Solo,95,1
+Improved Varieties-Inorganic Fertilizer-Intercropping-Solo,6,1
+Crop Residue-Reduced Tillage-Solo,36,1
+Biochar-Mulch-Organic Fertilizer-Solo,3,1
+Biochar-Inorganic Fertilizer-Mulch-Organic Fertilizer-Solo,1,1
+Crop Residue-Mulch-Reduced Tillage-Solo,36,1
+Agroforestry Pruning-Reduced Tillage-Solo,2,1
+Green Manure-Inorganic Fertilizer-Solo,3,1
+Green Manure-Organic Fertilizer-Solo,3,1
+Green Manure-Inorganic Fertilizer-Organic Fertilizer-Solo,2,1
+Crop Rotation-Organic Fertilizer-Solo,3,1
+Crop Rotation-Inorganic Fertilizer-Organic Fertilizer-Solo,2,1
+Harvest Method-Combo,21,1
+Other Agroforestry-Combo,95,1
+Parklands-Combo,95,1
+Green Manure-Combo,8,1

@@ -1,0 +1,1298 @@
+---
+title: "Climate & Soils Data in ERA"
+author: "Alliance of Bioversity International & CIAT"
+date: "`r Sys.Date()`"
+format:
+  html:
+    toc: true
+    toc-depth: 4
+    toc-expand: 2     
+    number-sections: true
+    code-fold: false
+    include-in-header: hypothesis.html
+editor: visual
+---
+
+
+::: {style="display: flex; align-items: center; gap: 20px;"}
+<img src="images/Era_Logo_FINAL_Colour.png" width="100" style="margin-top: 10px;"/>
+:::
+
+
+```{r load required packages,echo=F,warning=F,message=F}
+if (!require("pacman", character.only = TRUE)) {
+  install.packages("pacman")
+  library(pacman)
+}
+pacman::p_load(data.table,s3fs,kable,kableExtra,knitr,arrow)
+```
+
+
+# How ERA Connects to Geospatial Climate and Soils Data
+
+**Intended Users**
+
+This documentation is intended for technical users working with the ERA meta-dataset who wish to integrate seasonally relevant climate statistics into agronomic observations. Users do not need to rerun the calculations---preprocessed climate data are provided on S3---but may use this guide to understand:
+
+-   What climate indicators were generated
+-   How planting dates and season lengths were determined
+-   Where to find the data and how to merge them with ERA observations
+-   Where to find the code used to generate and process data
+
+**Background**
+
+We developed a geospatial enrichment pipeline to augment ERA's agronomic experiments with high-resolution climate, soil, and elevation data, linked to specific crops, locations, and growing seasons. Each observation is connected to daily weather time series and soil attributes based on its site coordinates and reported or inferred planting and harvest dates. Where precise dates are unavailable, the pipeline uses a tiered imputation approach---drawing on published planting windows, nearby analogs, and agroclimatic indicators such as rainfall onset---to estimate a plausible growing season. This enables the calculation of detailed climate statistics for the period most relevant to crop development, while excluding records with excessive spatial or temporal uncertainty.
+
+The enrichment process applies only to crop-based experiments. Climate statistics are generated only where both spatial and temporal resolution meet defined quality thresholds---specifically, where the site location is known within 50 km and the cropping calendar can be clearly determined. Records from animal feed experiments, as well as spatially or temporally aggregated data (e.g., regional summaries or multi-year averages), are not included. As a result, only a subset of ERA observations receive climate enrichment---those with sufficient detail to anchor the analysis in a specific place and season.
+
+## Data Sources
+
+The ERA pipeline enriches observations with climate, soil, and landscape data using custom functions stored in:
+
+-   [`R/add_geodata/`](https://github.com/CIAT/ERA_dev/tree/main/R/add_geodata): main dataset scripts
+-   [`R/add_geodata/functions/`](https://github.com/CIAT/ERA_dev/tree/main/R/add_geodata/functions): core download and utility functions
+
+Below are the datasets used and the script locations.
+
+------------------------------------------------------------------------
+
+### CHIRPS (Rainfall)
+
+-   **Dataset**: CHIRPS Daily Rainfall
+-   **Resolution**: 0.05° (\~5.5 km)
+-   **Coverage**: Africa and globally, 1981--present
+-   **Download Source**: [`https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_daily/tifs/p05/`](https://data.chc.ucsb.edu/products/CHIRPS-2.0/global_daily/tifs/p05/)
+-   **Download Script**: [`R/add_geodata/chirps.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/chirps.R)
+-   **Download Function**: [`R/add_geodata/functions/download_chirps.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/functions/download_chirps.R)\
+-   **Notes**: Filenames include the date (e.g. `chirps.2023.01.01.tif.gz`). Versioning is inferred from file date.
+
+------------------------------------------------------------------------
+
+### POWER (NASA)
+
+-   **Dataset**: NASA POWER (Temperature, Radiation, Wind, etc.)
+
+-   **Resolution**: 0.5° lat × 0.625° lon
+
+-   **Coverage**: global, \~1983--present
+
+-   **Download Source**: NASA POWER API --- `https://power.larc.nasa.gov/api/temporal/daily/`
+
+-   **Script**: [`R/add_geodata/power.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/power.R)
+
+-   **Download Function**: [`R/add_geodata/functions/download_power.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/functions/download_power.R)
+
+### Soil Data Sources
+
+Soil data are used to estimate key properties like water-holding capacity, which underpin the calculation of climate indicators such as **Eratio** and **waterlogging**. Two soil datasets are used depending on site location:
+
+#### iSDAsoil (Africa only)
+
+-   **Dataset**: iSDAsoil\
+-   **Resolution**: 30 m\
+-   **Coverage**: Sub-Saharan Africa\
+-   **Source**: [`https://www.isda-africa.com/isdasoil`](https://www.isda-africa.com/isdasoil)\
+-   **Use**: Used for all **African sites** in ERA. Offers high-resolution predictions of soil texture, carbon, pH, and depth---well-suited to the diversity of African agroecosystems.\
+-   **Download Scripts**: [`soilgrids.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/soilgrids.R)
+
+#### SoilGrids 2.0 (Non-Africa)
+
+-   **Dataset**: SoilGrids 2.0 (ISRIC)
+-   **Resolution**: 250 m\
+-   **Coverage**: Global\
+-   **Use**: Applied to **non-African sites** in ERA.
+-   **Download Scripts**: [`soilgrids2.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/soilgrids2.R).
+-   **Functions**: [`download_soilgrids2.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/functions/download_soilgrids2.R)\
+-   **Notes**: Accesses data via `soilDB::fetchSoilGrids()` and reshapes raster. Outputs CSV summaries per site and variable.
+
+*We plan to extend SoilGrids 2.0 to African sites in a future update, allowing for harmonized coverage across all regions.*
+
+### AEZ (Agro-Ecological Zones)
+
+-   **Layers Used**:
+    -   `AEZ16_CLAS--SSA.tif`: from Harvard Dataverse\
+    -   `004_afr-aez_09.tif`: from [ISRIC server](https://files.africasis.isric.org/aez/004_afr-aez_09.tif)
+-   **Script**: [`R/add_geodata/aez.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/aez.R).
+-   **Notes**: The ISRIC AEZ layer is recoded with value-to-label mappings from a CSV.
+
+------------------------------------------------------------------------
+
+### Elevation (DEM)
+
+-   **Dataset**: Elevation raster
+-   **Download Script**: [`R/add_geodata/elevation.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/elevation.R).
+-   **Notes**: Processed from SRTM or other public sources.
+
+------------------------------------------------------------------------
+
+### Water Balance & Onset of Rain
+
+-   **Water Balance**: [`R/add_geodata/water_balance.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/water_balance.R)\
+-   **Onset Date (Start of Season)**: [`R/add_geodata/calculate_sos.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/calculate_sos.R)
+
+------------------------------------------------------------------------
+
+## Methods
+
+The [`generate_climate_stats.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/generate_climate_stats.R) pipeline constructs crop-specific seasonal windows and computes derived climate indicators for each observation in the ERA agronomy dataset. These indicators are designed to reflect climate conditions experienced **during the growing season**, rather than general climatological conditions.
+
+Each observation is linked to a custom seasonal window based on:
+
+-   **Reported Planting and Harvest Dates**: If available, these dates define the crop's growing period directly.\
+-   **Imputed Dates**: Where planting or harvest dates are missing or uncertain, the pipeline estimates plausible values using:
+    -   Nearby observations (within 1--10 km)\
+    -   Published planting calendars\
+    -   Agroclimatic thresholds (e.g. start of rainy season based on dekadal CHIRPS rainfall)
+-   **Season Length Estimation**: Season length is either taken from the original dataset, imputed from nearby records, or inferred from EcoCrop definitions of crop cycle duration.
+-   **Alternate Windows**: In addition to the main growing period, alternate windows are used for specific purposes:
+    -   `PDate.SLen.EcoCrop`: uses EcoCrop-inferred season length\
+    -   `PDate.SLen.P30`: fixed 30-day window after planting (used to assess early-season climate stress)
+
+These windows allow climate statistics to be calculated **only for periods relevant to crop development**, improving interpretation compared to annual or calendar-based averages.
+
+**Climate Statistics Generated**
+
+Unlike the foundational datasets (e.g., daily rainfall, temperature, radiation), which provide **raw gridded values**, this pipeline produces **seasonally aggregated statistics** aligned with cropping windows. These include:
+
+-   **Temperature**: Mean, max, min, and variability of daily temperatures; heat stress indicators (e.g., number of days \>35°C).\
+-   **Rainfall**: Total rainfall, dry spell frequency, rainfall adequacy.\
+-   **Growing Degree Days (GDD)**: Thermal accumulation across sub-optimal, optimal, and heat-stressed temperature bands.\
+-   **Evaporative Ratio (ERatio)**: Daily ratio of actual to potential evapotranspiration --- a proxy for drought stress.\
+-   **Waterlogging (Logging)**: Estimated soil moisture excess above field capacity, indicating excess moisture risk.\
+-   **Dry Spells**: Frequency, length, and timing of low-rainfall periods.
+
+Each of these indicators is calculated **per site--season--crop** combination using the daily CHIRPS and POWER datasets and simulated water balance (see [`water_balance.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/water_balance.R)).
+
+These derived indicators provide a **biophysically relevant summary of climate exposure** tailored to the actual growing period of each crop, making them more actionable than raw daily data or long-term averages.
+
+### Downloading the climate data
+
+To access the climate statistics generated for ERA observations, download the harmonized `.RData` file from the geodata directory on S3:
+
+-   **S3 location**: `s3://digital-atlas/era/geodata/clim_stats_2025-03-18.RData`
+-   **Content**: This file contains daily and seasonal climate summaries per site, ready to be joined with ERA observations.
+
+You can download the file using the `s3fs` interface as follows:
+
+
+```{r download_climdat1,warning=F}
+# Set the remote S3 path and local save path
+s3_data_dir <- "s3://digital-atlas/era/geodata"
+local_data_dir <- "downloaded_data"
+
+# List and filter files
+s3<-s3fs::S3FileSystem$new(anonymous = T)
+files_s3 <- s3$dir_ls(s3_data_dir)
+files_s3 <- grep("clim_stats.*RData", files_s3, value = TRUE)
+(files_s3 <- tail(files_s3, 1))
+
+# Create local file path and download
+files_local <- gsub(s3_data_dir, local_data_dir, files_s3)
+if(!file.exists(files_local)){
+s3$file_download(files_s3, files_local)
+}
+```
+
+
+Once downloaded, load the .RData file using:
+
+
+```{r download_climdat2}
+# Load the harmonized climate data into your environment
+clim_data <- miceadds::load.Rdata2(file = basename(files_local), path = dirname(files_local))
+```
+
+
+## Climate data content and structure
+
+`clim_dat` is a named list of data tables, created by `generate_climate_stats.R`.
+
+
+```{r climdat_structure1}
+names(clim_data)
+```
+
+
+**`site_data`**: contains the spatial and temporal location data for which climate statistic are generated.
+
+**`PDate.SLen.Data, PDate.SLen.EcoCrop,PDate.SLen.P30`**: these objects are lists of output climate data calculated for for different parameterizations of season length.
+
+### Unique locations and times (`clim_data$site_data`)
+
+`site_data` contains the unique combinations of site, time, crop, planting date, and harvest date from the ERA agronomy dataset.
+
+#### Site, year, season, & study
+
+
+```{r climdat_structure2}
+head(unique(clim_data$site_data[,.(Site.Key,Code,M.Year,Latitude,Longitude,M.Year,M.Year.Code,M.Season)]))|>
+  kable(format = "html") |>
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
+  scroll_box(width = "100%", height = "250px")
+```
+
+
+**Field Descriptions:**
+
+-   `Site.Key`: A unique identifier for each site or location. It is used to link locations consistently across datasets.\
+-   `Code`: A unique code used to identify a publication or entry in the ERA dataset. It serves as the main key for tracking a specific experiment/publication across associated tables.\
+-   `M.Year`: Measurement year -- a code that identifies the production season, typically aligned with the `Time` field in the main ERA dataset. This may take the form of a calendar year or include other formatting to distinguish multiple seasons per year.\
+-   \`Latitude: Geographic latitude of the site in decimal degrees (WGS84). Used for spatial analyses and mapping.\
+-   `Longitude`: Geographic longitude of the site in decimal degrees (WGS84). Used for spatial analyses and mapping.\
+-   `M.Year.Code`: A standardized or formatted version of `M.Year`, often combining year and season. Useful for indexing and subsetting.\
+-   `M.Season`: Management season (typically `1` or `2`) indicating the cropping season within a year. May be `NA` in unimodal systems; helps distinguish multiple cropping events in bimodal climates.
+
+#### Crops
+
+These fields contain thresholds that define a crop's temperature response curve and come from EcoCrop. They can also be used to calculate growing degree days, stress indices, or suitability zones under historical or future climate conditions.
+
+
+```{r climdat_structure3}
+head(unique(clim_data$site_data[,.(Product,EU,Topt.low,Topt.high,Tlow,Thigh)]))|>
+  kable(format = "html") |>
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
+  scroll_box(width = "100%", height = "250px")
+```
+
+
+**Field Descriptions:**
+
+-   `Product`: The name of the crop or agricultural product (e.g., maize, beans) associated with the management and outcome data.\
+-   `EU`: Experimental Unit code links to the `era_master_codes$EU` table.\
+-   `Tlow`: The **minimum temperature threshold** for crop development. Below this value, crop growth is assumed to be negligible or halted. Often derived from EcoCrop or agronomic sources.\
+-   `Thigh`: The **maximum temperature threshold** for crop development. Temperatures above this can lead to heat stress or failure in development.\
+-   `Topt.low`: The **lower bound of the optimal temperature range** for crop growth. Within this and `Topt.high`, the crop achieves near-optimal physiological performance.\
+-   `Topt.high`: The **upper bound of the optimal temperature range** for crop growth. Growth efficiency typically declines beyond this value, even if not fully stressed.
+
+These thresholds define a crop's temperature response curve and come from EcoCrop. They can also be used to calculate growing degree days, stress indices, or suitability zones under historical or future climate conditions.
+
+#### Planting dates
+
+`site_data` contains information about planting dates and their estimation:
+
+
+```{r climdat_structure4}
+head(clim_data$site_data[,.(Plant.Start,Plant.End,Plant.Diff.Raw,Data.PS.Date,Data.PE.Date,SOS,P.Date.Merge,P.Date.Merge.Source)])|>
+  kable(format = "html") |>
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
+  scroll_box(width = "100%", height = "250px")
+```
+
+
+**Field Descriptions:**
+
+-   `Plant.Start`: The reported start date for planting. This indicates when the planting period began according to the original data.
+-   `Plant.End`: The reported end date for planting. This marks the conclusion of the planting period in the original dataset.
+-   `Plant.Diff.Raw`: The difference (in days) between `Plant.Start` and `Plant.End`---indicating how uncertain the reported planting window was.
+-   `Data.PS.Date`: The estimated start date for planting, inferred from nearby or similar observations in ERA when a reported planting date is missing or uncertain.
+-   `Data.PE.Date`: The estimated end date for planting, derived using the same method as Data.PS.Date to define a plausible planting window.
+-   `SOS`: The estimated Start of Season date, derived from daily climate data using agroclimatic thresholds (e.g. rainfall ≥25 mm in a dekad and ≥20 mm in the following two dekads, with aridity index AI ≥ 0.5). It marks when planting conditions were first met based on climatic signals.
+-   `P.Date.Merge`: The final, merged planting date calculated by the pipeline. It represents a consolidated planting date that may incorporate adjustments or estimations (for example, averaging the planting window or refining it using rainfall data). It should be interpreted as the number of days since `1900-01-01`.
+-   `P.Date.Merge.Source`: A descriptive label indicating the source or method used to derive the merged planting date. This might indicate whether the date was taken directly from published data (e.g., "Published") or estimated using spatial or rainfall data (e.g., "Nearby 1km", "SOS + Published", etc.).
+
+**Explanation of `P.Date.Merge.Source` values:**
+
+
+```{r climdat_structure5}
+clim_data$site_data[,unique(P.Date.Merge.Source)]|>
+  kable(format = "html") |>
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
+  scroll_box(width = "100%", height = "250px")
+```
+
+
+Values below are presented in order of preference when estimating planting date in the `P.Date.Merge` field:
+
+-   `Published`: The planting date was directly reported in the original study with no need for estimation.\
+-   `Published CHIRPS`: A published planting date was available but was refined or verified using CHIRPS rainfall data.\
+-   `Nearby 1km CHIRPS` : The estimation was based on observations from locations within a 1‑km radius, with additional refinement using CHIRPS data.\
+-   `Nearby 10km CHIRPS`: As with the 10‑km estimation, this method further incorporated CHIRPS rainfall data to improve the estimate.\
+-   `Nearby 1km`: Similar to the CHIRPS-based 1‑km estimate but without the additional rainfall data refinement.\
+-   `Nearby 10km`: The planting date was estimated from nearby observations aggregated over a 10‑km radius due to missing or uncertain reported dates.\
+-   `SOS + Published`: The planting date was adjusted using SOS information in cases where the published date was uncertain, without incorporating CHIRPS data.\
+-   `SOS + Published CHIRPS`: When the reported planting date (Published) was too uncertain, the method adjusted it using the Start‐of‐Season (SOS) rainfall onset data alongside CHIRPS information.
+
+This hierarchy reflects a logical preference: **Directly observed data \> Nearby analogues \> Climatological estimation**.
+
+#### Season length
+
+`site_data` contains information about reported harvest dates and season length. Season length may use the reported dates or be estimated.
+
+
+```{r climdat_structure6}
+head(clim_data$site_data[,.(Harvest.Start,Harvest.End,SLen,Data.SLen,SLen.EcoCrop,SLen.Source,SeasonLength.Data,SeasonLength.EcoCrop)])|>
+  kable(format = "html") |>
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
+  scroll_box(width = "100%", height = "250px")
+```
+
+
+**Field Descriptions:**
+
+-   `Harvest.Start`: The reported or estimated date when harvest began. Typically reflects the first day of the harvest window.
+-   `Harvest.End`: The reported or estimated date when harvest concluded. Typically reflects the last day of the harvest window.
+-   `SLen`: Season Length -- calculated as the number of days between `Plant.Start` and `Harvest.End`. Represents the observed or estimated duration of the cropping cycle.
+-   `Data.SLen`: Season Length derived from reported data only (i.e., `Plant.Start` and `Harvest.End` must both be available from original records). Used to indicate where the season length is based on direct evidence rather than estimates.
+-   `SLen.EcoCrop`: An estimate of cropping cycle length derived from the EcoCrop database refined using data available in ERA where possible. Used as a fallback when data-derived values are missing. `SeasonLength.EcoCrop` is redundant and contains the same information as `SLen.EcoCrop`.
+-   `SLen.Source`: This field indicates how the final **Season Length** (`SeasonLength.Data` field) used in calculations was derived, based on the origin of planting and harvest date estimates. The format is:`<Planting Source> + <Season Length Source>`.
+-   `SeasonLength.Data`: Combines `SLen` and `Data.SLen` fields, substituting values `Data.SLen` when `SLen` is `NA.`
+
+**Explanation of SLen.Source values:**
+
+
+```{r climdat_structure7}
+clim_data$site_data[,unique(SLen.Source)]
+```
+
+
+The format of `SLen.Source` is `<Planting Source> + <Season Length Source>` and the order of preference for the season length source is the same as for planting. Observed values include:\
+- `Published + Pub` -- Both planting and harvest dates are reported with low uncertainty in the publication.\
+- `Published + Nearby 1km` -- Planting date reported with low uncertainty; season length estimated from nearby (within 1 km) observations.\
+- `CHIRPS Published + Pub` -- Planting date reported, but uncertain, and refined using CHIRPS rainfall; harvest dates reported with low uncertainty.\
+- `Nearby 1km + Nearby 1km` -- Both planting date and season length derived from nearby (within 1 km) observations.\
+- `Nearby 1km + Nearby 10km` -- Planting date from 1 km radius; season length from 10 km radius.\
+- `SOS + Published + Nearby 1km` --The planting date was adjusted using SOS information in cases where the published date was uncertain, without incorporating CHIRPS data; season length from nearby data.\
+- `CHIRPS SOS + Published + Pub` -- When the reported planting date (Published) was too uncertain, the method adjusted it using the Start‐of‐Season (SOS) rainfall onset data alongside CHIRPS information; harvest dates reported with low uncertainty.\
+- `Published + Nearby 10km` -- Planting date reported with low uncertainty; season length from 10 km proximity.\
+- `Nearby 1km + Pub` -- Planting data from nearby; harvest dates reported with low uncertainty.\
+- `Nearby 10km + Nearby 1km` -- Planting data from nearby;season length from 10 km proximity.\
+- `NA` -- No season length estimate was available or derived.
+
+These combinations trace the logical fallback and merging sequence for generating season length when direct data are missing or uncertain.
+
+These can be merged with ERA observation data using the Site.ID and Time fields.
+
+### Climate data (`PDate.SLen.Data, PDate.SLen.EcoCrop, PDate.SLen.P30`)
+
+Each of these climate window datasets contains a set of summary tables---one per climate indicator (e.g., temperature, rainfall, GDD)---with statistics calculated over the defined seasonal window for every crop-site-season combination that passed quality filters.
+
+**`PDate.SLen.Data`** : `site_data$P.Date.Merge` and `site_data$SeasonLength.Data` are used to determine the start and end dates within which climate statistics are calculated. If season length is not reported or cannot be inferred from ERA data for a row in `site_data` then no climate stats will be generated for that record.
+
+**`PDate.SLen.EcoCrop`** `site_data$P.Date.Merge` and `site_data$SLen.EcoCrop` are used to determine the start and end dates within which climate statistics are calculated. Season length is inferred from the midpoint of ecocrop cycle length for a crop, refined where possible using reported values within the ERA dataset. This dataset therefore inputes missing season length and contains more records than `PDate.SLen.Data`,however season length is likely to be less accurate.
+
+**`PDate.SLen.P30`** `site_data$P.Date.Merge` is used to determine the start date of the climate window, and the end date is fixed to 30 days after planting. This represent the post-planting climate, which can be a particularly sensitive period for many crops.
+
+
+```{r climdat_structure8}
+names(clim_data$PDate.SLen.Data)|>
+  kable(format = "html") |>
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
+  scroll_box(width = "100%", height = "250px")
+```
+
+
+Each of the following names corresponds to a list of **climate statistics** calculated over the seasonal window defined by `P.Date.Merge` and `SeasonLength.Data`:
+
+-   **`gdd`**: Growing Degree Days --- cumulative heat units over the season binned into thermal stress classes, useful for crop development and heat stress exposure tracking.
+
+-   **`temperature`**: Mean, minimum, and maximum temperatures over the season. Consecutive and total days above/below temperature thresholds.
+
+-   **`rainfall`**: Total and average precipitation during the season. Consecutive and total days above/below precipitation thresholds.
+
+-   **`eratio`**: Ratio of rainfall to reference evapotranspiration --- a proxy for water availability or drought stress.
+
+-   **`logging`**: Days with waterlogging risk --- based on rainfall thresholds that may indicate excess moisture conditions.
+
+Each object is a `data.table` with one row per Site.ID and columns containing summary statistics for that climate indicator.
+
+#### shared fields (index or key fields)
+
+These fields are needed for merging the climate statistics back to the ERA comparisons table.
+
+All tables share these fields:\
+- **`Site.Key`**: The site identifier for spatially reconnecting to the ERA comparisons table.\
+- **`M.Year`**: The time period identifier for temporally reconnecting to the ERA comparisions table.\
+- **`EU`**: The crop or animal product code. - **`Product`**: The crop or animal product name (this corresponds to the `Product.Simple` name field in ther ERA comparisons table) - **`Plant.Start`**: The original planting start date (as per the ERA comparisons table raw data).\
+- **`Plant.End`**: The original planting end date (as per the ERA comparisons table raw data).\
+- **`Harvest.Start`**: The original harvest start date (as per the ERA comparisons table raw data).\
+- **`Harvest.End`**: The original harvest end date (as per the ERA comparisons table raw data).
+
+Additionally these shared fields are present: - **`window`**: Description of window used, useful if merging tables that use different climate window calculation methods.\
+- **`row_index`** : Internal index to link this row back to the corresponding entry in the `site_data` table.
+
+#### gdd
+
+
+```{r climdat_gdd}
+head(clim_data$PDate.SLen.Data$gdd)|>
+  kable(format = "html") |>
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
+  scroll_box(width = "100%", height = "250px")
+```
+
+
+This table contains Growing Degree Day (GDD) statistics calculated over the defined season window for each site. Here's what each field represents:\
+- **`gdd_subopt`**: Cumulative GDD within the **sub-optimal temperature range** for crop growth (above base temperature but below optimal).\
+- **`gdd_opt`**: Cumulative GDD within the **optimal temperature range** --- where the crop is expected to grow most efficiently.\
+- **`gdd_aboveopt`**: Cumulative GDD in the **above-optimal range**, where temperatures may begin to reduce growth efficiency.\
+- **`gdd_abovemax`**: Cumulative GDD **above the maximum threshold**, indicating **heat stress** or potentially damaging conditions.
+
+#### temperature
+
+
+```{r climdat_temp}
+head(clim_data$PDate.SLen.Data$temperature) |>
+  kable(format = "html") |>
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
+  scroll_box(width = "100%", height = "250px")
+```
+
+
+This table summarizes temperature-related climate statistics. Fields fall into two main categories:
+
+**1. Heat Stress Threshold Indicators (`tmax_tg_*`)**
+
+These fields summarize **extreme high-temperature events**, using thresholds of **35°C**, **37.5°C**, and **40°C**. The same set of metrics is calculated for each threshold:
+
+-   **`tmax_tg_[threshold].days`**: Total number of days where maximum temperature (`Tmax`) exceeded the threshold. e.g., `tmax_tg_35.days` = number of days \> 35°C.\
+-   **`tmax_tg_[threshold].days_pr`**: Proportion of days in the season above the threshold.\
+-   **`tmax_tg_[threshold].max_rseq`**: Maximum length of any **consecutive sequence** of days above the threshold.\
+-   **`tmax_tg_[threshold].n_seq_dX`**: Number of **sequences of at least X days** where Tmax stayed above the threshold.
+    -   `d5`: ≥5 consecutive days.
+    -   `d10`: ≥10 consecutive days\
+    -   `d15`: ≥15 consecutive days
+
+These indicators help assess the **intensity, persistence, and frequency** of heat stress.
+
+**2. General Temperature Statistics**
+
+These capture broader temperature behavior during the season:
+
+-   **Tmin-related fields:**
+    -   `tmin_min`: Minimum of daily minimum temperatures
+    -   `tmin_mean`: Mean daily minimum temperature
+    -   `tmin_var`: Variance of daily minimum temperatures
+    -   `tmin_sd`: Standard deviation of daily minimum temperatures
+    -   `tmin_range`: Difference between max and min daily minimum temperatures
+-   **Tmax-related fields:**
+    -   `tmax_max`: Maximum of daily maximum temperatures
+    -   `tmax_mean`: Mean daily maximum temperature
+    -   `tmax_var`: Variance of daily maximum temperatures
+    -   `tmax_sd`: Standard deviation of daily maximum temperatures
+    -   `tmax_range`: Difference between max and min daily maximum temperatures
+-   **Tmean (daily average temperature) fields:**
+    -   `tmean_max`: Maximum of daily mean temperatures
+    -   `tmean_min`: Minimum of daily mean temperatures
+    -   `tmean_mean`: Mean of daily mean temperatures
+    -   `tmean_var`: Variance of daily mean temperatures
+    -   `tmean_sd`: Standard deviation of daily mean temperatures
+    -   `tmean_range`: Difference between max and min daily mean temperatures
+
+These metrics provide a comprehensive description of **temperature variability and extremes** during the growing season.
+
+#### rainfall
+
+
+```{r climdat_rain}
+head(clim_data$PDate.SLen.Data$rainfall) |>
+  kable(format = "html") |>
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
+  scroll_box(width = "100%", height = "250px")
+```
+
+
+This table summarizes rainfall-related climate statistics.
+
+**1. Total and Derived Rainfall Metrics** - `rain_sum`: Total rainfall (mm) accumulated over the observation window.\
+- `eto_sum`: Total reference evapotranspiration (mm) over the window, calculated from NASA POWER data.\
+- `eto_na`: Number of days with missing `ETO` values due to data unavailability.\
+- `w_balance`: Approximate seasonal water balance: `rain_sum` -- `eto_sum`.\
+- `w_balance_negdays`: Number of days when daily rainfall \< daily evapotranspiration (i.e., water deficit days).
+
+**2. Dry Spell Indicators (`rain_l_*`)**
+
+These indicators summarize **dry spells** using thresholds of **0.1 mm**, **1 mm**, and **5 mm** of daily rainfall.
+
+For each threshold:\
+- **`rain_l_[threshold].days`**: Total number of days below the rainfall threshold. e.g., `rain_l_1.days` = number of days with rainfall \< 1 mm.\
+- `rain_l_[threshold].days_pr` Proportion of total days below the threshold.\
+- `rain_l_[threshold].max_seq`: Length of the **longest consecutive sequence** of dry days.\
+- `rain_l_[threshold].n_seq_dX`:Number of dry spells lasting at least X days:\
+- `d5` = ≥5 consecutive days\
+- `d10` = ≥10 consecutive days\
+- `d15` = ≥15 consecutive days
+
+Thresholds used: - `rain_l_0.1`: Very light rainfall (effectively dry)\
+- `rain_l_1`: Light rainfall\
+- `rain_l_5`: Moderate rainfall threshold
+
+These variables help identify **drought risk**, **intra-seasonal dry periods**, and **rainfall distribution** relevant to crop growth.
+
+#### eratio
+
+
+```{r climdat_eratio}
+head(clim_data$PDate.SLen.Data$eratio) |>
+  kable(format = "html") |>
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
+  scroll_box(width = "100%", height = "250px")
+```
+
+
+These variables describe **evaporative ratio (Eratio)** statistics, which serve as a proxy for water stress during the crop season.\
+**Eratio** is computed as the ratio of **actual evapotranspiration (Ea)** to **potential evapotranspiration (Ep)**, based on a daily water balance simulation that accounts for rainfall, PET, and soil water-holding capacity:
+
+`Eratio = Ea / Ep`
+
+-   **Ep** (potential evapotranspiration) is calculated using the **Priestley--Taylor method**.
+-   **Ea** is estimated by simulating **daily water availability** in the soil, using a simple empirical model based on soil capacity and depletion (see `calc_daily_watbal()` in `watbal_all_in_one.R`).
+-   Soil properties (e.g., field capacity, saturation, depth) are estimated using a pedotransfer function (`AWCPTF()`), and aggregated with `soilcap_calc()`.
+
+This approach integrates soil, rainfall, and climate to better reflect actual water supply to crops, beyond rainfall alone.
+
+Low values indicate water deficits, while higher values suggest sufficient water supply relative to atmospheric demand.
+
+**1. Summary Eratio Statistics**
+
+-   `eratio_mean`: Mean daily Eratio over the observation window.\
+-   `eratio_median`: Median daily Eratio.\
+-   `eratio_min`: Minimum daily Eratio (most severe water deficit day).
+
+**2. Water Stress Indicators (`eratio_l_*`)**
+
+These fields capture **frequency, duration, and intensity of low Eratio events**, using thresholds of **\<0.5**, **\<0.25**, and **\<0.1**.
+
+For each threshold: - `eratio_l_[threshold].days`: Number of days where Eratio fell below the threshold. e.g., `eratio_l_0.5.days` = number of days with Eratio \< 0.5.\
+- `eratio_l_[threshold].days_pr`: Proportion of total days with Eratio below the threshold.\
+- `eratio_l_[threshold].max_seq`: Maximum **consecutive sequence** of days below the threshold.\
+- `eratio_l_[threshold].n_seq_dX`: Number of **spells of at least X consecutive days** below the threshold:\
+- `d5` = ≥5 consecutive days\
+- `d10` = ≥10 consecutive days\
+- `d15` = ≥15 consecutive days
+
+Thresholds represent escalating levels of water stress: - `0.5`: Mild deficit\
+- `0.25`: Moderate deficit\
+- `0.1`: Severe deficit
+
+These metrics can be used to **identify seasonal water stress risk**, **evaluate drought periods**, and **inform adaptive irrigation or planting strategies**.
+
+#### logging
+
+
+```{r climdat_logging}
+head(clim_data$PDate.SLen.Data$logging) |>
+  kable(format = "html") |>
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
+  scroll_box(width = "100%", height = "250px")
+```
+
+
+These variables summarize **soil waterlogging** conditions during the crop season.\
+Waterlogging is defined here as the **amount of water held in the soil above field capacity** but **below saturation**, simulated via a daily water balance using [`calc_daily_watbal()`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/functions/water_balance.R) from [`watbal_all_in_one.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/functions/water_balance.R).
+
+Logging occurs when incoming rainfall exceeds the soil's capacity to retain water at field capacity, but has **not yet exceeded total saturation**.
+
+**1. Summary Waterlogging Statistics**
+
+-   `logging_sum`: Total cumulative logging value across the observation window.\
+-   `logging_mean`: Mean daily logging value.\
+-   `logging_median`: Median daily logging value.\
+-   `logging_present_mean`: Mean logging value on days when waterlogging was present (i.e., \> 0).
+
+**2. General Waterlogging Presence (`logging_g_0.*`)**
+
+These fields indicate periods when **water balance \> 0**, a proxy for general waterlogging.
+
+-   `logging_g_0.days`: Number of days where waterlogging \> 0.\
+-   `logging_g_0.days_pr`: Proportion of days with waterlogging \> 0.\
+-   `logging_g_0.max_seq`: Longest **consecutive sequence** of waterlogged days.\
+-   `logging_g_0.n_seq_dX`: Number of **spells** of X consecutive days with waterlogging:
+    -   `d5`: ≥5 consecutive days
+    -   `d10`: ≥10 consecutive days
+    -   `d15`: ≥15 consecutive days
+
+**3. Saturation Threshold Indicators (`logging_g_ssat_*`)**
+
+These fields apply stricter thresholds based on **soil saturation**: - `ssat_0.5`: Moderate saturation (50% of saturation) - `ssat_0.9`: High saturation (90% of saturation)
+
+For each threshold:
+
+-   `logging_g_ssat_[threshold].days`: Number of days exceeding the saturation threshold.\
+-   `logging_g_ssat_[threshold].days_pr`: Proportion of season with saturation exceeded.\
+-   `logging_g_ssat_[threshold].max_seq`: Maximum consecutive days above threshold.
+-   `logging_g_ssat_[threshold].n_seq_dX`: Number of **long saturation spells**:
+    -   `d5`: ≥5 consecutive days\
+    -   `d10`: ≥10 consecutive days\
+    -   `d15`: ≥15 consecutive days
+
+These indicators help assess **excess moisture risks**, which can influence **root health**, **germination success**, and **yields**.
+
+## Connecting climate stats back to the ERA database
+
+### ERA Comparisons Table
+
+
+```{r era_comparisons_table1,warning=F}
+
+# Set the remote S3 path and local save path
+s3_data_dir <- "s3://digital-atlas/era/data"
+local_data_dir <- "downloaded_data"
+
+# List and filter files
+s3<-s3fs::S3FileSystem$new(anonymous = T)
+files_s3 <- s3$dir_ls(s3_data_dir)
+files_s3 <- grep("compiled.*mh.*parquet", files_s3, value = TRUE)
+
+# Filter to most recent version of dataset
+(files_s3 <- tail(files_s3, 1))
+
+# Create local file path and download
+files_local <- gsub(s3_data_dir, local_data_dir, files_s3)
+if(!file.exists(files_local)){
+  s3$file_download(files_s3, files_local)
+}
+
+# Load the data
+era_comparisons<-arrow::read_parquet(files_local)
+```
+
+```{r era_comparisons_table2}
+key_fields<-c("Site.Key","M.Year","Product.Simple","Plant.Start","Plant.End","Harvest.Start","Harvest.End")
+
+# Climate data to merge
+clim_mergedat<-clim_data$PDate.SLen.EcoCrop$gdd
+# Rename the Product field to match the ERA comparisons table
+setnames(clim_mergedat,"Product","Product.Simple")
+# Remove unneeded columns 
+clim_mergedat[,c("row_index","window","EU"):=NULL]
+# Remove any duplicates
+clim_mergedat<-unique(clim_mergedat)
+
+# Merge datasets
+era_comparisons_gdd<-merge(era_comparisons,clim_mergedat,by=key_fields,all.x=T,sort=F)
+
+# Explore merge result
+head(era_comparisons_gdd[!is.na(gdd_subopt),c(key_fields,grep("gdd",colnames(era_comparisons_gdd),value=T)),with=F])|>
+  kable(format = "html") |>
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
+  scroll_box(width = "100%", height = "250px")
+
+```
+
+
+How many observations have we enriched?
+
+
+```{r era_comparisons_table13}
+era_comparisons_gdd[!is.na(gdd_subopt),.N]
+era_comparisons_gdd[!is.na(gdd_subopt),.N]/era_comparisons_gdd[,.N]
+```
+
+
+Why is this less than half of the total data available? - 1. A planting date or window must have been reported. - 2. If planting uncertainty is too high, it may not have been possible to infer the planting date. - 3. Sites with large spatial uncertainty (\>50km radius) are excluded. - 4. Climate statistics have not been calculated for animal experiments. - 5. Climate statistics are not calculated for spatially aggregated sites, products or time periods.
+
+
+```{r era_comparisons_table4}
+era_comparisons_gdd[!is.na(gdd_subopt),.N]/era_comparisons_gdd[!is.na(Plant.Start) & 
+                                                                 Buffer<50000 &
+                                                                 !grepl("[.][.]",Site.ID) & 
+                                                                 !grepl("[.][.]",M.Year) &
+                                                                 !grepl("-",Product.Simple),.N]
+```
+
+
+Non-matches, if present, indicate missing data in the era climate stats pipeline, please let us know and check for updates.
+
+
+```{r era_comparisons_table5}
+era_comparisons_gdd[!is.na(Plant.Start) & 
+                         Buffer<50000 &
+                         !grepl("[.][.]",Site.ID) & 
+                         !grepl("[.][.]",M.Year) &
+                         !grepl("-",Product.Simple) & is.na(gdd_subopt),key_fields,with=F]
+```
+
+
+## Foundational datasets
+
+### Rainfall
+
+Rainfall data are downloaded using [`R/add_geodata/functions/download_chirps.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/functions/download_chirps.R) and processed using the script [`R/add_geodata/chirps.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/chirps.R).
+
+#### Access
+
+The annual and long-term average datasets are small, we can simply download them from the ERA s3 bucket.
+
+
+```{r rainfall_access,warning=F}
+# Set the remote S3 path and local save path
+s3_data_dir <- "s3://digital-atlas/era/geodata"
+
+# List and filter files
+s3<-s3fs::S3FileSystem$new(anonymous = T)
+files_s3 <- s3$dir_ls(s3_data_dir)
+
+file_ltavg<-grep("chirps_ltavg.*parquet", files_s3, value = TRUE)
+file_annnual<-grep("chirps_annual.*parquet", files_s3, value = TRUE)
+
+# Filter to most recent version of dataset
+(file_ltavg <- tail(file_ltavg, 1))
+(file_annnual <- tail(file_annnual, 1))
+
+files_s3<-c(file_ltavg,file_annnual)
+
+# Create local file path and download
+files_local <- gsub(s3_data_dir, local_data_dir, files_s3)
+
+for(i in 1:length(files_local)){
+  if(!file.exists(files_local[i])){
+    s3$file_download(files_s3[i], files_local[i])
+  }
+}
+
+# Load ltavg and annual data
+chirps_ltavg<-arrow::read_parquet(files_local[1])
+chirps_annual<-arrow::read_parquet(files_local[2])
+```
+
+
+The daily CHIRPS dataset id quite large, let's use the arrow package to download the head of the data only. To learn more about using the arrow package to access parquet data in R see <https://arrow.apache.org/docs/r/>.\
+In future ERA updates we will optimize the partition structure of parquet tables to faciliate faster access, in the short-term we suggest working locally with files is still the best option.
+
+
+```{r rainfall_structure,warning=F}
+# Load head of daily data only
+files_s3 <- s3$dir_ls(s3_data_dir)
+
+file_daily<-grep("chirps.*parquet", files_s3, value = TRUE)
+file_daily<-file_daily[!grepl("ltavg|annual",file_daily)]
+(file_daily <- tail(file_daily, 1))
+
+
+files_local <- gsub(s3_data_dir, local_data_dir, file_daily)
+
+if(!file.exists(files_local)){
+
+  chirps_daily<-open_dataset(file_daily, format = "parquet", filesystem = s3)
+
+  # Read the first 5 rows into a data.table
+  chirps_daily <- as.data.table(head(chirps_daily, 5))
+  
+  # Save result
+  arrow::write_parquet(chirps_daily,files_local)
+}else{
+  chirps_daily<-arrow::read_parquet(files_local)
+}
+
+```
+
+
+#### Structure
+
+**Daily precipitation**
+
+
+```{r rainfall_prec}
+head(chirps_daily) |>
+  kable(format = "html") |>
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
+  scroll_box(width = "100%", height = "250px")
+```
+
+
+**Annual precipitation**
+
+
+```{r rainfall_annual}
+head(chirps_annual) |>
+  kable(format = "html") |>
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
+  scroll_box(width = "100%", height = "250px")
+```
+
+
+**Long-term average precipitation**
+
+
+```{r rainfall_ltavg}
+head(chirps_ltavg) |>
+  kable(format = "html") |>
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
+  scroll_box(width = "100%", height = "250px")
+```
+
+
+### POWER
+
+POWER data are downloaded using [`R/add_geodata/functions/download_power.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/functions/download_power.R) and processed using the script [`R/add_geodata/power.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/power.R).
+
+#### Access
+
+The annual and long-term average datasets are small, we can simply download them from the ERA s3 bucket.
+
+
+```{r power_access1,warning=F}
+# Set the remote S3 path and local save path
+s3_data_dir <- "s3://digital-atlas/era/geodata"
+
+# List and filter files
+s3<-s3fs::S3FileSystem$new(anonymous = T)
+files_s3 <- s3$dir_ls(s3_data_dir)
+
+file_ltavg<-grep("POWER_ltavg.*parquet", files_s3, value = TRUE)
+file_annnual<-grep("POWER_annual.*parquet", files_s3, value = TRUE)
+
+# Filter to most recent version of dataset
+(file_ltavg <- tail(file_ltavg, 1))
+(file_annnual <- tail(file_annnual, 1))
+
+files_s3<-c(file_ltavg,file_annnual)
+
+# Create local file path and download
+files_local <- gsub(s3_data_dir, local_data_dir, files_s3)
+
+for(i in 1:length(files_local)){
+  if(!file.exists(files_local[i])){
+    s3$file_download(files_s3[i], files_local[i])
+  }
+}
+
+# Load ltavg and annual data
+power_ltavg<-arrow::read_parquet(files_local[1])
+power_annual<-arrow::read_parquet(files_local[2])
+```
+
+```{r power_access2,warning=F}
+files_s3 <- s3$dir_ls(s3_data_dir)
+
+file_daily<-grep("POWER.*parquet", files_s3, value = TRUE)
+file_daily<-file_daily[!grepl("ltavg|annual",file_daily)]
+(file_daily <- tail(file_daily, 1))
+
+files_local <- gsub(s3_data_dir, local_data_dir, file_daily)
+
+if(!file.exists(files_local)){
+
+    s3$file_download(file_daily, files_local)
+  
+  # Subset to the first 5 rows
+  power_daily <-arrow::read_parquet(files_local)[1:5]
+  
+  # Save result
+  arrow::write_parquet(power_daily,files_local)
+}else{
+  power_daily<-arrow::read_parquet(files_local)
+}
+```
+
+
+#### Structure
+
+**Daily power**
+
+
+```{r power_daily}
+head(power_daily) |>
+  kable(format = "html") |>
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
+  scroll_box(width = "100%", height = "250px")
+```
+
+
+**Annual power**
+
+
+```{r power_annual}
+head(power_annual) |>
+  kable(format = "html") |>
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
+  scroll_box(width = "100%", height = "250px")
+```
+
+
+**Long-term average power**
+
+
+```{r power_latavg}
+head(power_ltavg) |>
+  kable(format = "html") |>
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
+  scroll_box(width = "100%", height = "250px")
+```
+
+
+### Soilgrids
+
+#### Access
+
+
+```{r soilgrids_access,warning=F}
+# Set the remote S3 path and local save path
+s3_data_dir <- "s3://digital-atlas/era/geodata"
+
+# List and filter files
+s3<-s3fs::S3FileSystem$new(anonymous = T)
+files_s3 <- s3$dir_ls(s3_data_dir)
+
+files_s3<-files_s3[!grepl("watbal",files_s3)]
+
+file_soilgrids<-grep("soilgrids2.0.*parquet", files_s3, value = TRUE)
+file_isda<-grep("isda.*parquet", files_s3, value = TRUE)
+
+# Filter to most recent version of dataset
+(file_soilgrids <- tail(file_soilgrids, 1))
+(file_isda <- tail(file_isda, 1))
+
+files_s3<-c(file_isda,file_soilgrids)
+
+# Create local file path and download
+files_local <- gsub(s3_data_dir, local_data_dir, files_s3)
+
+for(i in 1:length(files_local)){
+  if(!file.exists(files_local[i])){
+    s3$file_download(files_s3[i], files_local[i])
+  }
+}
+
+# Load data
+# Note the soilgrids data is quite large (>150 Mb) so it will take a few minutes to download
+soilgrids<-arrow::read_parquet(files_local[1])
+isda<-arrow::read_parquet(files_local[2])
+```
+
+
+#### Structure
+
+**Soil grids**
+
+
+```{r soilgrids_structure1}
+head(soilgrids) |>
+  kable(format = "html") |>
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
+  scroll_box(width = "100%", height = "250px")
+```
+
+```{r soilgrids_structure2,warning=F}
+files_s3 <- s3$dir_ls(s3_data_dir)
+(files_s3<-grep("soilgrids2.0.*metadata", files_s3, value = TRUE))
+
+# Replace s3 path with https path so we can read directly into R
+http_path <- gsub("^s3://([^/]+)/(.*)$", "https://\\1.s3.amazonaws.com/\\2", files_s3)
+
+soilgrids_metadata<-fread(http_path)
+```
+
+```{r soilgrids_structure3}
+head(soilgrids_metadata) |>
+  kable(format = "html") |>
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
+  scroll_box(width = "100%", height = "250px")
+```
+
+
+**isda**
+
+
+```{r isda_structure1}
+head(isda) |>
+  kable(format = "html") |>
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
+  scroll_box(width = "100%", height = "250px")
+```
+
+```{r isda_structure2}
+files_s3 <- s3$dir_ls(s3_data_dir)
+files_s3<-grep("isda.*metadata", files_s3, value = TRUE)
+
+# Replace s3 path with https path so we can read directly into R
+http_path <- gsub("^s3://([^/]+)/(.*)$", "https://\\1.s3.amazonaws.com/\\2", files_s3)
+
+isda_metadata<-fread(http_path)
+```
+
+```{r isda_structure3}
+head(isda_metadata) |>
+  kable(format = "html") |>
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
+  scroll_box(width = "100%", height = "250px")
+```
+
+
+### Elevation
+
+#### Access
+
+
+```{r elevation_access, warning=F}
+files_s3 <- s3$dir_ls(s3_data_dir)
+files_s3<-grep("elevation.*parquet", files_s3, value = TRUE)
+(files_s3 <- tail(files_s3, 1))
+
+# Create local file path and download
+files_local <- gsub(s3_data_dir, local_data_dir, files_s3)
+
+  if(!file.exists(files_local)){
+    s3$file_download(files_s3, files_local)
+  }
+
+elevation<-arrow::read_parquet(files_local)
+```
+
+
+#### Structure
+
+
+```{r elevation_structure}
+head(elevation) |>
+  kable(format = "html") |>
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
+  scroll_box(width = "100%", height = "250px")
+```
+
+
+**Field Descriptions:**
+
+-   `Site.Key`: Unique identifier for the ERA site.\
+-   `Latitude`: Geographic latitude of the site (decimal degrees, WGS84).\
+-   `Longitude`: Geographic longitude of the site (decimal degrees, WGS84).\
+-   `Buffer`: Radius (in meters) around the site used for calculating topographic statistics.\
+-   `Country`: Country in which the site is located.\
+-   `variable`: The terrain variable being summarized:
+    -   `elevation`: Elevation above sea level (meters)\
+    -   `slope`: Terrain slope or steepness (degrees)\
+    -   `aspect`: Orientation of slope (degrees clockwise from North)\
+-   `stat`: Summary statistic applied to the variable within the buffer:
+    -   `mean`: Mean value\
+    -   `sd`: Standard deviation\
+    -   `median`: Median value\
+    -   `max`: Maximum value\
+    -   `min`: Minimum value\
+-   `value`: The computed result for each `variable`--`stat` combination.
+
+### SOS
+
+#### Access
+
+
+```{r sos_access,warning=F}
+files_s3 <- s3$dir_ls(s3_data_dir)
+
+files_s3<-grep("sos_.*RData", files_s3, value = TRUE)
+(files_s3 <- tail(files_s3, 1))
+
+files_local <- gsub(s3_data_dir, local_data_dir, files_s3)
+
+# File size is about 40 MB, so download will take some time depending on your connection
+if(!file.exists(files_local)){
+    s3$file_download(files_s3, files_local)
+}
+
+# Load sos data
+sos<-miceadds::load.Rdata2(file=basename(files_local),path=dirname(files_local))
+
+names(sos)
+```
+
+
+#### Structure
+
+The start of season (sos) calculations [/R/add_geodata/calculate_sos.R](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/calculate_sos.R) process raw climate data to derive robust growing-season indicators at multiple temporal scales. In essence, it integrates high-resolution (dekadal) climate records with monthly and seasonal aggregations to compute metrics such as the start of season (SOS), end of season (EOS), length of growing period (LGP), and total rainfall. This multi-layered approach is designed for informed agricultural planning and climate adaptation analysis.
+
+We do not provide detailed descriptions of all the field present in the sos tables, this can be found in the metadata table. The table we make use of the climate statistic calculations is `sos$LTAvg_SOS2` which tells on the average onset of the rainy season (in dekads) for a location.
+
+0.  `metadata`
+
+
+```{r sos_structure1, warning=F}
+files_s3 <- s3$dir_ls(s3_data_dir)
+files_s3<-grep("sos.*metadata.*csv", files_s3, value = TRUE)
+(files_s3 <- tail(files_s3, 1))
+
+# Replace s3 path with https path so we can read directly into R
+http_path <- gsub("^s3://([^/]+)/(.*)$", "https://\\1.s3.amazonaws.com/\\2", files_s3)
+
+sos_metadata<-fread(http_path)
+```
+
+```{r sos_structure2}
+head(sos_metadata) |>
+  kable(format = "html") |>
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
+  scroll_box(width = "100%", height = "250px")
+```
+
+
+1.  `Dekadal_SOS`
+    -   **Description:** Contains detailed, dekadal (approximately 10-day) climate information.\
+    -   **Key Metrics:** Rainfall, potential evapotranspiration (ETo), aridity index (AI), and computed dekad values.\
+    -   **Purpose:** Provides the high-resolution temporal detail needed to identify seasonal transitions and establish baseline climate conditions.
+2.  `Seasonal_SOS2`
+    -   **Description:** Aggregates dekadal data into a seasonal view focused on the primary growing season.\
+    -   **Key Metrics:**
+        -   **SOS:** The first dekad when conditions indicate the start of the season.\
+        -   **EOS:** The last dekad of the season.\
+        -   **LGP:** The length of the growing period (calculated as the difference between EOS and SOS).\
+        -   **Tot.Rain:** Total rainfall during the season.\
+    -   **Methodology:** Uses rolling sums and fixed threshold criteria (e.g., minimum rainfall, aridity conditions) to define the rainy period, with padding applied to manage edge effects.
+
+3.`LTAvg_SOS2` - **Description:** Provides long-term average statistics derived from the primary seasonal data.\
+- **Key Metrics:**\
+- Mean, median, minimum, and maximum SOS values.\
+- Average EOS, LGP, and average total seasonal rainfall (mean seasonal precipitation MSP).\
+- Proportions indicating seasonal transitions across calendar years. - **Purpose:** Summarizes seasonal behavior over the full record, highlighting variability and central tendencies.
+
+
+```{r sos_structure3}
+head(sos$LTAvg_SOS2[,.(Site.Key,SOS.min,SOS.mean,SOS.max,EOS,LGP,Tot.Rain,Seasons)]) |>
+  kable(format = "html") |>
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
+  scroll_box(width = "100%", height = "250px")
+```
+
+
+4.  `Seasonal_SOS3 & LTAvg_SOS3`
+    -   **Description:** These datasets mirror Seasonal_SOS2 and LTAvg_SOS2 but pertain to an additional (often secondary) growing season, which may be present in more humid regions.\
+    -   **Key Metrics & Purpose:** Similar to the primary season outputs, these capture SOS, EOS, LGP, and rainfall for the secondary season, adding nuance to regions where multiple growing periods exist.
+
+#### Methods
+
+[/R/add_geodata/calculate_sos.R](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/calculate_sos.R)
+
+-   **Data Integration:** The script merges datasets from the POWER and CHIRPS sources---substituting CHIRPS rainfall into the POWER dataset---to leverage the strengths of both and ensure more accurate rainfall data.
+
+-   **Temporal Aggregation:** Daily data are first converted to dekadal values. These are further aggregated into monthly summaries and then into seasonal periods using custom functions (e.g., `SOS_Dekad`, `SOS_SeasonPad`).
+
+-   **Threshold-Based Filtering:** Fixed criteria (e.g., a minimum rainfall threshold of 200 mm, an aridity index cutoff) are applied to delineate season boundaries. While these thresholds are clearly defined, they prompt a critical question: are they universally applicable, or do they require recalibration for different regions and evolving climate conditions?
+
+-   **Handling Season Transitions:** The script manages scenarios where seasons cross calendar boundaries, excludes incomplete years, and applies specific padding rules to balance season lengths. Custom sequence functions (e.g., `SOS_UniqueSeq`, `SOS_SeqMerge`) play a key role in ensuring the integrity of the seasonal identification.
+
+**Critical Considerations & Forward-Thinking Perspective**
+
+-   **Fixed Parameters vs. Regional Flexibility:** The use of fixed thresholds (for rainfall and aridity) is straightforward but invites scrutiny. It is important to ask whether these parameters are optimal for all regions, especially in a changing climate. Future iterations might consider adaptive or region-specific thresholds.
+
+-   **Modular and Adaptable Structure:** The script's modular design---with separate outputs for dekadal details, seasonal summaries, and long-term averages---allows for flexibility. This structure facilitates updates and refinements, such as integrating more dynamic statistical methods or machine learning approaches to adjust thresholds.
+
+-   **Robustness in Data Quality:** Steps to exclude incomplete data and adjust for season transitions add robustness, but constant validation against observed ground conditions is critical for long-term reliability.
+
+The output datasets provide a comprehensive picture of growing season dynamics: - **Dekadal_SOS** offers a fine-scale temporal resolution. - **Seasonal_SOS2** and **LTAvg_SOS2** capture the primary and secondary growing season's characteristics. - **Seasonal_SOS3** and **LTAvg_SOS3** extend this analysis to potential thrid season.
+
+This structure supports detailed analysis and decision-making in agricultural and climate adaptation planning. However, while the methodology is thorough, questioning the fixed thresholds and continuously validating the approach against real-world data remains essential for maintaining relevance in a forward-thinking, dynamic climate context.
+
+### AEZ
+
+#### Access
+
+
+```{r aez_access,warning=F}
+files_s3 <- s3$dir_ls(s3_data_dir)
+
+files_s3<-grep("aez_.*parquet", files_s3, value = TRUE)
+(files_s3 <- tail(files_s3, 1))
+
+files_local <- gsub(s3_data_dir, local_data_dir, files_s3)
+
+if(!file.exists(files_local)){
+    s3$file_download(files_s3, files_local)
+}
+
+aez<-arrow::read_parquet(files_local)
+```
+
+
+#### Structure
+
+
+```{r aez_structure}
+head(aez) |>
+  kable(format = "html") |>
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
+  scroll_box(width = "100%", height = "250px")
+```
+
+
+**Field Descriptions:**
+
+-   `Latitude`: Geographic latitude of the site (decimal degrees, WGS84).\
+-   `Longitude`: Geographic longitude of the site (decimal degrees, WGS84).\
+-   `Site.Key`: Unique site identifier used throughout ERA.\
+-   `Buffer`: Radius (in meters) used to extract AEZ values from raster data.\
+-   `prop`: Proportion of the buffer area covered by the dominant AEZ category.\
+-   `value`: Numeric AEZ class code assigned by the source dataset.\
+-   `dataset`: The AEZ raster dataset used, e.g., `"004_afr-aez_09.tif"` or `"AEZ8_CLAS--SSA.tif"`.\
+-   `value_cat`: Human-readable label for the AEZ zone, derived from the class value using an external key or metadata file (e.g., `"Tropic - cool / humid"`).
+
+### Soil Moisture
+
+Daily soil moisture balance is calculated using a simple water balance model implemented in [`water_balance.R`](https://github.com/CIAT/ERA_dev/blob/main/R/add_geodata/water_balance.R).\
+This model simulates **daily soil water availability**, **evaporative demand**, and **logging risk** for each site, based on rainfall (CHIRPS), temperature and radiation (NASA POWER), and soil properties derived from ISDA (Africa) or SoilGrids 2.0 (non-Africa). These daily values are the foundation for seasonal summaries of **water stress** (`ERATIO`) and **excess moisture** (`LOGGING`).
+
+-   **`ERATIO`** (Evaporative Ratio) is the ratio of actual evapotranspiration (Ea) to potential evapotranspiration (Ep).
+    -   Values near **1** indicate sufficient water availability---plants are able to meet atmospheric demand.\
+    -   Values **\< 0.5** suggest **moderate to severe water stress**, where crop water needs are not being met.\
+    -   Daily `ERATIO` values are used to summarize **frequency, duration, and intensity** of drought conditions across a season.
+-   **`LOGGING`** represents the amount of water in the soil **above field capacity but below saturation**.
+    -   Positive values indicate periods where **excess water** may restrict oxygen availability to roots (i.e., waterlogging).\
+    -   Used to flag **moisture stress due to excess rainfall or poor drainage**.
+
+#### Access
+
+
+```{r soil_moisture_access,warning=F}
+files_s3 <- s3$dir_ls(s3_data_dir)
+
+# Substitute isda for soilgrids to access the isda soil grids data (for african site)
+# Hear we are using soilgrids2.0 because the file size is more convinient for this vignette
+files_s3<-grep("watbal.*soilgrids.*parquet", files_s3, value = TRUE)
+(files_s3 <- tail(files_s3, 1))
+
+files_local <- gsub(s3_data_dir, local_data_dir, files_s3)
+
+# File size is about x MB, so download will take some time depending on your connection
+if(!file.exists(files_local)){
+    s3$file_download(files_s3, files_local)
+}
+
+watbal<-arrow::read_parquet(files_local)
+```
+
+
+#### Structure
+
+
+```{r soil_moisture_structure}
+head(watbal) |>
+  kable(format = "html") |>
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"), position = "left") |>
+  scroll_box(width = "100%", height = "250px")
+```
+
+
+Each row represents a unique site-day combination.
+
+**Field Descriptions:**
+
+-   `Site.Key`: Unique identifier for the ERA site.\
+-   `scp`: Soil water holding capacity at field capacity (mm). Estimated from ISDA or SoilGrids based on pedotransfer rules.\
+-   `ssat`: Soil saturation point (mm). Maximum amount of water the soil can hold.\
+-   `DATE`: Observation date (daily time step).\
+-   `TMIN`: Minimum daily air temperature (°C), from NASA POWER.\
+-   `TMAX`: Maximum daily air temperature (°C), from NASA POWER.\
+-   `TMEAN`: Mean daily air temperature (°C).\
+-   `RAIN`: Daily precipitation (mm), from CHIRPS.\
+-   `SRAD`: Surface solar radiation (MJ/m²/day), from NASA POWER.\
+-   `ETMAX`: Potential evapotranspiration (PET, mm/day), calculated using the Priestley--Taylor method.
+-   `AVAIL`: Estimated soil water available to crops (mm). Simulated daily from soil and rainfall inputs.\
+-   `DEMAND`: Crop water demand (mm). Equal to `ETMAX` if water is not limiting.\
+-   `ERATIO`: Evaporative ratio (Ea/Ep) --- actual evapotranspiration divided by PET. A proxy for crop water stress.\
+-   `LOGGING`: Simulated waterlogging value (mm above field capacity, but below saturation).\
+-   `RUNOFF`: Excess rainfall (mm) beyond soil saturation capacity; assumed to be lost as runoff or deep percolation.
+
+### Bioclim
+
+This will be made available in future updates. If you have a critical need for this information then please contact the ERA team and we can prioritize these data.
+
+# Acknowledgements
+
+These open-source scripts were delivered for and funded by the **Agroecology in the Dry Corridor of Central America (ACDC) project**
+
+# Contact Us
+
+For more details or to explore collaborative opportunities:
+
+Please visit our GitHub repository: <https://github.com/ERAgriculture/ERA_Agronomy.git>
+
+Or contact: Peter Steward (Scientist II): [p.steward\@cgiar.org](mailto:p.steward@cgiar.org){.email}\
+Namita Joshi (Senior Research Associate): [n.joshi\@cgiar.org](mailto:n.joshi@cgiar.org){.email}\
+Todd Rosenstock (Principal Scientist): [t.rosenstock\@cgiar.org](mailto:t.rosenstock@cgiar.org){.email}
+
