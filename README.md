@@ -62,7 +62,7 @@ This repository is maintained by the team at the Alliance of Bioversity Internat
 This project is licensed under the GPL-3.0 License.
 
 Acknowledgment
-This work is funded by the CGIAR Livestock & Climate Initiative, supporting ERA’s mission of providing actionable insights into resilient agricultural practices.
+This work is funded by the CGIAR Climate Action and Sustainable Farming Programs, supporting ERA’s mission of providing actionable insights into resilient agricultural practices.
 
 For more details, please consult the foundational ERA publication:
 Rosenstock, T.S., Steward, P., Joshi, N. et al. Effects of changing farming practices in African agriculture. Sci Data 11, 958 (2024)
