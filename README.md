@@ -69,4 +69,4 @@ Rosenstock, T.S., Steward, P., Joshi, N. et al. Effects of changing farming prac
 (DOI: 10.1038/s41597-024-03805-z).
 
 For questions or contributions, please create an issue or contact the maintainers.
-
+![SFP Logo](images/Stacked Logo - Green - SF.pdf)
