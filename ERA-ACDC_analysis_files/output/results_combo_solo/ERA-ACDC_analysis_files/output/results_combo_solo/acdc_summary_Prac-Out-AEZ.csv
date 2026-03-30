@@ -1,0 +1,74 @@
+PrName,Out.SubInd,AEZ16simple,Observations,Studies
+Inorganic Fertilizer-Solo,Crop Yield,,795,60
+Intercropping-Solo,Crop Yield,,136,15
+Inorganic Fertilizer-Combo,Crop Yield,,66,15
+Reduced Tillage-Solo,Crop Yield,,149,13
+Mulch-Combo,Crop Yield,,104,13
+pH Control-Solo,Crop Yield,,192,11
+Intercropping-Combo,Crop Yield,,71,11
+Crop Rotation-Combo,Crop Yield,,88,11
+Reduced Tillage-Combo,Crop Yield,,104,10
+Organic Fertilizer-Solo,Crop Yield,,79,9
+Crop Rotation-Solo,Crop Yield,,59,8
+Crop Residue-Combo,Crop Yield,,84,7
+Multistrata Agroforestry-Solo,Crop Yield,,59,5
+Mulch-Solo,Crop Yield,,128,5
+Agroforestry Pruning-Combo,Crop Yield,,19,5
+Organic Fertilizer-Combo,Crop Yield,,14,5
+Inorganic Fertilizer-Intercropping-Solo,Crop Yield,,22,4
+Crop Rotation-Mulch-Reduced Tillage-Solo,Crop Yield,,17,4
+Mulch-Reduced Tillage-Solo,Crop Yield,,14,4
+Inorganic Fertilizer Reduction-Solo,Crop Yield,,27,4
+pH Control-Combo,Crop Yield,,12,4
+Crop Residue Incorporation-Combo,Crop Yield,,18,4
+Supplemental Irrigation-Solo,Crop Yield,,46,3
+Improved Fallow-Solo,Crop Yield,,58,3
+Improved Fallow-Intercropping-Solo,Crop Yield,,25,3
+Crop Residue Incorporation-Solo,Crop Yield,,17,3
+Improved Varieties-Solo,Crop Yield,,261,3
+Crop Rotation-Mulch-Solo,Crop Yield,,9,3
+Inorganic Fertilizer-Organic Fertilizer-Solo,Crop Yield,,6,3
+Agroforestry Pruning-Solo,Crop Yield,,6,3
+Agroforestry Pruning-Inorganic Fertilizer-Solo,Crop Yield,,9,3
+Agroforestry Pruning-Inorganic Fertilizer Reduction-Solo,Crop Yield,,3,3
+Improved Fallow-Combo,Crop Yield,,25,3
+Inorganic Fertilizer Reduction-Combo,Crop Yield,,3,3
+Crop Rotation-Inorganic Fertilizer-Solo,Crop Yield,,10,2
+Double Cropping-Solo,Crop Yield,,13,2
+Other Agroforestry-Solo,Crop Yield,,15,2
+Crop Residue Incorporation-Reduced Tillage-Solo,Crop Yield,,3,2
+Crop Rotation-Intercropping-Solo,Crop Yield,,9,2
+Biochar-Organic Fertilizer-Solo,Crop Yield,,4,2
+Crop Rotation-Reduced Tillage-Solo,Crop Yield,,12,2
+Crop Residue Incorporation-Crop Rotation-Solo,Crop Yield,,6,2
+Crop Residue-Solo,Crop Yield,,49,2
+Crop Residue-Reduced Tillage-Solo,Crop Yield,,37,2
+Biochar-Combo,Crop Yield,,8,2
+Harvest Method-Intercropping-Mulch-Solo,Crop Yield,,9,1
+Crop Rotation-Intercropping-Reduced Tillage-Solo,Crop Yield,,1,1
+Intercropping-Supplemental Irrigation-Solo,Crop Yield,,1,1
+Agroforestry Pruning-Mulch-Solo,Crop Yield,,4,1
+Agroforestry Pruning-Mulch-pH Control-Solo,Crop Yield,,2,1
+Deficit Irrigation-Solo,Crop Yield,,24,1
+Crop Rotation-Inorganic Fertilizer-Mulch-Solo,Crop Yield,,3,1
+Crop Residue Incorporation-Crop Rotation-Mulch-Reduced Tillage-Solo,Crop Yield,,9,1
+Mulch-pH Control-Solo,Crop Yield,,1,1
+Crop Rotation-pH Control-Solo,Crop Yield,,4,1
+Alleycropping-Crop Rotation-Solo,Crop Yield,,4,1
+Crop Rotation-Inorganic Fertilizer-Intercropping-Solo,Crop Yield,,4,1
+Inorganic Fertilizer-Mulch-Reduced Tillage-Solo,Crop Yield,,2,1
+Parklands-Solo,Crop Yield,,2,1
+Alleycropping-Solo,Crop Yield,,4,1
+Inorganic Fertilizer-pH Control-Solo,Crop Yield,,5,1
+Biochar-Solo,Crop Yield,,6,1
+Agroforestry Pruning-Multistrata Agroforestry-Solo,Crop Yield,,1,1
+Green Manure-Solo,Crop Yield,,10,1
+Biochar-Mulch-Organic Fertilizer-Solo,Crop Yield,,3,1
+Biochar-Inorganic Fertilizer-Mulch-Organic Fertilizer-Solo,Crop Yield,,1,1
+Inorganic Fertilizer-Mulch-Solo,Crop Yield,,1,1
+Crop Residue-Mulch-Solo,Crop Yield,,20,1
+Crop Residue-Mulch-Reduced Tillage-Solo,Crop Yield,,9,1
+Harvest Method-Combo,Crop Yield,,9,1
+Supplemental Irrigation-Combo,Crop Yield,,1,1
+Multistrata Agroforestry-Combo,Crop Yield,,1,1
+Alleycropping-Combo,Crop Yield,,4,1

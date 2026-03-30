@@ -1,0 +1,118 @@
+PrName,Out.SubInd,Country,Observations,Studies
+Inorganic Fertilizer-Solo,Crop Yield,Brazil,681,48
+pH Control-Solo,Crop Yield,Brazil,192,11
+Intercropping-Solo,Crop Yield,Brazil,88,10
+Intercropping-Combo,Crop Yield,Brazil,69,10
+Inorganic Fertilizer-Solo,Crop Yield,Mexico,51,8
+Inorganic Fertilizer-Combo,Crop Yield,Brazil,46,8
+Crop Rotation-Combo,Crop Yield,Brazil,49,8
+Reduced Tillage-Solo,Crop Yield,Brazil,28,6
+Reduced Tillage-Solo,Crop Yield,Mexico,115,6
+Mulch-Combo,Crop Yield,Brazil,37,6
+Mulch-Combo,Crop Yield,Mexico,62,6
+Crop Rotation-Solo,Crop Yield,Brazil,32,5
+Organic Fertilizer-Solo,Crop Yield,Brazil,67,5
+Reduced Tillage-Combo,Crop Yield,Mexico,79,5
+Crop Residue-Combo,Crop Yield,Mexico,73,5
+Multistrata Agroforestry-Solo,Crop Yield,Brazil,53,4
+Intercropping-Solo,Crop Yield,Mexico,32,4
+Inorganic Fertilizer-Combo,Crop Yield,Mexico,8,4
+Reduced Tillage-Combo,Crop Yield,Brazil,17,4
+pH Control-Combo,Crop Yield,Brazil,12,4
+Improved Fallow-Solo,Crop Yield,Brazil,58,3
+Improved Fallow-Intercropping-Solo,Crop Yield,Brazil,25,3
+Inorganic Fertilizer-Intercropping-Solo,Crop Yield,Brazil,20,3
+Improved Varieties-Solo,Crop Yield,Brazil,261,3
+Organic Fertilizer-Solo,Crop Yield,Mexico,9,3
+Inorganic Fertilizer-Solo,Crop Yield,Haiti,62,3
+Agroforestry Pruning-Solo,Crop Yield,Haiti,6,3
+Agroforestry Pruning-Inorganic Fertilizer-Solo,Crop Yield,Haiti,9,3
+Inorganic Fertilizer Reduction-Solo,Crop Yield,Haiti,22,3
+Agroforestry Pruning-Inorganic Fertilizer Reduction-Solo,Crop Yield,Haiti,3,3
+Mulch-Solo,Crop Yield,Mexico,121,3
+Inorganic Fertilizer-Combo,Crop Yield,Haiti,12,3
+Improved Fallow-Combo,Crop Yield,Brazil,25,3
+Agroforestry Pruning-Combo,Crop Yield,Haiti,12,3
+Organic Fertilizer-Combo,Crop Yield,Mexico,9,3
+Inorganic Fertilizer Reduction-Combo,Crop Yield,Haiti,3,3
+Crop Rotation-Inorganic Fertilizer-Solo,Crop Yield,Brazil,10,2
+Supplemental Irrigation-Solo,Crop Yield,Brazil,42,2
+Other Agroforestry-Solo,Crop Yield,Brazil,15,2
+Crop Rotation-Intercropping-Solo,Crop Yield,Brazil,9,2
+Inorganic Fertilizer-Organic Fertilizer-Solo,Crop Yield,Mexico,4,2
+Crop Residue Incorporation-Crop Rotation-Solo,Crop Yield,Mexico,6,2
+Crop Rotation-Mulch-Reduced Tillage-Solo,Crop Yield,Mexico,14,2
+Crop Rotation-Solo,Crop Yield,Mexico,26,2
+Mulch-Reduced Tillage-Solo,Crop Yield,Mexico,10,2
+Crop Residue Incorporation-Solo,Crop Yield,Mexico,13,2
+Crop Residue-Solo,Crop Yield,Mexico,49,2
+Crop Residue-Reduced Tillage-Solo,Crop Yield,Mexico,37,2
+Crop Rotation-Combo,Crop Yield,Mexico,32,2
+Organic Fertilizer-Combo,Crop Yield,Brazil,5,2
+Crop Residue Incorporation-Combo,Crop Yield,Brazil,11,2
+Crop Residue Incorporation-Combo,Crop Yield,Mexico,7,2
+Crop Residue-Combo,Crop Yield,Brazil,11,2
+Harvest Method-Intercropping-Mulch-Solo,Crop Yield,Brazil,9,1
+Crop Rotation-Intercropping-Reduced Tillage-Solo,Crop Yield,Brazil,1,1
+Intercropping-Supplemental Irrigation-Solo,Crop Yield,Brazil,1,1
+Double Cropping-Solo,Crop Yield,Brazil,1,1
+Agroforestry Pruning-Mulch-Solo,Crop Yield,Brazil,4,1
+Agroforestry Pruning-Mulch-pH Control-Solo,Crop Yield,Brazil,2,1
+Crop Residue Incorporation-Solo,Crop Yield,Brazil,4,1
+Crop Residue Incorporation-Reduced Tillage-Solo,Crop Yield,Brazil,2,1
+Deficit Irrigation-Solo,Crop Yield,Brazil,24,1
+Crop Rotation-Mulch-Solo,Crop Yield,Brazil,4,1
+Crop Rotation-Inorganic Fertilizer-Mulch-Solo,Crop Yield,Brazil,3,1
+Crop Residue Incorporation-Crop Rotation-Mulch-Reduced Tillage-Solo,Crop Yield,Brazil,9,1
+Crop Rotation-Mulch-Reduced Tillage-Solo,Crop Yield,Brazil,1,1
+Mulch-Solo,Crop Yield,Brazil,2,1
+Mulch-pH Control-Solo,Crop Yield,Brazil,1,1
+Crop Rotation-pH Control-Solo,Crop Yield,Brazil,4,1
+Alleycropping-Crop Rotation-Solo,Crop Yield,Brazil,4,1
+Inorganic Fertilizer-Organic Fertilizer-Solo,Crop Yield,Brazil,2,1
+Crop Rotation-Inorganic Fertilizer-Intercropping-Solo,Crop Yield,Brazil,4,1
+Inorganic Fertilizer-Mulch-Reduced Tillage-Solo,Crop Yield,Brazil,2,1
+Mulch-Reduced Tillage-Solo,Crop Yield,Brazil,2,1
+Inorganic Fertilizer Reduction-Solo,Crop Yield,Brazil,5,1
+Parklands-Solo,Crop Yield,Brazil,2,1
+Alleycropping-Solo,Crop Yield,Brazil,4,1
+Inorganic Fertilizer-pH Control-Solo,Crop Yield,Brazil,5,1
+Biochar-Solo,Crop Yield,Brazil,6,1
+Biochar-Organic Fertilizer-Solo,Crop Yield,Brazil,3,1
+Intercropping-Solo,Crop Yield,Colombia,16,1
+Agroforestry Pruning-Multistrata Agroforestry-Solo,Crop Yield,Costa Rica,1,1
+Multistrata Agroforestry-Solo,Crop Yield,Costa Rica,6,1
+Double Cropping-Solo,Crop Yield,Costa Rica,12,1
+Reduced Tillage-Solo,Crop Yield,Nicaragua,6,1
+Mulch-Solo,Crop Yield,Nicaragua,5,1
+Mulch-Reduced Tillage-Solo,Crop Yield,Nicaragua,2,1
+Crop Rotation-Mulch-Reduced Tillage-Solo,Crop Yield,Nicaragua,2,1
+Crop Rotation-Mulch-Solo,Crop Yield,Nicaragua,1,1
+Crop Rotation-Reduced Tillage-Solo,Crop Yield,Nicaragua,4,1
+Crop Rotation-Solo,Crop Yield,Nicaragua,1,1
+Inorganic Fertilizer-Solo,Crop Yield,Honduras,1,1
+Organic Fertilizer-Solo,Crop Yield,Honduras,3,1
+Inorganic Fertilizer-Intercropping-Solo,Crop Yield,Mexico,2,1
+Green Manure-Solo,Crop Yield,Mexico,10,1
+Supplemental Irrigation-Solo,Crop Yield,Mexico,4,1
+Crop Rotation-Mulch-Solo,Crop Yield,Mexico,4,1
+Crop Rotation-Reduced Tillage-Solo,Crop Yield,Mexico,8,1
+Crop Residue Incorporation-Reduced Tillage-Solo,Crop Yield,Mexico,1,1
+Biochar-Organic Fertilizer-Solo,Crop Yield,Mexico,1,1
+Biochar-Mulch-Organic Fertilizer-Solo,Crop Yield,Mexico,3,1
+Biochar-Inorganic Fertilizer-Mulch-Organic Fertilizer-Solo,Crop Yield,Mexico,1,1
+Inorganic Fertilizer-Mulch-Solo,Crop Yield,Mexico,1,1
+Crop Residue-Mulch-Solo,Crop Yield,Mexico,20,1
+Crop Residue-Mulch-Reduced Tillage-Solo,Crop Yield,Mexico,9,1
+Harvest Method-Combo,Crop Yield,Brazil,9,1
+Intercropping-Combo,Crop Yield,Mexico,2,1
+Mulch-Combo,Crop Yield,Nicaragua,5,1
+Crop Rotation-Combo,Crop Yield,Nicaragua,7,1
+Reduced Tillage-Combo,Crop Yield,Nicaragua,8,1
+Supplemental Irrigation-Combo,Crop Yield,Brazil,1,1
+Agroforestry Pruning-Combo,Crop Yield,Brazil,6,1
+Agroforestry Pruning-Combo,Crop Yield,Costa Rica,1,1
+Multistrata Agroforestry-Combo,Crop Yield,Costa Rica,1,1
+Alleycropping-Combo,Crop Yield,Brazil,4,1
+Biochar-Combo,Crop Yield,Brazil,3,1
+Biochar-Combo,Crop Yield,Mexico,5,1

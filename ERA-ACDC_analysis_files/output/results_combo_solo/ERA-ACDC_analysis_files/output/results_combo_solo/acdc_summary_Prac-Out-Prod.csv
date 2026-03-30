@@ -1,0 +1,109 @@
+PrName,Out.SubInd,Product.Simple,Observations,Studies
+Inorganic Fertilizer-Solo,Crop Yield,Maize,660,53
+Intercropping-Solo,Crop Yield,Maize,115,14
+Inorganic Fertilizer-Combo,Crop Yield,Maize,64,14
+Mulch-Combo,Crop Yield,Maize,99,12
+Reduced Tillage-Solo,Crop Yield,Maize,136,10
+pH Control-Solo,Crop Yield,Maize,120,10
+Intercropping-Combo,Crop Yield,Maize,63,9
+Inorganic Fertilizer-Solo,Crop Yield,Common Bean,131,8
+Crop Rotation-Combo,Crop Yield,Maize,73,8
+Reduced Tillage-Combo,Crop Yield,Maize,94,8
+Organic Fertilizer-Solo,Crop Yield,Maize,74,7
+Crop Rotation-Solo,Crop Yield,Maize,54,6
+Crop Residue-Combo,Crop Yield,Maize,82,6
+Multistrata Agroforestry-Solo,Crop Yield,Coffee,59,5
+Inorganic Fertilizer-Intercropping-Solo,Crop Yield,Maize,22,4
+Mulch-Solo,Crop Yield,Maize,123,4
+Inorganic Fertilizer Reduction-Solo,Crop Yield,Maize,27,4
+Agroforestry Pruning-Combo,Crop Yield,Maize,18,4
+Reduced Tillage-Solo,Crop Yield,Common Bean,13,3
+Intercropping-Solo,Crop Yield,Common Bean,19,3
+Improved Fallow-Solo,Crop Yield,Maize,58,3
+Crop Rotation-Mulch-Reduced Tillage-Solo,Crop Yield,Maize,15,3
+Mulch-Reduced Tillage-Solo,Crop Yield,Maize,12,3
+Agroforestry Pruning-Solo,Crop Yield,Maize,6,3
+Agroforestry Pruning-Inorganic Fertilizer-Solo,Crop Yield,Maize,9,3
+Agroforestry Pruning-Inorganic Fertilizer Reduction-Solo,Crop Yield,Maize,3,3
+Crop Rotation-Combo,Crop Yield,Common Bean,15,3
+pH Control-Combo,Crop Yield,Maize,8,3
+Organic Fertilizer-Combo,Crop Yield,Maize,9,3
+Crop Residue Incorporation-Combo,Crop Yield,Maize,16,3
+Inorganic Fertilizer Reduction-Combo,Crop Yield,Maize,3,3
+Crop Rotation-Inorganic Fertilizer-Solo,Crop Yield,Maize,10,2
+Improved Fallow-Intercropping-Solo,Crop Yield,Maize,18,2
+Other Agroforestry-Solo,Crop Yield,Coffee,15,2
+Crop Rotation-Intercropping-Solo,Crop Yield,Maize,9,2
+Crop Rotation-Mulch-Solo,Crop Yield,Maize,8,2
+Improved Varieties-Solo,Crop Yield,Maize,260,2
+pH Control-Solo,Crop Yield,Common Bean,52,2
+Crop Rotation-Solo,Crop Yield,Common Bean,5,2
+Organic Fertilizer-Solo,Crop Yield,Common Bean,5,2
+Supplemental Irrigation-Solo,Crop Yield,Maize,44,2
+Inorganic Fertilizer-Organic Fertilizer-Solo,Crop Yield,Maize,4,2
+Crop Residue Incorporation-Crop Rotation-Solo,Crop Yield,Maize,6,2
+Crop Residue Incorporation-Solo,Crop Yield,Maize,13,2
+Crop Residue-Solo,Crop Yield,Maize,49,2
+Crop Residue-Reduced Tillage-Solo,Crop Yield,Maize,37,2
+Reduced Tillage-Combo,Crop Yield,Common Bean,10,2
+Improved Fallow-Combo,Crop Yield,Maize,18,2
+Organic Fertilizer-Combo,Crop Yield,Common Bean,5,2
+Harvest Method-Intercropping-Mulch-Solo,Crop Yield,Maize,9,1
+Inorganic Fertilizer-Solo,Crop Yield,Coffee,4,1
+Crop Rotation-Intercropping-Reduced Tillage-Solo,Crop Yield,Maize,1,1
+Intercropping-Solo,Crop Yield,Coffee,2,1
+Supplemental Irrigation-Solo,Crop Yield,Coffee,2,1
+Intercropping-Supplemental Irrigation-Solo,Crop Yield,Coffee,1,1
+Double Cropping-Solo,Crop Yield,Maize,1,1
+Agroforestry Pruning-Mulch-Solo,Crop Yield,Maize,4,1
+Agroforestry Pruning-Mulch-pH Control-Solo,Crop Yield,Maize,2,1
+Crop Residue Incorporation-Solo,Crop Yield,Common Bean,4,1
+Crop Residue Incorporation-Reduced Tillage-Solo,Crop Yield,Common Bean,2,1
+Improved Fallow-Intercropping-Solo,Crop Yield,Common Bean,7,1
+Deficit Irrigation-Solo,Crop Yield,Common Bean,24,1
+Improved Varieties-Solo,Crop Yield,Common Bean,1,1
+Crop Rotation-Inorganic Fertilizer-Mulch-Solo,Crop Yield,Maize,3,1
+pH Control-Solo,Crop Yield,Coffee,20,1
+Crop Residue Incorporation-Crop Rotation-Mulch-Reduced Tillage-Solo,Crop Yield,Maize,9,1
+Mulch-pH Control-Solo,Crop Yield,Maize,1,1
+Crop Rotation-pH Control-Solo,Crop Yield,Common Bean,4,1
+Alleycropping-Crop Rotation-Solo,Crop Yield,Common Bean,4,1
+Inorganic Fertilizer-Organic Fertilizer-Solo,Crop Yield,Common Bean,2,1
+Crop Rotation-Inorganic Fertilizer-Intercropping-Solo,Crop Yield,Maize,4,1
+Inorganic Fertilizer-Mulch-Reduced Tillage-Solo,Crop Yield,Maize,2,1
+Parklands-Solo,Crop Yield,Maize,2,1
+Alleycropping-Solo,Crop Yield,Maize,4,1
+Inorganic Fertilizer-pH Control-Solo,Crop Yield,Maize,5,1
+Biochar-Solo,Crop Yield,Common Bean,6,1
+Biochar-Organic Fertilizer-Solo,Crop Yield,Common Bean,3,1
+Agroforestry Pruning-Multistrata Agroforestry-Solo,Crop Yield,Coffee,1,1
+Double Cropping-Solo,Crop Yield,Coffee,12,1
+Mulch-Solo,Crop Yield,Common Bean,5,1
+Mulch-Reduced Tillage-Solo,Crop Yield,Common Bean,2,1
+Crop Rotation-Mulch-Reduced Tillage-Solo,Crop Yield,Common Bean,2,1
+Crop Rotation-Mulch-Solo,Crop Yield,Common Bean,1,1
+Crop Rotation-Reduced Tillage-Solo,Crop Yield,Common Bean,4,1
+Green Manure-Solo,Crop Yield,Maize,10,1
+Crop Rotation-Reduced Tillage-Solo,Crop Yield,Maize,8,1
+Crop Residue Incorporation-Reduced Tillage-Solo,Crop Yield,Maize,1,1
+Biochar-Organic Fertilizer-Solo,Crop Yield,Maize,1,1
+Biochar-Mulch-Organic Fertilizer-Solo,Crop Yield,Maize,3,1
+Biochar-Inorganic Fertilizer-Mulch-Organic Fertilizer-Solo,Crop Yield,Maize,1,1
+Inorganic Fertilizer-Mulch-Solo,Crop Yield,Maize,1,1
+Crop Residue-Mulch-Solo,Crop Yield,Maize,20,1
+Crop Residue-Mulch-Reduced Tillage-Solo,Crop Yield,Maize,9,1
+Inorganic Fertilizer-Combo,Crop Yield,Common Bean,2,1
+Harvest Method-Combo,Crop Yield,Maize,9,1
+Intercropping-Combo,Crop Yield,Coffee,1,1
+Intercropping-Combo,Crop Yield,Common Bean,7,1
+Mulch-Combo,Crop Yield,Common Bean,5,1
+Supplemental Irrigation-Combo,Crop Yield,Coffee,1,1
+Improved Fallow-Combo,Crop Yield,Common Bean,7,1
+Agroforestry Pruning-Combo,Crop Yield,Coffee,1,1
+pH Control-Combo,Crop Yield,Common Bean,4,1
+Multistrata Agroforestry-Combo,Crop Yield,Coffee,1,1
+Crop Residue Incorporation-Combo,Crop Yield,Common Bean,2,1
+Alleycropping-Combo,Crop Yield,Common Bean,4,1
+Biochar-Combo,Crop Yield,Common Bean,3,1
+Biochar-Combo,Crop Yield,Maize,5,1
+Crop Residue-Combo,Crop Yield,Common Bean,2,1

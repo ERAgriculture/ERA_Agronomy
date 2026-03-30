@@ -1,0 +1,21 @@
+Variable,Family,N_Obs,AIC,R2,P_value,Interpretation
+gdd_Harvest.Start,GDD,649,735.9,12.1,< 2e-16,Weak predictor
+rain_Harvest.Start,Rainfall,649,735.9,12.1,< 2e-16,Weak predictor
+temp_Harvest.Start,Temperature,649,735.9,12.1,< 2e-16,Weak predictor
+eratio_Harvest.Start,ETo / Evaporative,649,735.9,12.1,< 2e-16,Weak predictor
+gdd_Harvest.End,GDD,649,736.1,12.1,< 2e-16,Weak predictor
+rain_Harvest.End,Rainfall,649,736.1,12.1,< 2e-16,Weak predictor
+temp_Harvest.End,Temperature,649,736.1,12.1,< 2e-16,Weak predictor
+eratio_Harvest.End,ETo / Evaporative,649,736.1,12.1,< 2e-16,Weak predictor
+rain_rain_l_5.n_seq_d5,Rainfall,1839,2144,7.6,9.0e-15,Weak predictor
+rain_rain_l_0.1.days_pr,Rainfall,1839,2151.6,5.4,8.4e-13,Weak predictor
+temp_tmean_max,Temperature,1839,2155.3,4,8.9e-12,Negligible
+rain_rain_l_0.1.days,Rainfall,1839,2158.4,4.8,3.2e-11,Negligible
+temp_tmean_var,Temperature,1839,2164.7,4.1,9.1e-10,Negligible
+temp_tmin_var,Temperature,1839,2168.4,4,6.4e-09,Negligible
+gdd_gdd_subopt,GDD,1839,2156.8,2.9,2.2e-11,Negligible
+rain_rain_l_0.1.n_seq_d5,Rainfall,1839,2170.3,3.9,1.7e-08,Negligible
+eratio_eratio_l_0.1.max_seq,ETo / Evaporative,1839,2170.2,3.5,1.6e-08,Negligible
+temp_tmean_range,Temperature,1839,2170.7,3.7,2.1e-08,Negligible
+temp_tmean_sd,Temperature,1839,2172.3,3.3,5.2e-08,Negligible
+temp_tmax_mean,Temperature,1839,2170.9,2.4,3.2e-08,Negligible

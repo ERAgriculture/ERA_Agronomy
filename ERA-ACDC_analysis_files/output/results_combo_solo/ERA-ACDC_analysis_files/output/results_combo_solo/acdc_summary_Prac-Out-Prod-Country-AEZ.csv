@@ -1,0 +1,142 @@
+PrName,Out.SubInd,Product.Simple,Country,AEZ16simple,Observations,Studies
+Inorganic Fertilizer-Solo,Crop Yield,Maize,Brazil,,548,41
+pH Control-Solo,Crop Yield,Maize,Brazil,,120,10
+Intercropping-Solo,Crop Yield,Maize,Brazil,,84,9
+Inorganic Fertilizer-Solo,Crop Yield,Maize,Mexico,,49,8
+Intercropping-Combo,Crop Yield,Maize,Brazil,,61,8
+Inorganic Fertilizer-Solo,Crop Yield,Common Bean,Brazil,,129,7
+Inorganic Fertilizer-Combo,Crop Yield,Maize,Brazil,,44,7
+Reduced Tillage-Solo,Crop Yield,Maize,Mexico,,115,6
+Mulch-Combo,Crop Yield,Maize,Brazil,,37,6
+Mulch-Combo,Crop Yield,Maize,Mexico,,62,6
+Crop Rotation-Combo,Crop Yield,Maize,Brazil,,41,6
+Reduced Tillage-Combo,Crop Yield,Maize,Mexico,,79,5
+Crop Residue-Combo,Crop Yield,Maize,Mexico,,73,5
+Crop Rotation-Solo,Crop Yield,Maize,Brazil,,28,4
+Reduced Tillage-Solo,Crop Yield,Maize,Brazil,,21,4
+Multistrata Agroforestry-Solo,Crop Yield,Coffee,Brazil,,53,4
+Intercropping-Solo,Crop Yield,Maize,Mexico,,23,4
+Inorganic Fertilizer-Combo,Crop Yield,Maize,Mexico,,8,4
+Improved Fallow-Solo,Crop Yield,Maize,Brazil,,58,3
+Inorganic Fertilizer-Intercropping-Solo,Crop Yield,Maize,Brazil,,20,3
+Organic Fertilizer-Solo,Crop Yield,Maize,Brazil,,62,3
+Organic Fertilizer-Solo,Crop Yield,Maize,Mexico,,9,3
+Inorganic Fertilizer-Solo,Crop Yield,Maize,Haiti,,62,3
+Agroforestry Pruning-Solo,Crop Yield,Maize,Haiti,,6,3
+Agroforestry Pruning-Inorganic Fertilizer-Solo,Crop Yield,Maize,Haiti,,9,3
+Inorganic Fertilizer Reduction-Solo,Crop Yield,Maize,Haiti,,22,3
+Agroforestry Pruning-Inorganic Fertilizer Reduction-Solo,Crop Yield,Maize,Haiti,,3,3
+Mulch-Solo,Crop Yield,Maize,Mexico,,121,3
+Inorganic Fertilizer-Combo,Crop Yield,Maize,Haiti,,12,3
+Reduced Tillage-Combo,Crop Yield,Maize,Brazil,,15,3
+Agroforestry Pruning-Combo,Crop Yield,Maize,Haiti,,12,3
+pH Control-Combo,Crop Yield,Maize,Brazil,,8,3
+Organic Fertilizer-Combo,Crop Yield,Maize,Mexico,,9,3
+Inorganic Fertilizer Reduction-Combo,Crop Yield,Maize,Haiti,,3,3
+Crop Rotation-Inorganic Fertilizer-Solo,Crop Yield,Maize,Brazil,,10,2
+Reduced Tillage-Solo,Crop Yield,Common Bean,Brazil,,7,2
+Improved Fallow-Intercropping-Solo,Crop Yield,Maize,Brazil,,18,2
+Other Agroforestry-Solo,Crop Yield,Coffee,Brazil,,15,2
+Crop Rotation-Intercropping-Solo,Crop Yield,Maize,Brazil,,9,2
+Improved Varieties-Solo,Crop Yield,Maize,Brazil,,260,2
+pH Control-Solo,Crop Yield,Common Bean,Brazil,,52,2
+Organic Fertilizer-Solo,Crop Yield,Common Bean,Brazil,,5,2
+Inorganic Fertilizer-Organic Fertilizer-Solo,Crop Yield,Maize,Mexico,,4,2
+Crop Residue Incorporation-Crop Rotation-Solo,Crop Yield,Maize,Mexico,,6,2
+Crop Rotation-Mulch-Reduced Tillage-Solo,Crop Yield,Maize,Mexico,,14,2
+Crop Rotation-Solo,Crop Yield,Maize,Mexico,,26,2
+Mulch-Reduced Tillage-Solo,Crop Yield,Maize,Mexico,,10,2
+Crop Residue Incorporation-Solo,Crop Yield,Maize,Mexico,,13,2
+Crop Residue-Solo,Crop Yield,Maize,Mexico,,49,2
+Crop Residue-Reduced Tillage-Solo,Crop Yield,Maize,Mexico,,37,2
+Crop Rotation-Combo,Crop Yield,Common Bean,Brazil,,8,2
+Crop Rotation-Combo,Crop Yield,Maize,Mexico,,32,2
+Improved Fallow-Combo,Crop Yield,Maize,Brazil,,18,2
+Organic Fertilizer-Combo,Crop Yield,Common Bean,Brazil,,5,2
+Crop Residue Incorporation-Combo,Crop Yield,Maize,Mexico,,7,2
+Harvest Method-Intercropping-Mulch-Solo,Crop Yield,Maize,Brazil,,9,1
+Inorganic Fertilizer-Solo,Crop Yield,Coffee,Brazil,,4,1
+Crop Rotation-Intercropping-Reduced Tillage-Solo,Crop Yield,Maize,Brazil,,1,1
+Intercropping-Solo,Crop Yield,Coffee,Brazil,,2,1
+Supplemental Irrigation-Solo,Crop Yield,Coffee,Brazil,,2,1
+Intercropping-Supplemental Irrigation-Solo,Crop Yield,Coffee,Brazil,,1,1
+Intercropping-Solo,Crop Yield,Common Bean,Brazil,,2,1
+Double Cropping-Solo,Crop Yield,Maize,Brazil,,1,1
+Agroforestry Pruning-Mulch-Solo,Crop Yield,Maize,Brazil,,4,1
+Agroforestry Pruning-Mulch-pH Control-Solo,Crop Yield,Maize,Brazil,,2,1
+Crop Residue Incorporation-Solo,Crop Yield,Common Bean,Brazil,,4,1
+Crop Residue Incorporation-Reduced Tillage-Solo,Crop Yield,Common Bean,Brazil,,2,1
+Improved Fallow-Intercropping-Solo,Crop Yield,Common Bean,Brazil,,7,1
+Deficit Irrigation-Solo,Crop Yield,Common Bean,Brazil,,24,1
+Improved Varieties-Solo,Crop Yield,Common Bean,Brazil,,1,1
+Crop Rotation-Mulch-Solo,Crop Yield,Maize,Brazil,,4,1
+Crop Rotation-Inorganic Fertilizer-Mulch-Solo,Crop Yield,Maize,Brazil,,3,1
+pH Control-Solo,Crop Yield,Coffee,Brazil,,20,1
+Crop Residue Incorporation-Crop Rotation-Mulch-Reduced Tillage-Solo,Crop Yield,Maize,Brazil,,9,1
+Crop Rotation-Mulch-Reduced Tillage-Solo,Crop Yield,Maize,Brazil,,1,1
+Mulch-Solo,Crop Yield,Maize,Brazil,,2,1
+Mulch-pH Control-Solo,Crop Yield,Maize,Brazil,,1,1
+Crop Rotation-Solo,Crop Yield,Common Bean,Brazil,,4,1
+Crop Rotation-pH Control-Solo,Crop Yield,Common Bean,Brazil,,4,1
+Alleycropping-Crop Rotation-Solo,Crop Yield,Common Bean,Brazil,,4,1
+Inorganic Fertilizer-Organic Fertilizer-Solo,Crop Yield,Common Bean,Brazil,,2,1
+Supplemental Irrigation-Solo,Crop Yield,Maize,Brazil,,40,1
+Crop Rotation-Inorganic Fertilizer-Intercropping-Solo,Crop Yield,Maize,Brazil,,4,1
+Inorganic Fertilizer-Mulch-Reduced Tillage-Solo,Crop Yield,Maize,Brazil,,2,1
+Mulch-Reduced Tillage-Solo,Crop Yield,Maize,Brazil,,2,1
+Inorganic Fertilizer Reduction-Solo,Crop Yield,Maize,Brazil,,5,1
+Parklands-Solo,Crop Yield,Maize,Brazil,,2,1
+Alleycropping-Solo,Crop Yield,Maize,Brazil,,4,1
+Inorganic Fertilizer-pH Control-Solo,Crop Yield,Maize,Brazil,,5,1
+Biochar-Solo,Crop Yield,Common Bean,Brazil,,6,1
+Biochar-Organic Fertilizer-Solo,Crop Yield,Common Bean,Brazil,,3,1
+Intercropping-Solo,Crop Yield,Common Bean,Colombia,,8,1
+Intercropping-Solo,Crop Yield,Maize,Colombia,,8,1
+Agroforestry Pruning-Multistrata Agroforestry-Solo,Crop Yield,Coffee,Costa Rica,,1,1
+Multistrata Agroforestry-Solo,Crop Yield,Coffee,Costa Rica,,6,1
+Double Cropping-Solo,Crop Yield,Coffee,Costa Rica,,12,1
+Reduced Tillage-Solo,Crop Yield,Common Bean,Nicaragua,,6,1
+Mulch-Solo,Crop Yield,Common Bean,Nicaragua,,5,1
+Mulch-Reduced Tillage-Solo,Crop Yield,Common Bean,Nicaragua,,2,1
+Crop Rotation-Mulch-Reduced Tillage-Solo,Crop Yield,Common Bean,Nicaragua,,2,1
+Crop Rotation-Mulch-Solo,Crop Yield,Common Bean,Nicaragua,,1,1
+Crop Rotation-Reduced Tillage-Solo,Crop Yield,Common Bean,Nicaragua,,4,1
+Crop Rotation-Solo,Crop Yield,Common Bean,Nicaragua,,1,1
+Inorganic Fertilizer-Solo,Crop Yield,Maize,Honduras,,1,1
+Organic Fertilizer-Solo,Crop Yield,Maize,Honduras,,3,1
+Inorganic Fertilizer-Solo,Crop Yield,Common Bean,Mexico,,2,1
+Intercropping-Solo,Crop Yield,Common Bean,Mexico,,9,1
+Inorganic Fertilizer-Intercropping-Solo,Crop Yield,Maize,Mexico,,2,1
+Green Manure-Solo,Crop Yield,Maize,Mexico,,10,1
+Supplemental Irrigation-Solo,Crop Yield,Maize,Mexico,,4,1
+Crop Rotation-Mulch-Solo,Crop Yield,Maize,Mexico,,4,1
+Crop Rotation-Reduced Tillage-Solo,Crop Yield,Maize,Mexico,,8,1
+Crop Residue Incorporation-Reduced Tillage-Solo,Crop Yield,Maize,Mexico,,1,1
+Biochar-Organic Fertilizer-Solo,Crop Yield,Maize,Mexico,,1,1
+Biochar-Mulch-Organic Fertilizer-Solo,Crop Yield,Maize,Mexico,,3,1
+Biochar-Inorganic Fertilizer-Mulch-Organic Fertilizer-Solo,Crop Yield,Maize,Mexico,,1,1
+Inorganic Fertilizer-Mulch-Solo,Crop Yield,Maize,Mexico,,1,1
+Crop Residue-Mulch-Solo,Crop Yield,Maize,Mexico,,20,1
+Crop Residue-Mulch-Reduced Tillage-Solo,Crop Yield,Maize,Mexico,,9,1
+Inorganic Fertilizer-Combo,Crop Yield,Common Bean,Brazil,,2,1
+Harvest Method-Combo,Crop Yield,Maize,Brazil,,9,1
+Intercropping-Combo,Crop Yield,Coffee,Brazil,,1,1
+Intercropping-Combo,Crop Yield,Common Bean,Brazil,,7,1
+Intercropping-Combo,Crop Yield,Maize,Mexico,,2,1
+Mulch-Combo,Crop Yield,Common Bean,Nicaragua,,5,1
+Crop Rotation-Combo,Crop Yield,Common Bean,Nicaragua,,7,1
+Reduced Tillage-Combo,Crop Yield,Common Bean,Brazil,,2,1
+Reduced Tillage-Combo,Crop Yield,Common Bean,Nicaragua,,8,1
+Supplemental Irrigation-Combo,Crop Yield,Coffee,Brazil,,1,1
+Improved Fallow-Combo,Crop Yield,Common Bean,Brazil,,7,1
+Agroforestry Pruning-Combo,Crop Yield,Maize,Brazil,,6,1
+Agroforestry Pruning-Combo,Crop Yield,Coffee,Costa Rica,,1,1
+pH Control-Combo,Crop Yield,Common Bean,Brazil,,4,1
+Multistrata Agroforestry-Combo,Crop Yield,Coffee,Costa Rica,,1,1
+Crop Residue Incorporation-Combo,Crop Yield,Common Bean,Brazil,,2,1
+Crop Residue Incorporation-Combo,Crop Yield,Maize,Brazil,,9,1
+Alleycropping-Combo,Crop Yield,Common Bean,Brazil,,4,1
+Biochar-Combo,Crop Yield,Common Bean,Brazil,,3,1
+Biochar-Combo,Crop Yield,Maize,Mexico,,5,1
+Crop Residue-Combo,Crop Yield,Common Bean,Brazil,,2,1
+Crop Residue-Combo,Crop Yield,Maize,Brazil,,9,1

@@ -1,0 +1,15 @@
+Code,Full_Name,Short_Name,Units,Period
+rain_rain_l_5.n_seq_d5,Maximum consecutive days with rainfall <5mm,Consecutive Dry Days (5mm),days,Growing season
+rain_l_0.1.days_pr,Total days with rainfall <0.1mm (threshold for precipitation),Drought Days (0.1mm),days,Growing season
+rain_l_0.1.days,Total days with rainfall <0.1mm,Drought Days,days,Growing season
+rain_l_0.1.n_seq_d5,Maximum consecutive days with rainfall <0.1mm,Consecutive Drought Days,days,Growing season
+temp_tmean_var,Variance in mean temperature,Temperature Variability,°C²,Growing season
+temp_tmin_var,Variance in minimum temperature,Min Temperature Variability,°C²,Growing season
+temp_tmean_max,Maximum mean temperature,Maximum Temperature,°C,Growing season
+temp_tmean_range,Temperature range (max - min mean temperature),Temperature Range,°C,Growing season
+eratio_eratio_l_0.1.max_seq,Maximum consecutive days with evaporative ratio <0.1,Evaporative Stress Duration,days,Growing season
+gdd_gdd_subopt,Growing degree days below crop-specific optimum,Cold Stress (GDD),degree-days,Growing season
+gdd_gdd_aboveopt,Growing degree days above crop-specific optimum,Heat Stress (GDD),degree-days,Growing season
+gdd_Harvest.Start,Growing degree days at harvest start,GDD at Harvest,degree-days,Harvest
+rain_Harvest.Start,Rainfall at harvest start,Harvest Rainfall,mm,Harvest
+temp_Harvest.Start,Temperature at harvest start,Harvest Temperature,°C,Harvest
